@@ -1,0 +1,2086 @@
+#pragma once
+
+#pragma region Proxy
+struct steam_api64_dll {
+	HMODULE dll;
+	FARPROC oGetHSteamPipe;
+	FARPROC oGetHSteamUser;
+	FARPROC oSteamAPI_GetHSteamPipe;
+	FARPROC oSteamAPI_GetHSteamUser;
+	FARPROC oSteamAPI_GetSteamInstallPath;
+	FARPROC oSteamAPI_ISteamAppList_GetAppBuildId;
+	FARPROC oSteamAPI_ISteamAppList_GetAppInstallDir;
+	FARPROC oSteamAPI_ISteamAppList_GetAppName;
+	FARPROC oSteamAPI_ISteamAppList_GetInstalledApps;
+	FARPROC oSteamAPI_ISteamAppList_GetNumInstalledApps;
+	FARPROC oSteamAPI_ISteamApps_BGetDLCDataByIndex;
+	FARPROC oSteamAPI_ISteamApps_BIsAppInstalled;
+	FARPROC oSteamAPI_ISteamApps_BIsCybercafe;
+	FARPROC oSteamAPI_ISteamApps_BIsDlcInstalled;
+	FARPROC oSteamAPI_ISteamApps_BIsLowViolence;
+	FARPROC oSteamAPI_ISteamApps_BIsSubscribed;
+	FARPROC oSteamAPI_ISteamApps_BIsSubscribedApp;
+	FARPROC oSteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend;
+	FARPROC oSteamAPI_ISteamApps_BIsVACBanned;
+	FARPROC oSteamAPI_ISteamApps_GetAppBuildId;
+	FARPROC oSteamAPI_ISteamApps_GetAppInstallDir;
+	FARPROC oSteamAPI_ISteamApps_GetAppOwner;
+	FARPROC oSteamAPI_ISteamApps_GetAvailableGameLanguages;
+	FARPROC oSteamAPI_ISteamApps_GetCurrentBetaName;
+	FARPROC oSteamAPI_ISteamApps_GetCurrentGameLanguage;
+	FARPROC oSteamAPI_ISteamApps_GetDLCCount;
+	FARPROC oSteamAPI_ISteamApps_GetDlcDownloadProgress;
+	FARPROC oSteamAPI_ISteamApps_GetEarliestPurchaseUnixTime;
+	FARPROC oSteamAPI_ISteamApps_GetInstalledDepots;
+	FARPROC oSteamAPI_ISteamApps_GetLaunchQueryParam;
+	FARPROC oSteamAPI_ISteamApps_InstallDLC;
+	FARPROC oSteamAPI_ISteamApps_MarkContentCorrupt;
+	FARPROC oSteamAPI_ISteamApps_RequestAppProofOfPurchaseKey;
+	FARPROC oSteamAPI_ISteamApps_UninstallDLC;
+	FARPROC oSteamAPI_ISteamClient_BReleaseSteamPipe;
+	FARPROC oSteamAPI_ISteamClient_BShutdownIfAllPipesClosed;
+	FARPROC oSteamAPI_ISteamClient_ConnectToGlobalUser;
+	FARPROC oSteamAPI_ISteamClient_CreateLocalUser;
+	FARPROC oSteamAPI_ISteamClient_CreateSteamPipe;
+	FARPROC oSteamAPI_ISteamClient_GetIPCCallCount;
+	FARPROC oSteamAPI_ISteamClient_GetISteamAppList;
+	FARPROC oSteamAPI_ISteamClient_GetISteamApps;
+	FARPROC oSteamAPI_ISteamClient_GetISteamController;
+	FARPROC oSteamAPI_ISteamClient_GetISteamFriends;
+	FARPROC oSteamAPI_ISteamClient_GetISteamGameServer;
+	FARPROC oSteamAPI_ISteamClient_GetISteamGameServerStats;
+	FARPROC oSteamAPI_ISteamClient_GetISteamGenericInterface;
+	FARPROC oSteamAPI_ISteamClient_GetISteamHTMLSurface;
+	FARPROC oSteamAPI_ISteamClient_GetISteamHTTP;
+	FARPROC oSteamAPI_ISteamClient_GetISteamInventory;
+	FARPROC oSteamAPI_ISteamClient_GetISteamMatchmaking;
+	FARPROC oSteamAPI_ISteamClient_GetISteamMatchmakingServers;
+	FARPROC oSteamAPI_ISteamClient_GetISteamMusic;
+	FARPROC oSteamAPI_ISteamClient_GetISteamMusicRemote;
+	FARPROC oSteamAPI_ISteamClient_GetISteamNetworking;
+	FARPROC oSteamAPI_ISteamClient_GetISteamRemoteStorage;
+	FARPROC oSteamAPI_ISteamClient_GetISteamScreenshots;
+	FARPROC oSteamAPI_ISteamClient_GetISteamUGC;
+	FARPROC oSteamAPI_ISteamClient_GetISteamUnifiedMessages;
+	FARPROC oSteamAPI_ISteamClient_GetISteamUser;
+	FARPROC oSteamAPI_ISteamClient_GetISteamUserStats;
+	FARPROC oSteamAPI_ISteamClient_GetISteamUtils;
+	FARPROC oSteamAPI_ISteamClient_GetISteamVideo;
+	FARPROC oSteamAPI_ISteamClient_ReleaseUser;
+	FARPROC oSteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess;
+	FARPROC oSteamAPI_ISteamClient_RunFrame;
+	FARPROC oSteamAPI_ISteamClient_SetLocalIPBinding;
+	FARPROC oSteamAPI_ISteamClient_SetWarningMessageHook;
+	FARPROC oSteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess;
+	FARPROC oSteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess;
+	FARPROC oSteamAPI_ISteamController_GetControllerState;
+	FARPROC oSteamAPI_ISteamController_Init;
+	FARPROC oSteamAPI_ISteamController_RunFrame;
+	FARPROC oSteamAPI_ISteamController_SetOverrideMode;
+	FARPROC oSteamAPI_ISteamController_Shutdown;
+	FARPROC oSteamAPI_ISteamController_TriggerHapticPulse;
+	FARPROC oSteamAPI_ISteamFriends_ActivateGameOverlay;
+	FARPROC oSteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog;
+	FARPROC oSteamAPI_ISteamFriends_ActivateGameOverlayToStore;
+	FARPROC oSteamAPI_ISteamFriends_ActivateGameOverlayToUser;
+	FARPROC oSteamAPI_ISteamFriends_ActivateGameOverlayToWebPage;
+	FARPROC oSteamAPI_ISteamFriends_ClearRichPresence;
+	FARPROC oSteamAPI_ISteamFriends_CloseClanChatWindowInSteam;
+	FARPROC oSteamAPI_ISteamFriends_DownloadClanActivityCounts;
+	FARPROC oSteamAPI_ISteamFriends_EnumerateFollowingList;
+	FARPROC oSteamAPI_ISteamFriends_GetChatMemberByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetClanActivityCounts;
+	FARPROC oSteamAPI_ISteamFriends_GetClanByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetClanChatMemberCount;
+	FARPROC oSteamAPI_ISteamFriends_GetClanChatMessage;
+	FARPROC oSteamAPI_ISteamFriends_GetClanCount;
+	FARPROC oSteamAPI_ISteamFriends_GetClanName;
+	FARPROC oSteamAPI_ISteamFriends_GetClanOfficerByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetClanOfficerCount;
+	FARPROC oSteamAPI_ISteamFriends_GetClanOwner;
+	FARPROC oSteamAPI_ISteamFriends_GetClanTag;
+	FARPROC oSteamAPI_ISteamFriends_GetCoplayFriend;
+	FARPROC oSteamAPI_ISteamFriends_GetCoplayFriendCount;
+	FARPROC oSteamAPI_ISteamFriends_GetFollowerCount;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendCoplayGame;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendCoplayTime;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendCount;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendCountFromSource;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendFromSourceByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendGamePlayed;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendMessage;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendPersonaName;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendPersonaNameHistory;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendPersonaState;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendRelationship;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendRichPresence;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendSteamLevel;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendsGroupCount;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendsGroupIDByIndex;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendsGroupMembersCount;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendsGroupMembersList;
+	FARPROC oSteamAPI_ISteamFriends_GetFriendsGroupName;
+	FARPROC oSteamAPI_ISteamFriends_GetLargeFriendAvatar;
+	FARPROC oSteamAPI_ISteamFriends_GetMediumFriendAvatar;
+	FARPROC oSteamAPI_ISteamFriends_GetPersonaName;
+	FARPROC oSteamAPI_ISteamFriends_GetPersonaState;
+	FARPROC oSteamAPI_ISteamFriends_GetPlayerNickname;
+	FARPROC oSteamAPI_ISteamFriends_GetSmallFriendAvatar;
+	FARPROC oSteamAPI_ISteamFriends_GetUserRestrictions;
+	FARPROC oSteamAPI_ISteamFriends_HasFriend;
+	FARPROC oSteamAPI_ISteamFriends_InviteUserToGame;
+	FARPROC oSteamAPI_ISteamFriends_IsClanChatAdmin;
+	FARPROC oSteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam;
+	FARPROC oSteamAPI_ISteamFriends_IsFollowing;
+	FARPROC oSteamAPI_ISteamFriends_IsUserInSource;
+	FARPROC oSteamAPI_ISteamFriends_JoinClanChatRoom;
+	FARPROC oSteamAPI_ISteamFriends_LeaveClanChatRoom;
+	FARPROC oSteamAPI_ISteamFriends_OpenClanChatWindowInSteam;
+	FARPROC oSteamAPI_ISteamFriends_ReplyToFriendMessage;
+	FARPROC oSteamAPI_ISteamFriends_RequestClanOfficerList;
+	FARPROC oSteamAPI_ISteamFriends_RequestFriendRichPresence;
+	FARPROC oSteamAPI_ISteamFriends_RequestUserInformation;
+	FARPROC oSteamAPI_ISteamFriends_SendClanChatMessage;
+	FARPROC oSteamAPI_ISteamFriends_SetInGameVoiceSpeaking;
+	FARPROC oSteamAPI_ISteamFriends_SetListenForFriendsMessages;
+	FARPROC oSteamAPI_ISteamFriends_SetPersonaName;
+	FARPROC oSteamAPI_ISteamFriends_SetPlayedWith;
+	FARPROC oSteamAPI_ISteamFriends_SetRichPresence;
+	FARPROC oSteamAPI_ISteamGameServerStats_ClearUserAchievement;
+	FARPROC oSteamAPI_ISteamGameServerStats_GetUserAchievement;
+	FARPROC oSteamAPI_ISteamGameServerStats_GetUserStat;
+	FARPROC oSteamAPI_ISteamGameServerStats_GetUserStat0;
+	FARPROC oSteamAPI_ISteamGameServerStats_RequestUserStats;
+	FARPROC oSteamAPI_ISteamGameServerStats_SetUserAchievement;
+	FARPROC oSteamAPI_ISteamGameServerStats_SetUserStat;
+	FARPROC oSteamAPI_ISteamGameServerStats_SetUserStat0;
+	FARPROC oSteamAPI_ISteamGameServerStats_StoreUserStats;
+	FARPROC oSteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat;
+	FARPROC oSteamAPI_ISteamGameServer_AssociateWithClan;
+	FARPROC oSteamAPI_ISteamGameServer_BLoggedOn;
+	FARPROC oSteamAPI_ISteamGameServer_BSecure;
+	FARPROC oSteamAPI_ISteamGameServer_BUpdateUserData;
+	FARPROC oSteamAPI_ISteamGameServer_BeginAuthSession;
+	FARPROC oSteamAPI_ISteamGameServer_CancelAuthTicket;
+	FARPROC oSteamAPI_ISteamGameServer_ClearAllKeyValues;
+	FARPROC oSteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility;
+	FARPROC oSteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection;
+	FARPROC oSteamAPI_ISteamGameServer_EnableHeartbeats;
+	FARPROC oSteamAPI_ISteamGameServer_EndAuthSession;
+	FARPROC oSteamAPI_ISteamGameServer_ForceHeartbeat;
+	FARPROC oSteamAPI_ISteamGameServer_GetAuthSessionTicket;
+	FARPROC oSteamAPI_ISteamGameServer_GetGameplayStats;
+	FARPROC oSteamAPI_ISteamGameServer_GetNextOutgoingPacket;
+	FARPROC oSteamAPI_ISteamGameServer_GetPublicIP;
+	FARPROC oSteamAPI_ISteamGameServer_GetServerReputation;
+	FARPROC oSteamAPI_ISteamGameServer_GetSteamID;
+	FARPROC oSteamAPI_ISteamGameServer_HandleIncomingPacket;
+	FARPROC oSteamAPI_ISteamGameServer_InitGameServer;
+	FARPROC oSteamAPI_ISteamGameServer_LogOff;
+	FARPROC oSteamAPI_ISteamGameServer_LogOn;
+	FARPROC oSteamAPI_ISteamGameServer_LogOnAnonymous;
+	FARPROC oSteamAPI_ISteamGameServer_RequestUserGroupStatus;
+	FARPROC oSteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate;
+	FARPROC oSteamAPI_ISteamGameServer_SendUserDisconnect;
+	FARPROC oSteamAPI_ISteamGameServer_SetBotPlayerCount;
+	FARPROC oSteamAPI_ISteamGameServer_SetDedicatedServer;
+	FARPROC oSteamAPI_ISteamGameServer_SetGameData;
+	FARPROC oSteamAPI_ISteamGameServer_SetGameDescription;
+	FARPROC oSteamAPI_ISteamGameServer_SetGameTags;
+	FARPROC oSteamAPI_ISteamGameServer_SetHeartbeatInterval;
+	FARPROC oSteamAPI_ISteamGameServer_SetKeyValue;
+	FARPROC oSteamAPI_ISteamGameServer_SetMapName;
+	FARPROC oSteamAPI_ISteamGameServer_SetMaxPlayerCount;
+	FARPROC oSteamAPI_ISteamGameServer_SetModDir;
+	FARPROC oSteamAPI_ISteamGameServer_SetPasswordProtected;
+	FARPROC oSteamAPI_ISteamGameServer_SetProduct;
+	FARPROC oSteamAPI_ISteamGameServer_SetRegion;
+	FARPROC oSteamAPI_ISteamGameServer_SetServerName;
+	FARPROC oSteamAPI_ISteamGameServer_SetSpectatorPort;
+	FARPROC oSteamAPI_ISteamGameServer_SetSpectatorServerName;
+	FARPROC oSteamAPI_ISteamGameServer_UserHasLicenseForApp;
+	FARPROC oSteamAPI_ISteamGameServer_WasRestartRequested;
+	FARPROC oSteamAPI_ISteamHTMLSurface_AddHeader;
+	FARPROC oSteamAPI_ISteamHTMLSurface_AllowStartRequest;
+	FARPROC oSteamAPI_ISteamHTMLSurface_CopyToClipboard;
+	FARPROC oSteamAPI_ISteamHTMLSurface_CreateBrowser;
+	FARPROC oSteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface;
+	FARPROC oSteamAPI_ISteamHTMLSurface_ExecuteJavascript;
+	FARPROC oSteamAPI_ISteamHTMLSurface_FileLoadDialogResponse;
+	FARPROC oSteamAPI_ISteamHTMLSurface_Find;
+	FARPROC oSteamAPI_ISteamHTMLSurface_GetLinkAtPosition;
+	FARPROC oSteamAPI_ISteamHTMLSurface_GoBack;
+	FARPROC oSteamAPI_ISteamHTMLSurface_GoForward;
+	FARPROC oSteamAPI_ISteamHTMLSurface_Init;
+	FARPROC oSteamAPI_ISteamHTMLSurface_JSDialogResponse;
+	FARPROC oSteamAPI_ISteamHTMLSurface_KeyChar;
+	FARPROC oSteamAPI_ISteamHTMLSurface_KeyDown;
+	FARPROC oSteamAPI_ISteamHTMLSurface_KeyUp;
+	FARPROC oSteamAPI_ISteamHTMLSurface_LoadURL;
+	FARPROC oSteamAPI_ISteamHTMLSurface_MouseDoubleClick;
+	FARPROC oSteamAPI_ISteamHTMLSurface_MouseDown;
+	FARPROC oSteamAPI_ISteamHTMLSurface_MouseMove;
+	FARPROC oSteamAPI_ISteamHTMLSurface_MouseUp;
+	FARPROC oSteamAPI_ISteamHTMLSurface_MouseWheel;
+	FARPROC oSteamAPI_ISteamHTMLSurface_PasteFromClipboard;
+	FARPROC oSteamAPI_ISteamHTMLSurface_Reload;
+	FARPROC oSteamAPI_ISteamHTMLSurface_RemoveBrowser;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetBackgroundMode;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetCookie;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetHorizontalScroll;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetKeyFocus;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetPageScaleFactor;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetSize;
+	FARPROC oSteamAPI_ISteamHTMLSurface_SetVerticalScroll;
+	FARPROC oSteamAPI_ISteamHTMLSurface_Shutdown;
+	FARPROC oSteamAPI_ISteamHTMLSurface_StopFind;
+	FARPROC oSteamAPI_ISteamHTMLSurface_StopLoad;
+	FARPROC oSteamAPI_ISteamHTMLSurface_ViewSource;
+	FARPROC oSteamAPI_ISteamHTTP_CreateCookieContainer;
+	FARPROC oSteamAPI_ISteamHTTP_CreateHTTPRequest;
+	FARPROC oSteamAPI_ISteamHTTP_DeferHTTPRequest;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPResponseBodyData;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPResponseBodySize;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue;
+	FARPROC oSteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData;
+	FARPROC oSteamAPI_ISteamHTTP_PrioritizeHTTPRequest;
+	FARPROC oSteamAPI_ISteamHTTP_ReleaseCookieContainer;
+	FARPROC oSteamAPI_ISteamHTTP_ReleaseHTTPRequest;
+	FARPROC oSteamAPI_ISteamHTTP_SendHTTPRequest;
+	FARPROC oSteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse;
+	FARPROC oSteamAPI_ISteamHTTP_SetCookie;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestContextValue;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate;
+	FARPROC oSteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo;
+	FARPROC oSteamAPI_ISteamInventory_AddPromoItem;
+	FARPROC oSteamAPI_ISteamInventory_AddPromoItems;
+	FARPROC oSteamAPI_ISteamInventory_CheckResultSteamID;
+	FARPROC oSteamAPI_ISteamInventory_ConsumeItem;
+	FARPROC oSteamAPI_ISteamInventory_DeserializeResult;
+	FARPROC oSteamAPI_ISteamInventory_DestroyResult;
+	FARPROC oSteamAPI_ISteamInventory_ExchangeItems;
+	FARPROC oSteamAPI_ISteamInventory_GenerateItems;
+	FARPROC oSteamAPI_ISteamInventory_GetAllItems;
+	FARPROC oSteamAPI_ISteamInventory_GetItemDefinitionIDs;
+	FARPROC oSteamAPI_ISteamInventory_GetItemDefinitionProperty;
+	FARPROC oSteamAPI_ISteamInventory_GetItemsByID;
+	FARPROC oSteamAPI_ISteamInventory_GetResultItems;
+	FARPROC oSteamAPI_ISteamInventory_GetResultStatus;
+	FARPROC oSteamAPI_ISteamInventory_GetResultTimestamp;
+	FARPROC oSteamAPI_ISteamInventory_GrantPromoItems;
+	FARPROC oSteamAPI_ISteamInventory_LoadItemDefinitions;
+	FARPROC oSteamAPI_ISteamInventory_SendItemDropHeartbeat;
+	FARPROC oSteamAPI_ISteamInventory_SerializeResult;
+	FARPROC oSteamAPI_ISteamInventory_TradeItems;
+	FARPROC oSteamAPI_ISteamInventory_TransferItemQuantity;
+	FARPROC oSteamAPI_ISteamInventory_TriggerItemDrop;
+	FARPROC oSteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond;
+	FARPROC oSteamAPI_ISteamMatchmakingPingResponse_ServerResponded;
+	FARPROC oSteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList;
+	FARPROC oSteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond;
+	FARPROC oSteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete;
+	FARPROC oSteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond;
+	FARPROC oSteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete;
+	FARPROC oSteamAPI_ISteamMatchmakingRulesResponse_RulesResponded;
+	FARPROC oSteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete;
+	FARPROC oSteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond;
+	FARPROC oSteamAPI_ISteamMatchmakingServerListResponse_ServerResponded;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_CancelQuery;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_CancelServerQuery;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_GetServerCount;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_GetServerDetails;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_IsRefreshing;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_PingServer;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_PlayerDetails;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RefreshQuery;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RefreshServer;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_ReleaseRequest;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RequestFriendsServerList;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RequestHistoryServerList;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RequestInternetServerList;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RequestLANServerList;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList;
+	FARPROC oSteamAPI_ISteamMatchmakingServers_ServerRules;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddFavoriteGame;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter;
+	FARPROC oSteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter;
+	FARPROC oSteamAPI_ISteamMatchmaking_CreateLobby;
+	FARPROC oSteamAPI_ISteamMatchmaking_DeleteLobbyData;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetFavoriteGame;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetFavoriteGameCount;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyByIndex;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyChatEntry;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyData;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyDataByIndex;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyDataCount;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyGameServer;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyMemberData;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyMemberLimit;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetLobbyOwner;
+	FARPROC oSteamAPI_ISteamMatchmaking_GetNumLobbyMembers;
+	FARPROC oSteamAPI_ISteamMatchmaking_InviteUserToLobby;
+	FARPROC oSteamAPI_ISteamMatchmaking_JoinLobby;
+	FARPROC oSteamAPI_ISteamMatchmaking_LeaveLobby;
+	FARPROC oSteamAPI_ISteamMatchmaking_RemoveFavoriteGame;
+	FARPROC oSteamAPI_ISteamMatchmaking_RequestLobbyData;
+	FARPROC oSteamAPI_ISteamMatchmaking_RequestLobbyList;
+	FARPROC oSteamAPI_ISteamMatchmaking_SendLobbyChatMsg;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLinkedLobby;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyData;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyGameServer;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyJoinable;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyMemberData;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyMemberLimit;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyOwner;
+	FARPROC oSteamAPI_ISteamMatchmaking_SetLobbyType;
+	FARPROC oSteamAPI_ISteamMusicRemote_BActivationSuccess;
+	FARPROC oSteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote;
+	FARPROC oSteamAPI_ISteamMusicRemote_CurrentEntryDidChange;
+	FARPROC oSteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable;
+	FARPROC oSteamAPI_ISteamMusicRemote_CurrentEntryWillChange;
+	FARPROC oSteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote;
+	FARPROC oSteamAPI_ISteamMusicRemote_EnableLooped;
+	FARPROC oSteamAPI_ISteamMusicRemote_EnablePlayNext;
+	FARPROC oSteamAPI_ISteamMusicRemote_EnablePlayPrevious;
+	FARPROC oSteamAPI_ISteamMusicRemote_EnablePlaylists;
+	FARPROC oSteamAPI_ISteamMusicRemote_EnableQueue;
+	FARPROC oSteamAPI_ISteamMusicRemote_EnableShuffled;
+	FARPROC oSteamAPI_ISteamMusicRemote_PlaylistDidChange;
+	FARPROC oSteamAPI_ISteamMusicRemote_PlaylistWillChange;
+	FARPROC oSteamAPI_ISteamMusicRemote_QueueDidChange;
+	FARPROC oSteamAPI_ISteamMusicRemote_QueueWillChange;
+	FARPROC oSteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote;
+	FARPROC oSteamAPI_ISteamMusicRemote_ResetPlaylistEntries;
+	FARPROC oSteamAPI_ISteamMusicRemote_ResetQueueEntries;
+	FARPROC oSteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry;
+	FARPROC oSteamAPI_ISteamMusicRemote_SetCurrentQueueEntry;
+	FARPROC oSteamAPI_ISteamMusicRemote_SetDisplayName;
+	FARPROC oSteamAPI_ISteamMusicRemote_SetPNGIcon_64x64;
+	FARPROC oSteamAPI_ISteamMusicRemote_SetPlaylistEntry;
+	FARPROC oSteamAPI_ISteamMusicRemote_SetQueueEntry;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryText;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdateLooped;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdatePlaybackStatus;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdateShuffled;
+	FARPROC oSteamAPI_ISteamMusicRemote_UpdateVolume;
+	FARPROC oSteamAPI_ISteamMusic_BIsEnabled;
+	FARPROC oSteamAPI_ISteamMusic_BIsPlaying;
+	FARPROC oSteamAPI_ISteamMusic_GetPlaybackStatus;
+	FARPROC oSteamAPI_ISteamMusic_GetVolume;
+	FARPROC oSteamAPI_ISteamMusic_Pause;
+	FARPROC oSteamAPI_ISteamMusic_Play;
+	FARPROC oSteamAPI_ISteamMusic_PlayNext;
+	FARPROC oSteamAPI_ISteamMusic_PlayPrevious;
+	FARPROC oSteamAPI_ISteamMusic_SetVolume;
+	FARPROC oSteamAPI_ISteamNetworking_AcceptP2PSessionWithUser;
+	FARPROC oSteamAPI_ISteamNetworking_AllowP2PPacketRelay;
+	FARPROC oSteamAPI_ISteamNetworking_CloseP2PChannelWithUser;
+	FARPROC oSteamAPI_ISteamNetworking_CloseP2PSessionWithUser;
+	FARPROC oSteamAPI_ISteamNetworking_CreateConnectionSocket;
+	FARPROC oSteamAPI_ISteamNetworking_CreateListenSocket;
+	FARPROC oSteamAPI_ISteamNetworking_CreateP2PConnectionSocket;
+	FARPROC oSteamAPI_ISteamNetworking_DestroyListenSocket;
+	FARPROC oSteamAPI_ISteamNetworking_DestroySocket;
+	FARPROC oSteamAPI_ISteamNetworking_GetListenSocketInfo;
+	FARPROC oSteamAPI_ISteamNetworking_GetMaxPacketSize;
+	FARPROC oSteamAPI_ISteamNetworking_GetP2PSessionState;
+	FARPROC oSteamAPI_ISteamNetworking_GetSocketConnectionType;
+	FARPROC oSteamAPI_ISteamNetworking_GetSocketInfo;
+	FARPROC oSteamAPI_ISteamNetworking_IsDataAvailable;
+	FARPROC oSteamAPI_ISteamNetworking_IsDataAvailableOnSocket;
+	FARPROC oSteamAPI_ISteamNetworking_IsP2PPacketAvailable;
+	FARPROC oSteamAPI_ISteamNetworking_ReadP2PPacket;
+	FARPROC oSteamAPI_ISteamNetworking_RetrieveData;
+	FARPROC oSteamAPI_ISteamNetworking_RetrieveDataFromSocket;
+	FARPROC oSteamAPI_ISteamNetworking_SendDataOnSocket;
+	FARPROC oSteamAPI_ISteamNetworking_SendP2PPacket;
+	FARPROC oSteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate;
+	FARPROC oSteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest;
+	FARPROC oSteamAPI_ISteamRemoteStorage_DeletePublishedFile;
+	FARPROC oSteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction;
+	FARPROC oSteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles;
+	FARPROC oSteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles;
+	FARPROC oSteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles;
+	FARPROC oSteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileDelete;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileExists;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileForget;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FilePersisted;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileRead;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileShare;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileWrite;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileWriteStreamCancel;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileWriteStreamClose;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileWriteStreamOpen;
+	FARPROC oSteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetCachedUGCCount;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetCachedUGCHandle;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetFileCount;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetFileNameAndSize;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetFileSize;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetFileTimestamp;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetPublishedFileDetails;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetQuota;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetSyncPlatforms;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetUGCDetails;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress;
+	FARPROC oSteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails;
+	FARPROC oSteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount;
+	FARPROC oSteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp;
+	FARPROC oSteamAPI_ISteamRemoteStorage_PublishVideo;
+	FARPROC oSteamAPI_ISteamRemoteStorage_PublishWorkshopFile;
+	FARPROC oSteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp;
+	FARPROC oSteamAPI_ISteamRemoteStorage_SetSyncPlatforms;
+	FARPROC oSteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction;
+	FARPROC oSteamAPI_ISteamRemoteStorage_SubscribePublishedFile;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UGCDownload;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UGCDownloadToLocation;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UGCRead;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility;
+	FARPROC oSteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote;
+	FARPROC oSteamAPI_ISteamScreenshots_AddScreenshotToLibrary;
+	FARPROC oSteamAPI_ISteamScreenshots_HookScreenshots;
+	FARPROC oSteamAPI_ISteamScreenshots_SetLocation;
+	FARPROC oSteamAPI_ISteamScreenshots_TagPublishedFile;
+	FARPROC oSteamAPI_ISteamScreenshots_TagUser;
+	FARPROC oSteamAPI_ISteamScreenshots_TriggerScreenshot;
+	FARPROC oSteamAPI_ISteamScreenshots_WriteScreenshot;
+	FARPROC oSteamAPI_ISteamUGC_AddExcludedTag;
+	FARPROC oSteamAPI_ISteamUGC_AddItemKeyValueTag;
+	FARPROC oSteamAPI_ISteamUGC_AddItemToFavorites;
+	FARPROC oSteamAPI_ISteamUGC_AddRequiredKeyValueTag;
+	FARPROC oSteamAPI_ISteamUGC_AddRequiredTag;
+	FARPROC oSteamAPI_ISteamUGC_CreateItem;
+	FARPROC oSteamAPI_ISteamUGC_CreateQueryAllUGCRequest;
+	FARPROC oSteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest;
+	FARPROC oSteamAPI_ISteamUGC_CreateQueryUserUGCRequest;
+	FARPROC oSteamAPI_ISteamUGC_DownloadItem;
+	FARPROC oSteamAPI_ISteamUGC_GetItemDownloadInfo;
+	FARPROC oSteamAPI_ISteamUGC_GetItemInstallInfo;
+	FARPROC oSteamAPI_ISteamUGC_GetItemState;
+	FARPROC oSteamAPI_ISteamUGC_GetItemUpdateProgress;
+	FARPROC oSteamAPI_ISteamUGC_GetNumSubscribedItems;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCChildren;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCKeyValueTag;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCMetadata;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCPreviewURL;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCResult;
+	FARPROC oSteamAPI_ISteamUGC_GetQueryUGCStatistic;
+	FARPROC oSteamAPI_ISteamUGC_GetSubscribedItems;
+	FARPROC oSteamAPI_ISteamUGC_GetUserItemVote;
+	FARPROC oSteamAPI_ISteamUGC_ReleaseQueryUGCRequest;
+	FARPROC oSteamAPI_ISteamUGC_RemoveItemFromFavorites;
+	FARPROC oSteamAPI_ISteamUGC_RemoveItemKeyValueTags;
+	FARPROC oSteamAPI_ISteamUGC_RequestUGCDetails;
+	FARPROC oSteamAPI_ISteamUGC_SendQueryUGCRequest;
+	FARPROC oSteamAPI_ISteamUGC_SetAllowCachedResponse;
+	FARPROC oSteamAPI_ISteamUGC_SetCloudFileNameFilter;
+	FARPROC oSteamAPI_ISteamUGC_SetItemContent;
+	FARPROC oSteamAPI_ISteamUGC_SetItemDescription;
+	FARPROC oSteamAPI_ISteamUGC_SetItemMetadata;
+	FARPROC oSteamAPI_ISteamUGC_SetItemPreview;
+	FARPROC oSteamAPI_ISteamUGC_SetItemTags;
+	FARPROC oSteamAPI_ISteamUGC_SetItemTitle;
+	FARPROC oSteamAPI_ISteamUGC_SetItemUpdateLanguage;
+	FARPROC oSteamAPI_ISteamUGC_SetItemVisibility;
+	FARPROC oSteamAPI_ISteamUGC_SetLanguage;
+	FARPROC oSteamAPI_ISteamUGC_SetMatchAnyTag;
+	FARPROC oSteamAPI_ISteamUGC_SetRankedByTrendDays;
+	FARPROC oSteamAPI_ISteamUGC_SetReturnAdditionalPreviews;
+	FARPROC oSteamAPI_ISteamUGC_SetReturnChildren;
+	FARPROC oSteamAPI_ISteamUGC_SetReturnKeyValueTags;
+	FARPROC oSteamAPI_ISteamUGC_SetReturnLongDescription;
+	FARPROC oSteamAPI_ISteamUGC_SetReturnMetadata;
+	FARPROC oSteamAPI_ISteamUGC_SetReturnTotalOnly;
+	FARPROC oSteamAPI_ISteamUGC_SetSearchText;
+	FARPROC oSteamAPI_ISteamUGC_SetUserItemVote;
+	FARPROC oSteamAPI_ISteamUGC_StartItemUpdate;
+	FARPROC oSteamAPI_ISteamUGC_SubmitItemUpdate;
+	FARPROC oSteamAPI_ISteamUGC_SubscribeItem;
+	FARPROC oSteamAPI_ISteamUGC_UnsubscribeItem;
+	FARPROC oSteamAPI_ISteamUnifiedMessages_GetMethodResponseData;
+	FARPROC oSteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo;
+	FARPROC oSteamAPI_ISteamUnifiedMessages_ReleaseMethod;
+	FARPROC oSteamAPI_ISteamUnifiedMessages_SendMethod;
+	FARPROC oSteamAPI_ISteamUnifiedMessages_SendNotification;
+	FARPROC oSteamAPI_ISteamUserStats_AttachLeaderboardUGC;
+	FARPROC oSteamAPI_ISteamUserStats_ClearAchievement;
+	FARPROC oSteamAPI_ISteamUserStats_DownloadLeaderboardEntries;
+	FARPROC oSteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers;
+	FARPROC oSteamAPI_ISteamUserStats_FindLeaderboard;
+	FARPROC oSteamAPI_ISteamUserStats_FindOrCreateLeaderboard;
+	FARPROC oSteamAPI_ISteamUserStats_GetAchievement;
+	FARPROC oSteamAPI_ISteamUserStats_GetAchievementAchievedPercent;
+	FARPROC oSteamAPI_ISteamUserStats_GetAchievementAndUnlockTime;
+	FARPROC oSteamAPI_ISteamUserStats_GetAchievementDisplayAttribute;
+	FARPROC oSteamAPI_ISteamUserStats_GetAchievementIcon;
+	FARPROC oSteamAPI_ISteamUserStats_GetAchievementName;
+	FARPROC oSteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry;
+	FARPROC oSteamAPI_ISteamUserStats_GetGlobalStat;
+	FARPROC oSteamAPI_ISteamUserStats_GetGlobalStat0;
+	FARPROC oSteamAPI_ISteamUserStats_GetGlobalStatHistory;
+	FARPROC oSteamAPI_ISteamUserStats_GetGlobalStatHistory0;
+	FARPROC oSteamAPI_ISteamUserStats_GetLeaderboardDisplayType;
+	FARPROC oSteamAPI_ISteamUserStats_GetLeaderboardEntryCount;
+	FARPROC oSteamAPI_ISteamUserStats_GetLeaderboardName;
+	FARPROC oSteamAPI_ISteamUserStats_GetLeaderboardSortMethod;
+	FARPROC oSteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo;
+	FARPROC oSteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo;
+	FARPROC oSteamAPI_ISteamUserStats_GetNumAchievements;
+	FARPROC oSteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers;
+	FARPROC oSteamAPI_ISteamUserStats_GetStat;
+	FARPROC oSteamAPI_ISteamUserStats_GetStat0;
+	FARPROC oSteamAPI_ISteamUserStats_GetUserAchievement;
+	FARPROC oSteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime;
+	FARPROC oSteamAPI_ISteamUserStats_GetUserStat;
+	FARPROC oSteamAPI_ISteamUserStats_GetUserStat0;
+	FARPROC oSteamAPI_ISteamUserStats_IndicateAchievementProgress;
+	FARPROC oSteamAPI_ISteamUserStats_RequestCurrentStats;
+	FARPROC oSteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages;
+	FARPROC oSteamAPI_ISteamUserStats_RequestGlobalStats;
+	FARPROC oSteamAPI_ISteamUserStats_RequestUserStats;
+	FARPROC oSteamAPI_ISteamUserStats_ResetAllStats;
+	FARPROC oSteamAPI_ISteamUserStats_SetAchievement;
+	FARPROC oSteamAPI_ISteamUserStats_SetStat;
+	FARPROC oSteamAPI_ISteamUserStats_SetStat0;
+	FARPROC oSteamAPI_ISteamUserStats_StoreStats;
+	FARPROC oSteamAPI_ISteamUserStats_UpdateAvgRateStat;
+	FARPROC oSteamAPI_ISteamUserStats_UploadLeaderboardScore;
+	FARPROC oSteamAPI_ISteamUser_AdvertiseGame;
+	FARPROC oSteamAPI_ISteamUser_BIsBehindNAT;
+	FARPROC oSteamAPI_ISteamUser_BLoggedOn;
+	FARPROC oSteamAPI_ISteamUser_BeginAuthSession;
+	FARPROC oSteamAPI_ISteamUser_CancelAuthTicket;
+	FARPROC oSteamAPI_ISteamUser_DecompressVoice;
+	FARPROC oSteamAPI_ISteamUser_EndAuthSession;
+	FARPROC oSteamAPI_ISteamUser_GetAuthSessionTicket;
+	FARPROC oSteamAPI_ISteamUser_GetAvailableVoice;
+	FARPROC oSteamAPI_ISteamUser_GetEncryptedAppTicket;
+	FARPROC oSteamAPI_ISteamUser_GetGameBadgeLevel;
+	FARPROC oSteamAPI_ISteamUser_GetHSteamUser;
+	FARPROC oSteamAPI_ISteamUser_GetPlayerSteamLevel;
+	FARPROC oSteamAPI_ISteamUser_GetSteamID;
+	FARPROC oSteamAPI_ISteamUser_GetUserDataFolder;
+	FARPROC oSteamAPI_ISteamUser_GetVoice;
+	FARPROC oSteamAPI_ISteamUser_GetVoiceOptimalSampleRate;
+	FARPROC oSteamAPI_ISteamUser_InitiateGameConnection;
+	FARPROC oSteamAPI_ISteamUser_RequestEncryptedAppTicket;
+	FARPROC oSteamAPI_ISteamUser_RequestStoreAuthURL;
+	FARPROC oSteamAPI_ISteamUser_StartVoiceRecording;
+	FARPROC oSteamAPI_ISteamUser_StopVoiceRecording;
+	FARPROC oSteamAPI_ISteamUser_TerminateGameConnection;
+	FARPROC oSteamAPI_ISteamUser_TrackAppUsageEvent;
+	FARPROC oSteamAPI_ISteamUser_UserHasLicenseForApp;
+	FARPROC oSteamAPI_ISteamUtils_BOverlayNeedsPresent;
+	FARPROC oSteamAPI_ISteamUtils_CheckFileSignature;
+	FARPROC oSteamAPI_ISteamUtils_GetAPICallFailureReason;
+	FARPROC oSteamAPI_ISteamUtils_GetAPICallResult;
+	FARPROC oSteamAPI_ISteamUtils_GetAppID;
+	FARPROC oSteamAPI_ISteamUtils_GetCSERIPPort;
+	FARPROC oSteamAPI_ISteamUtils_GetConnectedUniverse;
+	FARPROC oSteamAPI_ISteamUtils_GetCurrentBatteryPower;
+	FARPROC oSteamAPI_ISteamUtils_GetEnteredGamepadTextInput;
+	FARPROC oSteamAPI_ISteamUtils_GetEnteredGamepadTextLength;
+	FARPROC oSteamAPI_ISteamUtils_GetIPCCallCount;
+	FARPROC oSteamAPI_ISteamUtils_GetIPCountry;
+	FARPROC oSteamAPI_ISteamUtils_GetImageRGBA;
+	FARPROC oSteamAPI_ISteamUtils_GetImageSize;
+	FARPROC oSteamAPI_ISteamUtils_GetSecondsSinceAppActive;
+	FARPROC oSteamAPI_ISteamUtils_GetSecondsSinceComputerActive;
+	FARPROC oSteamAPI_ISteamUtils_GetServerRealTime;
+	FARPROC oSteamAPI_ISteamUtils_GetSteamUILanguage;
+	FARPROC oSteamAPI_ISteamUtils_IsAPICallCompleted;
+	FARPROC oSteamAPI_ISteamUtils_IsOverlayEnabled;
+	FARPROC oSteamAPI_ISteamUtils_IsSteamRunningInVR;
+	FARPROC oSteamAPI_ISteamUtils_RunFrame;
+	FARPROC oSteamAPI_ISteamUtils_SetOverlayNotificationInset;
+	FARPROC oSteamAPI_ISteamUtils_SetOverlayNotificationPosition;
+	FARPROC oSteamAPI_ISteamUtils_SetWarningMessageHook;
+	FARPROC oSteamAPI_ISteamUtils_ShowGamepadTextInput;
+	FARPROC oSteamAPI_ISteamVideo_GetVideoURL;
+	FARPROC oSteamAPI_ISteamVideo_IsBroadcasting;
+	FARPROC oSteamAPI_Init;
+	FARPROC oSteamAPI_InitSafe;
+	FARPROC oSteamAPI_IsSteamRunning;
+	FARPROC oSteamAPI_RegisterCallResult;
+	FARPROC oSteamAPI_RegisterCallback;
+	FARPROC oSteamAPI_RestartAppIfNecessary;
+	FARPROC oSteamAPI_RunCallbacks;
+	FARPROC oSteamAPI_SetBreakpadAppID;
+	FARPROC oSteamAPI_SetMiniDumpComment;
+	FARPROC oSteamAPI_SetTryCatchCallbacks;
+	FARPROC oSteamAPI_Shutdown;
+	FARPROC oSteamAPI_UnregisterCallResult;
+	FARPROC oSteamAPI_UnregisterCallback;
+	FARPROC oSteamAPI_UseBreakpadCrashHandler;
+	FARPROC oSteamAPI_WriteMiniDump;
+	FARPROC oSteamAppList;
+	FARPROC oSteamApps;
+	FARPROC oSteamClient;
+	FARPROC oSteamController;
+	FARPROC oSteamController_GetControllerState;
+	FARPROC oSteamController_Init;
+	FARPROC oSteamController_SetOverrideMode;
+	FARPROC oSteamController_Shutdown;
+	FARPROC oSteamController_TriggerHapticPulse;
+	FARPROC oSteamFriends;
+	FARPROC oSteamGameServer;
+	FARPROC oSteamGameServerApps;
+	FARPROC oSteamGameServerHTTP;
+	FARPROC oSteamGameServerInventory;
+	FARPROC oSteamGameServerNetworking;
+	FARPROC oSteamGameServerStats;
+	FARPROC oSteamGameServerUGC;
+	FARPROC oSteamGameServerUtils;
+	FARPROC oSteamGameServer_BSecure;
+	FARPROC oSteamGameServer_GetHSteamPipe;
+	FARPROC oSteamGameServer_GetHSteamUser;
+	FARPROC oSteamGameServer_GetIPCCallCount;
+	FARPROC oSteamGameServer_GetSteamID;
+	FARPROC oSteamGameServer_Init;
+	FARPROC oSteamGameServer_InitSafe;
+	FARPROC oSteamGameServer_RunCallbacks;
+	FARPROC oSteamGameServer_Shutdown;
+	FARPROC oSteamHTMLSurface;
+	FARPROC oSteamHTTP;
+	FARPROC oSteamInventory;
+	FARPROC oSteamMatchmaking;
+	FARPROC oSteamMatchmakingServers;
+	FARPROC oSteamMusic;
+	FARPROC oSteamMusicRemote;
+	FARPROC oSteamNetworking;
+	FARPROC oSteamRemoteStorage;
+	FARPROC oSteamScreenshots;
+	FARPROC oSteamUGC;
+	FARPROC oSteamUnifiedMessages;
+	FARPROC oSteamUser;
+	FARPROC oSteamUserStats;
+	FARPROC oSteamUtils;
+	FARPROC oSteamVideo;
+	FARPROC oSteam_GetHSteamUserCurrent;
+	FARPROC oSteam_RegisterInterfaceFuncs;
+	FARPROC oSteam_RunCallbacks;
+	FARPROC og_pSteamClientGameServer;
+} steam_api64;
+
+extern "C" {
+	FARPROC PA = 0;
+	int runASM();
+
+	void fGetHSteamPipe() { PA = steam_api64.oGetHSteamPipe; runASM(); }
+	void fGetHSteamUser() { PA = steam_api64.oGetHSteamUser; runASM(); }
+	void fSteamAPI_GetHSteamPipe() { PA = steam_api64.oSteamAPI_GetHSteamPipe; runASM(); }
+	void fSteamAPI_GetHSteamUser() { PA = steam_api64.oSteamAPI_GetHSteamUser; runASM(); }
+	void fSteamAPI_GetSteamInstallPath() { PA = steam_api64.oSteamAPI_GetSteamInstallPath; runASM(); }
+	void fSteamAPI_ISteamAppList_GetAppBuildId() { PA = steam_api64.oSteamAPI_ISteamAppList_GetAppBuildId; runASM(); }
+	void fSteamAPI_ISteamAppList_GetAppInstallDir() { PA = steam_api64.oSteamAPI_ISteamAppList_GetAppInstallDir; runASM(); }
+	void fSteamAPI_ISteamAppList_GetAppName() { PA = steam_api64.oSteamAPI_ISteamAppList_GetAppName; runASM(); }
+	void fSteamAPI_ISteamAppList_GetInstalledApps() { PA = steam_api64.oSteamAPI_ISteamAppList_GetInstalledApps; runASM(); }
+	void fSteamAPI_ISteamAppList_GetNumInstalledApps() { PA = steam_api64.oSteamAPI_ISteamAppList_GetNumInstalledApps; runASM(); }
+	void fSteamAPI_ISteamApps_BGetDLCDataByIndex() { PA = steam_api64.oSteamAPI_ISteamApps_BGetDLCDataByIndex; runASM(); }
+	void fSteamAPI_ISteamApps_BIsAppInstalled() { PA = steam_api64.oSteamAPI_ISteamApps_BIsAppInstalled; runASM(); }
+	void fSteamAPI_ISteamApps_BIsCybercafe() { PA = steam_api64.oSteamAPI_ISteamApps_BIsCybercafe; runASM(); }
+	void fSteamAPI_ISteamApps_BIsDlcInstalled() { PA = steam_api64.oSteamAPI_ISteamApps_BIsDlcInstalled; runASM(); }
+	void fSteamAPI_ISteamApps_BIsLowViolence() { PA = steam_api64.oSteamAPI_ISteamApps_BIsLowViolence; runASM(); }
+	void fSteamAPI_ISteamApps_BIsSubscribed() { PA = steam_api64.oSteamAPI_ISteamApps_BIsSubscribed; runASM(); }
+	void fSteamAPI_ISteamApps_BIsSubscribedApp() { PA = steam_api64.oSteamAPI_ISteamApps_BIsSubscribedApp; runASM(); }
+	void fSteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend() { PA = steam_api64.oSteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend; runASM(); }
+	void fSteamAPI_ISteamApps_BIsVACBanned() { PA = steam_api64.oSteamAPI_ISteamApps_BIsVACBanned; runASM(); }
+	void fSteamAPI_ISteamApps_GetAppBuildId() { PA = steam_api64.oSteamAPI_ISteamApps_GetAppBuildId; runASM(); }
+	void fSteamAPI_ISteamApps_GetAppInstallDir() { PA = steam_api64.oSteamAPI_ISteamApps_GetAppInstallDir; runASM(); }
+	void fSteamAPI_ISteamApps_GetAppOwner() { PA = steam_api64.oSteamAPI_ISteamApps_GetAppOwner; runASM(); }
+	void fSteamAPI_ISteamApps_GetAvailableGameLanguages() { PA = steam_api64.oSteamAPI_ISteamApps_GetAvailableGameLanguages; runASM(); }
+	void fSteamAPI_ISteamApps_GetCurrentBetaName() { PA = steam_api64.oSteamAPI_ISteamApps_GetCurrentBetaName; runASM(); }
+	void fSteamAPI_ISteamApps_GetCurrentGameLanguage() { PA = steam_api64.oSteamAPI_ISteamApps_GetCurrentGameLanguage; runASM(); }
+	void fSteamAPI_ISteamApps_GetDLCCount() { PA = steam_api64.oSteamAPI_ISteamApps_GetDLCCount; runASM(); }
+	void fSteamAPI_ISteamApps_GetDlcDownloadProgress() { PA = steam_api64.oSteamAPI_ISteamApps_GetDlcDownloadProgress; runASM(); }
+	void fSteamAPI_ISteamApps_GetEarliestPurchaseUnixTime() { PA = steam_api64.oSteamAPI_ISteamApps_GetEarliestPurchaseUnixTime; runASM(); }
+	void fSteamAPI_ISteamApps_GetInstalledDepots() { PA = steam_api64.oSteamAPI_ISteamApps_GetInstalledDepots; runASM(); }
+	void fSteamAPI_ISteamApps_GetLaunchQueryParam() { PA = steam_api64.oSteamAPI_ISteamApps_GetLaunchQueryParam; runASM(); }
+	void fSteamAPI_ISteamApps_InstallDLC() { PA = steam_api64.oSteamAPI_ISteamApps_InstallDLC; runASM(); }
+	void fSteamAPI_ISteamApps_MarkContentCorrupt() { PA = steam_api64.oSteamAPI_ISteamApps_MarkContentCorrupt; runASM(); }
+	void fSteamAPI_ISteamApps_RequestAppProofOfPurchaseKey() { PA = steam_api64.oSteamAPI_ISteamApps_RequestAppProofOfPurchaseKey; runASM(); }
+	void fSteamAPI_ISteamApps_UninstallDLC() { PA = steam_api64.oSteamAPI_ISteamApps_UninstallDLC; runASM(); }
+	void fSteamAPI_ISteamClient_BReleaseSteamPipe() { PA = steam_api64.oSteamAPI_ISteamClient_BReleaseSteamPipe; runASM(); }
+	void fSteamAPI_ISteamClient_BShutdownIfAllPipesClosed() { PA = steam_api64.oSteamAPI_ISteamClient_BShutdownIfAllPipesClosed; runASM(); }
+	void fSteamAPI_ISteamClient_ConnectToGlobalUser() { PA = steam_api64.oSteamAPI_ISteamClient_ConnectToGlobalUser; runASM(); }
+	void fSteamAPI_ISteamClient_CreateLocalUser() { PA = steam_api64.oSteamAPI_ISteamClient_CreateLocalUser; runASM(); }
+	void fSteamAPI_ISteamClient_CreateSteamPipe() { PA = steam_api64.oSteamAPI_ISteamClient_CreateSteamPipe; runASM(); }
+	void fSteamAPI_ISteamClient_GetIPCCallCount() { PA = steam_api64.oSteamAPI_ISteamClient_GetIPCCallCount; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamAppList() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamAppList; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamApps() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamApps; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamController() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamController; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamFriends() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamFriends; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamGameServer() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamGameServer; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamGameServerStats() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamGameServerStats; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamGenericInterface() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamGenericInterface; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamHTMLSurface() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamHTMLSurface; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamHTTP() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamHTTP; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamInventory() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamInventory; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamMatchmaking() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamMatchmaking; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamMatchmakingServers() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamMatchmakingServers; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamMusic() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamMusic; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamMusicRemote() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamMusicRemote; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamNetworking() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamNetworking; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamRemoteStorage() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamRemoteStorage; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamScreenshots() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamScreenshots; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamUGC() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamUGC; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamUnifiedMessages() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamUnifiedMessages; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamUser() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamUser; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamUserStats() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamUserStats; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamUtils() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamUtils; runASM(); }
+	void fSteamAPI_ISteamClient_GetISteamVideo() { PA = steam_api64.oSteamAPI_ISteamClient_GetISteamVideo; runASM(); }
+	void fSteamAPI_ISteamClient_ReleaseUser() { PA = steam_api64.oSteamAPI_ISteamClient_ReleaseUser; runASM(); }
+	void fSteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess() { PA = steam_api64.oSteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess; runASM(); }
+	void fSteamAPI_ISteamClient_RunFrame() { PA = steam_api64.oSteamAPI_ISteamClient_RunFrame; runASM(); }
+	void fSteamAPI_ISteamClient_SetLocalIPBinding() { PA = steam_api64.oSteamAPI_ISteamClient_SetLocalIPBinding; runASM(); }
+	void fSteamAPI_ISteamClient_SetWarningMessageHook() { PA = steam_api64.oSteamAPI_ISteamClient_SetWarningMessageHook; runASM(); }
+	void fSteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess() { PA = steam_api64.oSteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess; runASM(); }
+	void fSteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess() { PA = steam_api64.oSteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess; runASM(); }
+	void fSteamAPI_ISteamController_GetControllerState() { PA = steam_api64.oSteamAPI_ISteamController_GetControllerState; runASM(); }
+	void fSteamAPI_ISteamController_Init() { PA = steam_api64.oSteamAPI_ISteamController_Init; runASM(); }
+	void fSteamAPI_ISteamController_RunFrame() { PA = steam_api64.oSteamAPI_ISteamController_RunFrame; runASM(); }
+	void fSteamAPI_ISteamController_SetOverrideMode() { PA = steam_api64.oSteamAPI_ISteamController_SetOverrideMode; runASM(); }
+	void fSteamAPI_ISteamController_Shutdown() { PA = steam_api64.oSteamAPI_ISteamController_Shutdown; runASM(); }
+	void fSteamAPI_ISteamController_TriggerHapticPulse() { PA = steam_api64.oSteamAPI_ISteamController_TriggerHapticPulse; runASM(); }
+	void fSteamAPI_ISteamFriends_ActivateGameOverlay() { PA = steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlay; runASM(); }
+	void fSteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog() { PA = steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog; runASM(); }
+	void fSteamAPI_ISteamFriends_ActivateGameOverlayToStore() { PA = steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayToStore; runASM(); }
+	void fSteamAPI_ISteamFriends_ActivateGameOverlayToUser() { PA = steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayToUser; runASM(); }
+	void fSteamAPI_ISteamFriends_ActivateGameOverlayToWebPage() { PA = steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayToWebPage; runASM(); }
+	void fSteamAPI_ISteamFriends_ClearRichPresence() { PA = steam_api64.oSteamAPI_ISteamFriends_ClearRichPresence; runASM(); }
+	void fSteamAPI_ISteamFriends_CloseClanChatWindowInSteam() { PA = steam_api64.oSteamAPI_ISteamFriends_CloseClanChatWindowInSteam; runASM(); }
+	void fSteamAPI_ISteamFriends_DownloadClanActivityCounts() { PA = steam_api64.oSteamAPI_ISteamFriends_DownloadClanActivityCounts; runASM(); }
+	void fSteamAPI_ISteamFriends_EnumerateFollowingList() { PA = steam_api64.oSteamAPI_ISteamFriends_EnumerateFollowingList; runASM(); }
+	void fSteamAPI_ISteamFriends_GetChatMemberByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetChatMemberByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanActivityCounts() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanActivityCounts; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanChatMemberCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanChatMemberCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanChatMessage() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanChatMessage; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanName() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanName; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanOfficerByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanOfficerByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanOfficerCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanOfficerCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanOwner() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanOwner; runASM(); }
+	void fSteamAPI_ISteamFriends_GetClanTag() { PA = steam_api64.oSteamAPI_ISteamFriends_GetClanTag; runASM(); }
+	void fSteamAPI_ISteamFriends_GetCoplayFriend() { PA = steam_api64.oSteamAPI_ISteamFriends_GetCoplayFriend; runASM(); }
+	void fSteamAPI_ISteamFriends_GetCoplayFriendCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetCoplayFriendCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFollowerCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFollowerCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendCoplayGame() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendCoplayGame; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendCoplayTime() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendCoplayTime; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendCountFromSource() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendCountFromSource; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendFromSourceByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendFromSourceByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendGamePlayed() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendGamePlayed; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendMessage() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendMessage; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendPersonaName() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendPersonaName; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendPersonaNameHistory() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendPersonaNameHistory; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendPersonaState() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendPersonaState; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendRelationship() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendRelationship; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendRichPresence() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendRichPresence; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendSteamLevel() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendSteamLevel; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendsGroupCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendsGroupIDByIndex() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupIDByIndex; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendsGroupMembersCount() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupMembersCount; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendsGroupMembersList() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupMembersList; runASM(); }
+	void fSteamAPI_ISteamFriends_GetFriendsGroupName() { PA = steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupName; runASM(); }
+	void fSteamAPI_ISteamFriends_GetLargeFriendAvatar() { PA = steam_api64.oSteamAPI_ISteamFriends_GetLargeFriendAvatar; runASM(); }
+	void fSteamAPI_ISteamFriends_GetMediumFriendAvatar() { PA = steam_api64.oSteamAPI_ISteamFriends_GetMediumFriendAvatar; runASM(); }
+	void fSteamAPI_ISteamFriends_GetPersonaName() { PA = steam_api64.oSteamAPI_ISteamFriends_GetPersonaName; runASM(); }
+	void fSteamAPI_ISteamFriends_GetPersonaState() { PA = steam_api64.oSteamAPI_ISteamFriends_GetPersonaState; runASM(); }
+	void fSteamAPI_ISteamFriends_GetPlayerNickname() { PA = steam_api64.oSteamAPI_ISteamFriends_GetPlayerNickname; runASM(); }
+	void fSteamAPI_ISteamFriends_GetSmallFriendAvatar() { PA = steam_api64.oSteamAPI_ISteamFriends_GetSmallFriendAvatar; runASM(); }
+	void fSteamAPI_ISteamFriends_GetUserRestrictions() { PA = steam_api64.oSteamAPI_ISteamFriends_GetUserRestrictions; runASM(); }
+	void fSteamAPI_ISteamFriends_HasFriend() { PA = steam_api64.oSteamAPI_ISteamFriends_HasFriend; runASM(); }
+	void fSteamAPI_ISteamFriends_InviteUserToGame() { PA = steam_api64.oSteamAPI_ISteamFriends_InviteUserToGame; runASM(); }
+	void fSteamAPI_ISteamFriends_IsClanChatAdmin() { PA = steam_api64.oSteamAPI_ISteamFriends_IsClanChatAdmin; runASM(); }
+	void fSteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam() { PA = steam_api64.oSteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam; runASM(); }
+	void fSteamAPI_ISteamFriends_IsFollowing() { PA = steam_api64.oSteamAPI_ISteamFriends_IsFollowing; runASM(); }
+	void fSteamAPI_ISteamFriends_IsUserInSource() { PA = steam_api64.oSteamAPI_ISteamFriends_IsUserInSource; runASM(); }
+	void fSteamAPI_ISteamFriends_JoinClanChatRoom() { PA = steam_api64.oSteamAPI_ISteamFriends_JoinClanChatRoom; runASM(); }
+	void fSteamAPI_ISteamFriends_LeaveClanChatRoom() { PA = steam_api64.oSteamAPI_ISteamFriends_LeaveClanChatRoom; runASM(); }
+	void fSteamAPI_ISteamFriends_OpenClanChatWindowInSteam() { PA = steam_api64.oSteamAPI_ISteamFriends_OpenClanChatWindowInSteam; runASM(); }
+	void fSteamAPI_ISteamFriends_ReplyToFriendMessage() { PA = steam_api64.oSteamAPI_ISteamFriends_ReplyToFriendMessage; runASM(); }
+	void fSteamAPI_ISteamFriends_RequestClanOfficerList() { PA = steam_api64.oSteamAPI_ISteamFriends_RequestClanOfficerList; runASM(); }
+	void fSteamAPI_ISteamFriends_RequestFriendRichPresence() { PA = steam_api64.oSteamAPI_ISteamFriends_RequestFriendRichPresence; runASM(); }
+	void fSteamAPI_ISteamFriends_RequestUserInformation() { PA = steam_api64.oSteamAPI_ISteamFriends_RequestUserInformation; runASM(); }
+	void fSteamAPI_ISteamFriends_SendClanChatMessage() { PA = steam_api64.oSteamAPI_ISteamFriends_SendClanChatMessage; runASM(); }
+	void fSteamAPI_ISteamFriends_SetInGameVoiceSpeaking() { PA = steam_api64.oSteamAPI_ISteamFriends_SetInGameVoiceSpeaking; runASM(); }
+	void fSteamAPI_ISteamFriends_SetListenForFriendsMessages() { PA = steam_api64.oSteamAPI_ISteamFriends_SetListenForFriendsMessages; runASM(); }
+	void fSteamAPI_ISteamFriends_SetPersonaName() { PA = steam_api64.oSteamAPI_ISteamFriends_SetPersonaName; runASM(); }
+	void fSteamAPI_ISteamFriends_SetPlayedWith() { PA = steam_api64.oSteamAPI_ISteamFriends_SetPlayedWith; runASM(); }
+	void fSteamAPI_ISteamFriends_SetRichPresence() { PA = steam_api64.oSteamAPI_ISteamFriends_SetRichPresence; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_ClearUserAchievement() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_ClearUserAchievement; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_GetUserAchievement() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_GetUserAchievement; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_GetUserStat() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_GetUserStat; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_GetUserStat0() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_GetUserStat0; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_RequestUserStats() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_RequestUserStats; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_SetUserAchievement() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_SetUserAchievement; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_SetUserStat() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_SetUserStat; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_SetUserStat0() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_SetUserStat0; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_StoreUserStats() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_StoreUserStats; runASM(); }
+	void fSteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat() { PA = steam_api64.oSteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat; runASM(); }
+	void fSteamAPI_ISteamGameServer_AssociateWithClan() { PA = steam_api64.oSteamAPI_ISteamGameServer_AssociateWithClan; runASM(); }
+	void fSteamAPI_ISteamGameServer_BLoggedOn() { PA = steam_api64.oSteamAPI_ISteamGameServer_BLoggedOn; runASM(); }
+	void fSteamAPI_ISteamGameServer_BSecure() { PA = steam_api64.oSteamAPI_ISteamGameServer_BSecure; runASM(); }
+	void fSteamAPI_ISteamGameServer_BUpdateUserData() { PA = steam_api64.oSteamAPI_ISteamGameServer_BUpdateUserData; runASM(); }
+	void fSteamAPI_ISteamGameServer_BeginAuthSession() { PA = steam_api64.oSteamAPI_ISteamGameServer_BeginAuthSession; runASM(); }
+	void fSteamAPI_ISteamGameServer_CancelAuthTicket() { PA = steam_api64.oSteamAPI_ISteamGameServer_CancelAuthTicket; runASM(); }
+	void fSteamAPI_ISteamGameServer_ClearAllKeyValues() { PA = steam_api64.oSteamAPI_ISteamGameServer_ClearAllKeyValues; runASM(); }
+	void fSteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility() { PA = steam_api64.oSteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility; runASM(); }
+	void fSteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection() { PA = steam_api64.oSteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection; runASM(); }
+	void fSteamAPI_ISteamGameServer_EnableHeartbeats() { PA = steam_api64.oSteamAPI_ISteamGameServer_EnableHeartbeats; runASM(); }
+	void fSteamAPI_ISteamGameServer_EndAuthSession() { PA = steam_api64.oSteamAPI_ISteamGameServer_EndAuthSession; runASM(); }
+	void fSteamAPI_ISteamGameServer_ForceHeartbeat() { PA = steam_api64.oSteamAPI_ISteamGameServer_ForceHeartbeat; runASM(); }
+	void fSteamAPI_ISteamGameServer_GetAuthSessionTicket() { PA = steam_api64.oSteamAPI_ISteamGameServer_GetAuthSessionTicket; runASM(); }
+	void fSteamAPI_ISteamGameServer_GetGameplayStats() { PA = steam_api64.oSteamAPI_ISteamGameServer_GetGameplayStats; runASM(); }
+	void fSteamAPI_ISteamGameServer_GetNextOutgoingPacket() { PA = steam_api64.oSteamAPI_ISteamGameServer_GetNextOutgoingPacket; runASM(); }
+	void fSteamAPI_ISteamGameServer_GetPublicIP() { PA = steam_api64.oSteamAPI_ISteamGameServer_GetPublicIP; runASM(); }
+	void fSteamAPI_ISteamGameServer_GetServerReputation() { PA = steam_api64.oSteamAPI_ISteamGameServer_GetServerReputation; runASM(); }
+	void fSteamAPI_ISteamGameServer_GetSteamID() { PA = steam_api64.oSteamAPI_ISteamGameServer_GetSteamID; runASM(); }
+	void fSteamAPI_ISteamGameServer_HandleIncomingPacket() { PA = steam_api64.oSteamAPI_ISteamGameServer_HandleIncomingPacket; runASM(); }
+	void fSteamAPI_ISteamGameServer_InitGameServer() { PA = steam_api64.oSteamAPI_ISteamGameServer_InitGameServer; runASM(); }
+	void fSteamAPI_ISteamGameServer_LogOff() { PA = steam_api64.oSteamAPI_ISteamGameServer_LogOff; runASM(); }
+	void fSteamAPI_ISteamGameServer_LogOn() { PA = steam_api64.oSteamAPI_ISteamGameServer_LogOn; runASM(); }
+	void fSteamAPI_ISteamGameServer_LogOnAnonymous() { PA = steam_api64.oSteamAPI_ISteamGameServer_LogOnAnonymous; runASM(); }
+	void fSteamAPI_ISteamGameServer_RequestUserGroupStatus() { PA = steam_api64.oSteamAPI_ISteamGameServer_RequestUserGroupStatus; runASM(); }
+	void fSteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate() { PA = steam_api64.oSteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate; runASM(); }
+	void fSteamAPI_ISteamGameServer_SendUserDisconnect() { PA = steam_api64.oSteamAPI_ISteamGameServer_SendUserDisconnect; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetBotPlayerCount() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetBotPlayerCount; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetDedicatedServer() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetDedicatedServer; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetGameData() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetGameData; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetGameDescription() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetGameDescription; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetGameTags() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetGameTags; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetHeartbeatInterval() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetHeartbeatInterval; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetKeyValue() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetKeyValue; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetMapName() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetMapName; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetMaxPlayerCount() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetMaxPlayerCount; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetModDir() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetModDir; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetPasswordProtected() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetPasswordProtected; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetProduct() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetProduct; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetRegion() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetRegion; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetServerName() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetServerName; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetSpectatorPort() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetSpectatorPort; runASM(); }
+	void fSteamAPI_ISteamGameServer_SetSpectatorServerName() { PA = steam_api64.oSteamAPI_ISteamGameServer_SetSpectatorServerName; runASM(); }
+	void fSteamAPI_ISteamGameServer_UserHasLicenseForApp() { PA = steam_api64.oSteamAPI_ISteamGameServer_UserHasLicenseForApp; runASM(); }
+	void fSteamAPI_ISteamGameServer_WasRestartRequested() { PA = steam_api64.oSteamAPI_ISteamGameServer_WasRestartRequested; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_AddHeader() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_AddHeader; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_AllowStartRequest() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_AllowStartRequest; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_CopyToClipboard() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_CopyToClipboard; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_CreateBrowser() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_CreateBrowser; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_ExecuteJavascript() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_ExecuteJavascript; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_FileLoadDialogResponse() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_FileLoadDialogResponse; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_Find() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_Find; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_GetLinkAtPosition() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_GetLinkAtPosition; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_GoBack() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_GoBack; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_GoForward() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_GoForward; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_Init() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_Init; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_JSDialogResponse() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_JSDialogResponse; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_KeyChar() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_KeyChar; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_KeyDown() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_KeyDown; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_KeyUp() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_KeyUp; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_LoadURL() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_LoadURL; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_MouseDoubleClick() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_MouseDoubleClick; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_MouseDown() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_MouseDown; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_MouseMove() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_MouseMove; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_MouseUp() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_MouseUp; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_MouseWheel() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_MouseWheel; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_PasteFromClipboard() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_PasteFromClipboard; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_Reload() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_Reload; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_RemoveBrowser() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_RemoveBrowser; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetBackgroundMode() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetBackgroundMode; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetCookie() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetCookie; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetHorizontalScroll() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetHorizontalScroll; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetKeyFocus() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetKeyFocus; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetPageScaleFactor() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetPageScaleFactor; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetSize() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetSize; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_SetVerticalScroll() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_SetVerticalScroll; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_Shutdown() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_Shutdown; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_StopFind() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_StopFind; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_StopLoad() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_StopLoad; runASM(); }
+	void fSteamAPI_ISteamHTMLSurface_ViewSource() { PA = steam_api64.oSteamAPI_ISteamHTMLSurface_ViewSource; runASM(); }
+	void fSteamAPI_ISteamHTTP_CreateCookieContainer() { PA = steam_api64.oSteamAPI_ISteamHTTP_CreateCookieContainer; runASM(); }
+	void fSteamAPI_ISteamHTTP_CreateHTTPRequest() { PA = steam_api64.oSteamAPI_ISteamHTTP_CreateHTTPRequest; runASM(); }
+	void fSteamAPI_ISteamHTTP_DeferHTTPRequest() { PA = steam_api64.oSteamAPI_ISteamHTTP_DeferHTTPRequest; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPResponseBodyData() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseBodyData; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPResponseBodySize() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseBodySize; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue; runASM(); }
+	void fSteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData() { PA = steam_api64.oSteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData; runASM(); }
+	void fSteamAPI_ISteamHTTP_PrioritizeHTTPRequest() { PA = steam_api64.oSteamAPI_ISteamHTTP_PrioritizeHTTPRequest; runASM(); }
+	void fSteamAPI_ISteamHTTP_ReleaseCookieContainer() { PA = steam_api64.oSteamAPI_ISteamHTTP_ReleaseCookieContainer; runASM(); }
+	void fSteamAPI_ISteamHTTP_ReleaseHTTPRequest() { PA = steam_api64.oSteamAPI_ISteamHTTP_ReleaseHTTPRequest; runASM(); }
+	void fSteamAPI_ISteamHTTP_SendHTTPRequest() { PA = steam_api64.oSteamAPI_ISteamHTTP_SendHTTPRequest; runASM(); }
+	void fSteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse() { PA = steam_api64.oSteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetCookie() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetCookie; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestContextValue() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestContextValue; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate; runASM(); }
+	void fSteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo() { PA = steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo; runASM(); }
+	void fSteamAPI_ISteamInventory_AddPromoItem() { PA = steam_api64.oSteamAPI_ISteamInventory_AddPromoItem; runASM(); }
+	void fSteamAPI_ISteamInventory_AddPromoItems() { PA = steam_api64.oSteamAPI_ISteamInventory_AddPromoItems; runASM(); }
+	void fSteamAPI_ISteamInventory_CheckResultSteamID() { PA = steam_api64.oSteamAPI_ISteamInventory_CheckResultSteamID; runASM(); }
+	void fSteamAPI_ISteamInventory_ConsumeItem() { PA = steam_api64.oSteamAPI_ISteamInventory_ConsumeItem; runASM(); }
+	void fSteamAPI_ISteamInventory_DeserializeResult() { PA = steam_api64.oSteamAPI_ISteamInventory_DeserializeResult; runASM(); }
+	void fSteamAPI_ISteamInventory_DestroyResult() { PA = steam_api64.oSteamAPI_ISteamInventory_DestroyResult; runASM(); }
+	void fSteamAPI_ISteamInventory_ExchangeItems() { PA = steam_api64.oSteamAPI_ISteamInventory_ExchangeItems; runASM(); }
+	void fSteamAPI_ISteamInventory_GenerateItems() { PA = steam_api64.oSteamAPI_ISteamInventory_GenerateItems; runASM(); }
+	void fSteamAPI_ISteamInventory_GetAllItems() { PA = steam_api64.oSteamAPI_ISteamInventory_GetAllItems; runASM(); }
+	void fSteamAPI_ISteamInventory_GetItemDefinitionIDs() { PA = steam_api64.oSteamAPI_ISteamInventory_GetItemDefinitionIDs; runASM(); }
+	void fSteamAPI_ISteamInventory_GetItemDefinitionProperty() { PA = steam_api64.oSteamAPI_ISteamInventory_GetItemDefinitionProperty; runASM(); }
+	void fSteamAPI_ISteamInventory_GetItemsByID() { PA = steam_api64.oSteamAPI_ISteamInventory_GetItemsByID; runASM(); }
+	void fSteamAPI_ISteamInventory_GetResultItems() { PA = steam_api64.oSteamAPI_ISteamInventory_GetResultItems; runASM(); }
+	void fSteamAPI_ISteamInventory_GetResultStatus() { PA = steam_api64.oSteamAPI_ISteamInventory_GetResultStatus; runASM(); }
+	void fSteamAPI_ISteamInventory_GetResultTimestamp() { PA = steam_api64.oSteamAPI_ISteamInventory_GetResultTimestamp; runASM(); }
+	void fSteamAPI_ISteamInventory_GrantPromoItems() { PA = steam_api64.oSteamAPI_ISteamInventory_GrantPromoItems; runASM(); }
+	void fSteamAPI_ISteamInventory_LoadItemDefinitions() { PA = steam_api64.oSteamAPI_ISteamInventory_LoadItemDefinitions; runASM(); }
+	void fSteamAPI_ISteamInventory_SendItemDropHeartbeat() { PA = steam_api64.oSteamAPI_ISteamInventory_SendItemDropHeartbeat; runASM(); }
+	void fSteamAPI_ISteamInventory_SerializeResult() { PA = steam_api64.oSteamAPI_ISteamInventory_SerializeResult; runASM(); }
+	void fSteamAPI_ISteamInventory_TradeItems() { PA = steam_api64.oSteamAPI_ISteamInventory_TradeItems; runASM(); }
+	void fSteamAPI_ISteamInventory_TransferItemQuantity() { PA = steam_api64.oSteamAPI_ISteamInventory_TransferItemQuantity; runASM(); }
+	void fSteamAPI_ISteamInventory_TriggerItemDrop() { PA = steam_api64.oSteamAPI_ISteamInventory_TriggerItemDrop; runASM(); }
+	void fSteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond() { PA = steam_api64.oSteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond; runASM(); }
+	void fSteamAPI_ISteamMatchmakingPingResponse_ServerResponded() { PA = steam_api64.oSteamAPI_ISteamMatchmakingPingResponse_ServerResponded; runASM(); }
+	void fSteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond() { PA = steam_api64.oSteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond; runASM(); }
+	void fSteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete() { PA = steam_api64.oSteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete; runASM(); }
+	void fSteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond() { PA = steam_api64.oSteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond; runASM(); }
+	void fSteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete() { PA = steam_api64.oSteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete; runASM(); }
+	void fSteamAPI_ISteamMatchmakingRulesResponse_RulesResponded() { PA = steam_api64.oSteamAPI_ISteamMatchmakingRulesResponse_RulesResponded; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServerListResponse_ServerResponded() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServerListResponse_ServerResponded; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_CancelQuery() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_CancelQuery; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_CancelServerQuery() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_CancelServerQuery; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_GetServerCount() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_GetServerCount; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_GetServerDetails() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_GetServerDetails; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_IsRefreshing() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_IsRefreshing; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_PingServer() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_PingServer; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_PlayerDetails() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_PlayerDetails; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RefreshQuery() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RefreshQuery; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RefreshServer() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RefreshServer; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_ReleaseRequest() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_ReleaseRequest; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RequestFriendsServerList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestFriendsServerList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RequestHistoryServerList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestHistoryServerList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RequestInternetServerList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestInternetServerList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RequestLANServerList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestLANServerList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList; runASM(); }
+	void fSteamAPI_ISteamMatchmakingServers_ServerRules() { PA = steam_api64.oSteamAPI_ISteamMatchmakingServers_ServerRules; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddFavoriteGame() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddFavoriteGame; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_CreateLobby() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_CreateLobby; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_DeleteLobbyData() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_DeleteLobbyData; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetFavoriteGame() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetFavoriteGame; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetFavoriteGameCount() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetFavoriteGameCount; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyByIndex() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyByIndex; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyChatEntry() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyChatEntry; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyData() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyData; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyDataByIndex() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyDataByIndex; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyDataCount() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyDataCount; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyGameServer() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyGameServer; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyMemberData() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyMemberData; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyMemberLimit() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyMemberLimit; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetLobbyOwner() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyOwner; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_GetNumLobbyMembers() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_GetNumLobbyMembers; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_InviteUserToLobby() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_InviteUserToLobby; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_JoinLobby() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_JoinLobby; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_LeaveLobby() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_LeaveLobby; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_RemoveFavoriteGame() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_RemoveFavoriteGame; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_RequestLobbyData() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_RequestLobbyData; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_RequestLobbyList() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_RequestLobbyList; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SendLobbyChatMsg() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SendLobbyChatMsg; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLinkedLobby() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLinkedLobby; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyData() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyData; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyGameServer() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyGameServer; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyJoinable() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyJoinable; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyMemberData() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyMemberData; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyMemberLimit() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyMemberLimit; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyOwner() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyOwner; runASM(); }
+	void fSteamAPI_ISteamMatchmaking_SetLobbyType() { PA = steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyType; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_BActivationSuccess() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_BActivationSuccess; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_CurrentEntryDidChange() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_CurrentEntryDidChange; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_CurrentEntryWillChange() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_CurrentEntryWillChange; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_EnableLooped() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_EnableLooped; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_EnablePlayNext() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_EnablePlayNext; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_EnablePlayPrevious() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_EnablePlayPrevious; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_EnablePlaylists() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_EnablePlaylists; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_EnableQueue() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_EnableQueue; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_EnableShuffled() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_EnableShuffled; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_PlaylistDidChange() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_PlaylistDidChange; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_PlaylistWillChange() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_PlaylistWillChange; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_QueueDidChange() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_QueueDidChange; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_QueueWillChange() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_QueueWillChange; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_ResetPlaylistEntries() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_ResetPlaylistEntries; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_ResetQueueEntries() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_ResetQueueEntries; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_SetCurrentQueueEntry() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_SetCurrentQueueEntry; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_SetDisplayName() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_SetDisplayName; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_SetPNGIcon_64x64() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_SetPNGIcon_64x64; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_SetPlaylistEntry() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_SetPlaylistEntry; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_SetQueueEntry() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_SetQueueEntry; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdateCurrentEntryText() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryText; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdateLooped() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdateLooped; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdatePlaybackStatus() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdatePlaybackStatus; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdateShuffled() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdateShuffled; runASM(); }
+	void fSteamAPI_ISteamMusicRemote_UpdateVolume() { PA = steam_api64.oSteamAPI_ISteamMusicRemote_UpdateVolume; runASM(); }
+	void fSteamAPI_ISteamMusic_BIsEnabled() { PA = steam_api64.oSteamAPI_ISteamMusic_BIsEnabled; runASM(); }
+	void fSteamAPI_ISteamMusic_BIsPlaying() { PA = steam_api64.oSteamAPI_ISteamMusic_BIsPlaying; runASM(); }
+	void fSteamAPI_ISteamMusic_GetPlaybackStatus() { PA = steam_api64.oSteamAPI_ISteamMusic_GetPlaybackStatus; runASM(); }
+	void fSteamAPI_ISteamMusic_GetVolume() { PA = steam_api64.oSteamAPI_ISteamMusic_GetVolume; runASM(); }
+	void fSteamAPI_ISteamMusic_Pause() { PA = steam_api64.oSteamAPI_ISteamMusic_Pause; runASM(); }
+	void fSteamAPI_ISteamMusic_Play() { PA = steam_api64.oSteamAPI_ISteamMusic_Play; runASM(); }
+	void fSteamAPI_ISteamMusic_PlayNext() { PA = steam_api64.oSteamAPI_ISteamMusic_PlayNext; runASM(); }
+	void fSteamAPI_ISteamMusic_PlayPrevious() { PA = steam_api64.oSteamAPI_ISteamMusic_PlayPrevious; runASM(); }
+	void fSteamAPI_ISteamMusic_SetVolume() { PA = steam_api64.oSteamAPI_ISteamMusic_SetVolume; runASM(); }
+	void fSteamAPI_ISteamNetworking_AcceptP2PSessionWithUser() { PA = steam_api64.oSteamAPI_ISteamNetworking_AcceptP2PSessionWithUser; runASM(); }
+	void fSteamAPI_ISteamNetworking_AllowP2PPacketRelay() { PA = steam_api64.oSteamAPI_ISteamNetworking_AllowP2PPacketRelay; runASM(); }
+	void fSteamAPI_ISteamNetworking_CloseP2PChannelWithUser() { PA = steam_api64.oSteamAPI_ISteamNetworking_CloseP2PChannelWithUser; runASM(); }
+	void fSteamAPI_ISteamNetworking_CloseP2PSessionWithUser() { PA = steam_api64.oSteamAPI_ISteamNetworking_CloseP2PSessionWithUser; runASM(); }
+	void fSteamAPI_ISteamNetworking_CreateConnectionSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_CreateConnectionSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_CreateListenSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_CreateListenSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_CreateP2PConnectionSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_CreateP2PConnectionSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_DestroyListenSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_DestroyListenSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_DestroySocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_DestroySocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_GetListenSocketInfo() { PA = steam_api64.oSteamAPI_ISteamNetworking_GetListenSocketInfo; runASM(); }
+	void fSteamAPI_ISteamNetworking_GetMaxPacketSize() { PA = steam_api64.oSteamAPI_ISteamNetworking_GetMaxPacketSize; runASM(); }
+	void fSteamAPI_ISteamNetworking_GetP2PSessionState() { PA = steam_api64.oSteamAPI_ISteamNetworking_GetP2PSessionState; runASM(); }
+	void fSteamAPI_ISteamNetworking_GetSocketConnectionType() { PA = steam_api64.oSteamAPI_ISteamNetworking_GetSocketConnectionType; runASM(); }
+	void fSteamAPI_ISteamNetworking_GetSocketInfo() { PA = steam_api64.oSteamAPI_ISteamNetworking_GetSocketInfo; runASM(); }
+	void fSteamAPI_ISteamNetworking_IsDataAvailable() { PA = steam_api64.oSteamAPI_ISteamNetworking_IsDataAvailable; runASM(); }
+	void fSteamAPI_ISteamNetworking_IsDataAvailableOnSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_IsDataAvailableOnSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_IsP2PPacketAvailable() { PA = steam_api64.oSteamAPI_ISteamNetworking_IsP2PPacketAvailable; runASM(); }
+	void fSteamAPI_ISteamNetworking_ReadP2PPacket() { PA = steam_api64.oSteamAPI_ISteamNetworking_ReadP2PPacket; runASM(); }
+	void fSteamAPI_ISteamNetworking_RetrieveData() { PA = steam_api64.oSteamAPI_ISteamNetworking_RetrieveData; runASM(); }
+	void fSteamAPI_ISteamNetworking_RetrieveDataFromSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_RetrieveDataFromSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_SendDataOnSocket() { PA = steam_api64.oSteamAPI_ISteamNetworking_SendDataOnSocket; runASM(); }
+	void fSteamAPI_ISteamNetworking_SendP2PPacket() { PA = steam_api64.oSteamAPI_ISteamNetworking_SendP2PPacket; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_DeletePublishedFile() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_DeletePublishedFile; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileDelete() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileDelete; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileExists() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileExists; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileForget() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileForget; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FilePersisted() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FilePersisted; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileRead() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileRead; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileShare() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileShare; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileWrite() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileWrite; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileWriteStreamCancel() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamCancel; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileWriteStreamClose() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamClose; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileWriteStreamOpen() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamOpen; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetCachedUGCCount() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetCachedUGCCount; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetCachedUGCHandle() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetCachedUGCHandle; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetFileCount() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileCount; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetFileNameAndSize() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileNameAndSize; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetFileSize() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileSize; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetFileTimestamp() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileTimestamp; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetPublishedFileDetails() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetPublishedFileDetails; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetQuota() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetQuota; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetSyncPlatforms() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetSyncPlatforms; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetUGCDetails() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetUGCDetails; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_PublishVideo() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_PublishVideo; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_PublishWorkshopFile() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_PublishWorkshopFile; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_SetSyncPlatforms() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_SetSyncPlatforms; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_SubscribePublishedFile() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_SubscribePublishedFile; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UGCDownload() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UGCDownload; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UGCDownloadToLocation() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UGCDownloadToLocation; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UGCRead() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UGCRead; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility; runASM(); }
+	void fSteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote() { PA = steam_api64.oSteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote; runASM(); }
+	void fSteamAPI_ISteamScreenshots_AddScreenshotToLibrary() { PA = steam_api64.oSteamAPI_ISteamScreenshots_AddScreenshotToLibrary; runASM(); }
+	void fSteamAPI_ISteamScreenshots_HookScreenshots() { PA = steam_api64.oSteamAPI_ISteamScreenshots_HookScreenshots; runASM(); }
+	void fSteamAPI_ISteamScreenshots_SetLocation() { PA = steam_api64.oSteamAPI_ISteamScreenshots_SetLocation; runASM(); }
+	void fSteamAPI_ISteamScreenshots_TagPublishedFile() { PA = steam_api64.oSteamAPI_ISteamScreenshots_TagPublishedFile; runASM(); }
+	void fSteamAPI_ISteamScreenshots_TagUser() { PA = steam_api64.oSteamAPI_ISteamScreenshots_TagUser; runASM(); }
+	void fSteamAPI_ISteamScreenshots_TriggerScreenshot() { PA = steam_api64.oSteamAPI_ISteamScreenshots_TriggerScreenshot; runASM(); }
+	void fSteamAPI_ISteamScreenshots_WriteScreenshot() { PA = steam_api64.oSteamAPI_ISteamScreenshots_WriteScreenshot; runASM(); }
+	void fSteamAPI_ISteamUGC_AddExcludedTag() { PA = steam_api64.oSteamAPI_ISteamUGC_AddExcludedTag; runASM(); }
+	void fSteamAPI_ISteamUGC_AddItemKeyValueTag() { PA = steam_api64.oSteamAPI_ISteamUGC_AddItemKeyValueTag; runASM(); }
+	void fSteamAPI_ISteamUGC_AddItemToFavorites() { PA = steam_api64.oSteamAPI_ISteamUGC_AddItemToFavorites; runASM(); }
+	void fSteamAPI_ISteamUGC_AddRequiredKeyValueTag() { PA = steam_api64.oSteamAPI_ISteamUGC_AddRequiredKeyValueTag; runASM(); }
+	void fSteamAPI_ISteamUGC_AddRequiredTag() { PA = steam_api64.oSteamAPI_ISteamUGC_AddRequiredTag; runASM(); }
+	void fSteamAPI_ISteamUGC_CreateItem() { PA = steam_api64.oSteamAPI_ISteamUGC_CreateItem; runASM(); }
+	void fSteamAPI_ISteamUGC_CreateQueryAllUGCRequest() { PA = steam_api64.oSteamAPI_ISteamUGC_CreateQueryAllUGCRequest; runASM(); }
+	void fSteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest() { PA = steam_api64.oSteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest; runASM(); }
+	void fSteamAPI_ISteamUGC_CreateQueryUserUGCRequest() { PA = steam_api64.oSteamAPI_ISteamUGC_CreateQueryUserUGCRequest; runASM(); }
+	void fSteamAPI_ISteamUGC_DownloadItem() { PA = steam_api64.oSteamAPI_ISteamUGC_DownloadItem; runASM(); }
+	void fSteamAPI_ISteamUGC_GetItemDownloadInfo() { PA = steam_api64.oSteamAPI_ISteamUGC_GetItemDownloadInfo; runASM(); }
+	void fSteamAPI_ISteamUGC_GetItemInstallInfo() { PA = steam_api64.oSteamAPI_ISteamUGC_GetItemInstallInfo; runASM(); }
+	void fSteamAPI_ISteamUGC_GetItemState() { PA = steam_api64.oSteamAPI_ISteamUGC_GetItemState; runASM(); }
+	void fSteamAPI_ISteamUGC_GetItemUpdateProgress() { PA = steam_api64.oSteamAPI_ISteamUGC_GetItemUpdateProgress; runASM(); }
+	void fSteamAPI_ISteamUGC_GetNumSubscribedItems() { PA = steam_api64.oSteamAPI_ISteamUGC_GetNumSubscribedItems; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCChildren() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCChildren; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCKeyValueTag() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCKeyValueTag; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCMetadata() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCMetadata; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCPreviewURL() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCPreviewURL; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCResult() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCResult; runASM(); }
+	void fSteamAPI_ISteamUGC_GetQueryUGCStatistic() { PA = steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCStatistic; runASM(); }
+	void fSteamAPI_ISteamUGC_GetSubscribedItems() { PA = steam_api64.oSteamAPI_ISteamUGC_GetSubscribedItems; runASM(); }
+	void fSteamAPI_ISteamUGC_GetUserItemVote() { PA = steam_api64.oSteamAPI_ISteamUGC_GetUserItemVote; runASM(); }
+	void fSteamAPI_ISteamUGC_ReleaseQueryUGCRequest() { PA = steam_api64.oSteamAPI_ISteamUGC_ReleaseQueryUGCRequest; runASM(); }
+	void fSteamAPI_ISteamUGC_RemoveItemFromFavorites() { PA = steam_api64.oSteamAPI_ISteamUGC_RemoveItemFromFavorites; runASM(); }
+	void fSteamAPI_ISteamUGC_RemoveItemKeyValueTags() { PA = steam_api64.oSteamAPI_ISteamUGC_RemoveItemKeyValueTags; runASM(); }
+	void fSteamAPI_ISteamUGC_RequestUGCDetails() { PA = steam_api64.oSteamAPI_ISteamUGC_RequestUGCDetails; runASM(); }
+	void fSteamAPI_ISteamUGC_SendQueryUGCRequest() { PA = steam_api64.oSteamAPI_ISteamUGC_SendQueryUGCRequest; runASM(); }
+	void fSteamAPI_ISteamUGC_SetAllowCachedResponse() { PA = steam_api64.oSteamAPI_ISteamUGC_SetAllowCachedResponse; runASM(); }
+	void fSteamAPI_ISteamUGC_SetCloudFileNameFilter() { PA = steam_api64.oSteamAPI_ISteamUGC_SetCloudFileNameFilter; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemContent() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemContent; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemDescription() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemDescription; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemMetadata() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemMetadata; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemPreview() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemPreview; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemTags() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemTags; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemTitle() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemTitle; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemUpdateLanguage() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemUpdateLanguage; runASM(); }
+	void fSteamAPI_ISteamUGC_SetItemVisibility() { PA = steam_api64.oSteamAPI_ISteamUGC_SetItemVisibility; runASM(); }
+	void fSteamAPI_ISteamUGC_SetLanguage() { PA = steam_api64.oSteamAPI_ISteamUGC_SetLanguage; runASM(); }
+	void fSteamAPI_ISteamUGC_SetMatchAnyTag() { PA = steam_api64.oSteamAPI_ISteamUGC_SetMatchAnyTag; runASM(); }
+	void fSteamAPI_ISteamUGC_SetRankedByTrendDays() { PA = steam_api64.oSteamAPI_ISteamUGC_SetRankedByTrendDays; runASM(); }
+	void fSteamAPI_ISteamUGC_SetReturnAdditionalPreviews() { PA = steam_api64.oSteamAPI_ISteamUGC_SetReturnAdditionalPreviews; runASM(); }
+	void fSteamAPI_ISteamUGC_SetReturnChildren() { PA = steam_api64.oSteamAPI_ISteamUGC_SetReturnChildren; runASM(); }
+	void fSteamAPI_ISteamUGC_SetReturnKeyValueTags() { PA = steam_api64.oSteamAPI_ISteamUGC_SetReturnKeyValueTags; runASM(); }
+	void fSteamAPI_ISteamUGC_SetReturnLongDescription() { PA = steam_api64.oSteamAPI_ISteamUGC_SetReturnLongDescription; runASM(); }
+	void fSteamAPI_ISteamUGC_SetReturnMetadata() { PA = steam_api64.oSteamAPI_ISteamUGC_SetReturnMetadata; runASM(); }
+	void fSteamAPI_ISteamUGC_SetReturnTotalOnly() { PA = steam_api64.oSteamAPI_ISteamUGC_SetReturnTotalOnly; runASM(); }
+	void fSteamAPI_ISteamUGC_SetSearchText() { PA = steam_api64.oSteamAPI_ISteamUGC_SetSearchText; runASM(); }
+	void fSteamAPI_ISteamUGC_SetUserItemVote() { PA = steam_api64.oSteamAPI_ISteamUGC_SetUserItemVote; runASM(); }
+	void fSteamAPI_ISteamUGC_StartItemUpdate() { PA = steam_api64.oSteamAPI_ISteamUGC_StartItemUpdate; runASM(); }
+	void fSteamAPI_ISteamUGC_SubmitItemUpdate() { PA = steam_api64.oSteamAPI_ISteamUGC_SubmitItemUpdate; runASM(); }
+	void fSteamAPI_ISteamUGC_SubscribeItem() { PA = steam_api64.oSteamAPI_ISteamUGC_SubscribeItem; runASM(); }
+	void fSteamAPI_ISteamUGC_UnsubscribeItem() { PA = steam_api64.oSteamAPI_ISteamUGC_UnsubscribeItem; runASM(); }
+	void fSteamAPI_ISteamUnifiedMessages_GetMethodResponseData() { PA = steam_api64.oSteamAPI_ISteamUnifiedMessages_GetMethodResponseData; runASM(); }
+	void fSteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo() { PA = steam_api64.oSteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo; runASM(); }
+	void fSteamAPI_ISteamUnifiedMessages_ReleaseMethod() { PA = steam_api64.oSteamAPI_ISteamUnifiedMessages_ReleaseMethod; runASM(); }
+	void fSteamAPI_ISteamUnifiedMessages_SendMethod() { PA = steam_api64.oSteamAPI_ISteamUnifiedMessages_SendMethod; runASM(); }
+	void fSteamAPI_ISteamUnifiedMessages_SendNotification() { PA = steam_api64.oSteamAPI_ISteamUnifiedMessages_SendNotification; runASM(); }
+	void fSteamAPI_ISteamUserStats_AttachLeaderboardUGC() { PA = steam_api64.oSteamAPI_ISteamUserStats_AttachLeaderboardUGC; runASM(); }
+	void fSteamAPI_ISteamUserStats_ClearAchievement() { PA = steam_api64.oSteamAPI_ISteamUserStats_ClearAchievement; runASM(); }
+	void fSteamAPI_ISteamUserStats_DownloadLeaderboardEntries() { PA = steam_api64.oSteamAPI_ISteamUserStats_DownloadLeaderboardEntries; runASM(); }
+	void fSteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers() { PA = steam_api64.oSteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers; runASM(); }
+	void fSteamAPI_ISteamUserStats_FindLeaderboard() { PA = steam_api64.oSteamAPI_ISteamUserStats_FindLeaderboard; runASM(); }
+	void fSteamAPI_ISteamUserStats_FindOrCreateLeaderboard() { PA = steam_api64.oSteamAPI_ISteamUserStats_FindOrCreateLeaderboard; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetAchievement() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetAchievement; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetAchievementAchievedPercent() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetAchievementAchievedPercent; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetAchievementAndUnlockTime() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetAchievementAndUnlockTime; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetAchievementDisplayAttribute() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetAchievementDisplayAttribute; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetAchievementIcon() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetAchievementIcon; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetAchievementName() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetAchievementName; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetGlobalStat() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStat; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetGlobalStat0() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStat0; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetGlobalStatHistory() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStatHistory; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetGlobalStatHistory0() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStatHistory0; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetLeaderboardDisplayType() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardDisplayType; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetLeaderboardEntryCount() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardEntryCount; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetLeaderboardName() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardName; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetLeaderboardSortMethod() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardSortMethod; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetNumAchievements() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetNumAchievements; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetStat() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetStat; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetStat0() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetStat0; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetUserAchievement() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetUserAchievement; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetUserStat() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetUserStat; runASM(); }
+	void fSteamAPI_ISteamUserStats_GetUserStat0() { PA = steam_api64.oSteamAPI_ISteamUserStats_GetUserStat0; runASM(); }
+	void fSteamAPI_ISteamUserStats_IndicateAchievementProgress() { PA = steam_api64.oSteamAPI_ISteamUserStats_IndicateAchievementProgress; runASM(); }
+	void fSteamAPI_ISteamUserStats_RequestCurrentStats() { PA = steam_api64.oSteamAPI_ISteamUserStats_RequestCurrentStats; runASM(); }
+	void fSteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages() { PA = steam_api64.oSteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages; runASM(); }
+	void fSteamAPI_ISteamUserStats_RequestGlobalStats() { PA = steam_api64.oSteamAPI_ISteamUserStats_RequestGlobalStats; runASM(); }
+	void fSteamAPI_ISteamUserStats_RequestUserStats() { PA = steam_api64.oSteamAPI_ISteamUserStats_RequestUserStats; runASM(); }
+	void fSteamAPI_ISteamUserStats_ResetAllStats() { PA = steam_api64.oSteamAPI_ISteamUserStats_ResetAllStats; runASM(); }
+	void fSteamAPI_ISteamUserStats_SetAchievement() { PA = steam_api64.oSteamAPI_ISteamUserStats_SetAchievement; runASM(); }
+	void fSteamAPI_ISteamUserStats_SetStat() { PA = steam_api64.oSteamAPI_ISteamUserStats_SetStat; runASM(); }
+	void fSteamAPI_ISteamUserStats_SetStat0() { PA = steam_api64.oSteamAPI_ISteamUserStats_SetStat0; runASM(); }
+	void fSteamAPI_ISteamUserStats_StoreStats() { PA = steam_api64.oSteamAPI_ISteamUserStats_StoreStats; runASM(); }
+	void fSteamAPI_ISteamUserStats_UpdateAvgRateStat() { PA = steam_api64.oSteamAPI_ISteamUserStats_UpdateAvgRateStat; runASM(); }
+	void fSteamAPI_ISteamUserStats_UploadLeaderboardScore() { PA = steam_api64.oSteamAPI_ISteamUserStats_UploadLeaderboardScore; runASM(); }
+	void fSteamAPI_ISteamUser_AdvertiseGame() { PA = steam_api64.oSteamAPI_ISteamUser_AdvertiseGame; runASM(); }
+	void fSteamAPI_ISteamUser_BIsBehindNAT() { PA = steam_api64.oSteamAPI_ISteamUser_BIsBehindNAT; runASM(); }
+	void fSteamAPI_ISteamUser_BLoggedOn() { PA = steam_api64.oSteamAPI_ISteamUser_BLoggedOn; runASM(); }
+	void fSteamAPI_ISteamUser_BeginAuthSession() { PA = steam_api64.oSteamAPI_ISteamUser_BeginAuthSession; runASM(); }
+	void fSteamAPI_ISteamUser_CancelAuthTicket() { PA = steam_api64.oSteamAPI_ISteamUser_CancelAuthTicket; runASM(); }
+	void fSteamAPI_ISteamUser_DecompressVoice() { PA = steam_api64.oSteamAPI_ISteamUser_DecompressVoice; runASM(); }
+	void fSteamAPI_ISteamUser_EndAuthSession() { PA = steam_api64.oSteamAPI_ISteamUser_EndAuthSession; runASM(); }
+	void fSteamAPI_ISteamUser_GetAuthSessionTicket() { PA = steam_api64.oSteamAPI_ISteamUser_GetAuthSessionTicket; runASM(); }
+	void fSteamAPI_ISteamUser_GetAvailableVoice() { PA = steam_api64.oSteamAPI_ISteamUser_GetAvailableVoice; runASM(); }
+	void fSteamAPI_ISteamUser_GetEncryptedAppTicket() { PA = steam_api64.oSteamAPI_ISteamUser_GetEncryptedAppTicket; runASM(); }
+	void fSteamAPI_ISteamUser_GetGameBadgeLevel() { PA = steam_api64.oSteamAPI_ISteamUser_GetGameBadgeLevel; runASM(); }
+	void fSteamAPI_ISteamUser_GetHSteamUser() { PA = steam_api64.oSteamAPI_ISteamUser_GetHSteamUser; runASM(); }
+	void fSteamAPI_ISteamUser_GetPlayerSteamLevel() { PA = steam_api64.oSteamAPI_ISteamUser_GetPlayerSteamLevel; runASM(); }
+	void fSteamAPI_ISteamUser_GetSteamID() { PA = steam_api64.oSteamAPI_ISteamUser_GetSteamID; runASM(); }
+	void fSteamAPI_ISteamUser_GetUserDataFolder() { PA = steam_api64.oSteamAPI_ISteamUser_GetUserDataFolder; runASM(); }
+	void fSteamAPI_ISteamUser_GetVoice() { PA = steam_api64.oSteamAPI_ISteamUser_GetVoice; runASM(); }
+	void fSteamAPI_ISteamUser_GetVoiceOptimalSampleRate() { PA = steam_api64.oSteamAPI_ISteamUser_GetVoiceOptimalSampleRate; runASM(); }
+	void fSteamAPI_ISteamUser_InitiateGameConnection() { PA = steam_api64.oSteamAPI_ISteamUser_InitiateGameConnection; runASM(); }
+	void fSteamAPI_ISteamUser_RequestEncryptedAppTicket() { PA = steam_api64.oSteamAPI_ISteamUser_RequestEncryptedAppTicket; runASM(); }
+	void fSteamAPI_ISteamUser_RequestStoreAuthURL() { PA = steam_api64.oSteamAPI_ISteamUser_RequestStoreAuthURL; runASM(); }
+	void fSteamAPI_ISteamUser_StartVoiceRecording() { PA = steam_api64.oSteamAPI_ISteamUser_StartVoiceRecording; runASM(); }
+	void fSteamAPI_ISteamUser_StopVoiceRecording() { PA = steam_api64.oSteamAPI_ISteamUser_StopVoiceRecording; runASM(); }
+	void fSteamAPI_ISteamUser_TerminateGameConnection() { PA = steam_api64.oSteamAPI_ISteamUser_TerminateGameConnection; runASM(); }
+	void fSteamAPI_ISteamUser_TrackAppUsageEvent() { PA = steam_api64.oSteamAPI_ISteamUser_TrackAppUsageEvent; runASM(); }
+	void fSteamAPI_ISteamUser_UserHasLicenseForApp() { PA = steam_api64.oSteamAPI_ISteamUser_UserHasLicenseForApp; runASM(); }
+	void fSteamAPI_ISteamUtils_BOverlayNeedsPresent() { PA = steam_api64.oSteamAPI_ISteamUtils_BOverlayNeedsPresent; runASM(); }
+	void fSteamAPI_ISteamUtils_CheckFileSignature() { PA = steam_api64.oSteamAPI_ISteamUtils_CheckFileSignature; runASM(); }
+	void fSteamAPI_ISteamUtils_GetAPICallFailureReason() { PA = steam_api64.oSteamAPI_ISteamUtils_GetAPICallFailureReason; runASM(); }
+	void fSteamAPI_ISteamUtils_GetAPICallResult() { PA = steam_api64.oSteamAPI_ISteamUtils_GetAPICallResult; runASM(); }
+	void fSteamAPI_ISteamUtils_GetAppID() { PA = steam_api64.oSteamAPI_ISteamUtils_GetAppID; runASM(); }
+	void fSteamAPI_ISteamUtils_GetCSERIPPort() { PA = steam_api64.oSteamAPI_ISteamUtils_GetCSERIPPort; runASM(); }
+	void fSteamAPI_ISteamUtils_GetConnectedUniverse() { PA = steam_api64.oSteamAPI_ISteamUtils_GetConnectedUniverse; runASM(); }
+	void fSteamAPI_ISteamUtils_GetCurrentBatteryPower() { PA = steam_api64.oSteamAPI_ISteamUtils_GetCurrentBatteryPower; runASM(); }
+	void fSteamAPI_ISteamUtils_GetEnteredGamepadTextInput() { PA = steam_api64.oSteamAPI_ISteamUtils_GetEnteredGamepadTextInput; runASM(); }
+	void fSteamAPI_ISteamUtils_GetEnteredGamepadTextLength() { PA = steam_api64.oSteamAPI_ISteamUtils_GetEnteredGamepadTextLength; runASM(); }
+	void fSteamAPI_ISteamUtils_GetIPCCallCount() { PA = steam_api64.oSteamAPI_ISteamUtils_GetIPCCallCount; runASM(); }
+	void fSteamAPI_ISteamUtils_GetIPCountry() { PA = steam_api64.oSteamAPI_ISteamUtils_GetIPCountry; runASM(); }
+	void fSteamAPI_ISteamUtils_GetImageRGBA() { PA = steam_api64.oSteamAPI_ISteamUtils_GetImageRGBA; runASM(); }
+	void fSteamAPI_ISteamUtils_GetImageSize() { PA = steam_api64.oSteamAPI_ISteamUtils_GetImageSize; runASM(); }
+	void fSteamAPI_ISteamUtils_GetSecondsSinceAppActive() { PA = steam_api64.oSteamAPI_ISteamUtils_GetSecondsSinceAppActive; runASM(); }
+	void fSteamAPI_ISteamUtils_GetSecondsSinceComputerActive() { PA = steam_api64.oSteamAPI_ISteamUtils_GetSecondsSinceComputerActive; runASM(); }
+	void fSteamAPI_ISteamUtils_GetServerRealTime() { PA = steam_api64.oSteamAPI_ISteamUtils_GetServerRealTime; runASM(); }
+	void fSteamAPI_ISteamUtils_GetSteamUILanguage() { PA = steam_api64.oSteamAPI_ISteamUtils_GetSteamUILanguage; runASM(); }
+	void fSteamAPI_ISteamUtils_IsAPICallCompleted() { PA = steam_api64.oSteamAPI_ISteamUtils_IsAPICallCompleted; runASM(); }
+	void fSteamAPI_ISteamUtils_IsOverlayEnabled() { PA = steam_api64.oSteamAPI_ISteamUtils_IsOverlayEnabled; runASM(); }
+	void fSteamAPI_ISteamUtils_IsSteamRunningInVR() { PA = steam_api64.oSteamAPI_ISteamUtils_IsSteamRunningInVR; runASM(); }
+	void fSteamAPI_ISteamUtils_RunFrame() { PA = steam_api64.oSteamAPI_ISteamUtils_RunFrame; runASM(); }
+	void fSteamAPI_ISteamUtils_SetOverlayNotificationInset() { PA = steam_api64.oSteamAPI_ISteamUtils_SetOverlayNotificationInset; runASM(); }
+	void fSteamAPI_ISteamUtils_SetOverlayNotificationPosition() { PA = steam_api64.oSteamAPI_ISteamUtils_SetOverlayNotificationPosition; runASM(); }
+	void fSteamAPI_ISteamUtils_SetWarningMessageHook() { PA = steam_api64.oSteamAPI_ISteamUtils_SetWarningMessageHook; runASM(); }
+	void fSteamAPI_ISteamUtils_ShowGamepadTextInput() { PA = steam_api64.oSteamAPI_ISteamUtils_ShowGamepadTextInput; runASM(); }
+	void fSteamAPI_ISteamVideo_GetVideoURL() { PA = steam_api64.oSteamAPI_ISteamVideo_GetVideoURL; runASM(); }
+	void fSteamAPI_ISteamVideo_IsBroadcasting() { PA = steam_api64.oSteamAPI_ISteamVideo_IsBroadcasting; runASM(); }
+	void fSteamAPI_Init() { PA = steam_api64.oSteamAPI_Init; runASM(); }
+	void fSteamAPI_InitSafe() { PA = steam_api64.oSteamAPI_InitSafe; runASM(); }
+	void fSteamAPI_IsSteamRunning() { PA = steam_api64.oSteamAPI_IsSteamRunning; runASM(); }
+	void fSteamAPI_RegisterCallResult() { PA = steam_api64.oSteamAPI_RegisterCallResult; runASM(); }
+	void fSteamAPI_RegisterCallback() { PA = steam_api64.oSteamAPI_RegisterCallback; runASM(); }
+	void fSteamAPI_RestartAppIfNecessary() { PA = steam_api64.oSteamAPI_RestartAppIfNecessary; runASM(); }
+	void fSteamAPI_RunCallbacks() { PA = steam_api64.oSteamAPI_RunCallbacks; runASM(); }
+	void fSteamAPI_SetBreakpadAppID() { PA = steam_api64.oSteamAPI_SetBreakpadAppID; runASM(); }
+	void fSteamAPI_SetMiniDumpComment() { PA = steam_api64.oSteamAPI_SetMiniDumpComment; runASM(); }
+	void fSteamAPI_SetTryCatchCallbacks() { PA = steam_api64.oSteamAPI_SetTryCatchCallbacks; runASM(); }
+	void fSteamAPI_Shutdown() { PA = steam_api64.oSteamAPI_Shutdown; runASM(); }
+	void fSteamAPI_UnregisterCallResult() { PA = steam_api64.oSteamAPI_UnregisterCallResult; runASM(); }
+	void fSteamAPI_UnregisterCallback() { PA = steam_api64.oSteamAPI_UnregisterCallback; runASM(); }
+	void fSteamAPI_UseBreakpadCrashHandler() { PA = steam_api64.oSteamAPI_UseBreakpadCrashHandler; runASM(); }
+	void fSteamAPI_WriteMiniDump() { PA = steam_api64.oSteamAPI_WriteMiniDump; runASM(); }
+	void fSteamAppList() { PA = steam_api64.oSteamAppList; runASM(); }
+	void fSteamApps() { PA = steam_api64.oSteamApps; runASM(); }
+	void fSteamClient() { PA = steam_api64.oSteamClient; runASM(); }
+	void fSteamController() { PA = steam_api64.oSteamController; runASM(); }
+	void fSteamController_GetControllerState() { PA = steam_api64.oSteamController_GetControllerState; runASM(); }
+	void fSteamController_Init() { PA = steam_api64.oSteamController_Init; runASM(); }
+	void fSteamController_SetOverrideMode() { PA = steam_api64.oSteamController_SetOverrideMode; runASM(); }
+	void fSteamController_Shutdown() { PA = steam_api64.oSteamController_Shutdown; runASM(); }
+	void fSteamController_TriggerHapticPulse() { PA = steam_api64.oSteamController_TriggerHapticPulse; runASM(); }
+	void fSteamFriends() { PA = steam_api64.oSteamFriends; runASM(); }
+	void fSteamGameServer() { PA = steam_api64.oSteamGameServer; runASM(); }
+	void fSteamGameServerApps() { PA = steam_api64.oSteamGameServerApps; runASM(); }
+	void fSteamGameServerHTTP() { PA = steam_api64.oSteamGameServerHTTP; runASM(); }
+	void fSteamGameServerInventory() { PA = steam_api64.oSteamGameServerInventory; runASM(); }
+	void fSteamGameServerNetworking() { PA = steam_api64.oSteamGameServerNetworking; runASM(); }
+	void fSteamGameServerStats() { PA = steam_api64.oSteamGameServerStats; runASM(); }
+	void fSteamGameServerUGC() { PA = steam_api64.oSteamGameServerUGC; runASM(); }
+	void fSteamGameServerUtils() { PA = steam_api64.oSteamGameServerUtils; runASM(); }
+	void fSteamGameServer_BSecure() { PA = steam_api64.oSteamGameServer_BSecure; runASM(); }
+	void fSteamGameServer_GetHSteamPipe() { PA = steam_api64.oSteamGameServer_GetHSteamPipe; runASM(); }
+	void fSteamGameServer_GetHSteamUser() { PA = steam_api64.oSteamGameServer_GetHSteamUser; runASM(); }
+	void fSteamGameServer_GetIPCCallCount() { PA = steam_api64.oSteamGameServer_GetIPCCallCount; runASM(); }
+	void fSteamGameServer_GetSteamID() { PA = steam_api64.oSteamGameServer_GetSteamID; runASM(); }
+	void fSteamGameServer_Init() { PA = steam_api64.oSteamGameServer_Init; runASM(); }
+	void fSteamGameServer_InitSafe() { PA = steam_api64.oSteamGameServer_InitSafe; runASM(); }
+	void fSteamGameServer_RunCallbacks() { PA = steam_api64.oSteamGameServer_RunCallbacks; runASM(); }
+	void fSteamGameServer_Shutdown() { PA = steam_api64.oSteamGameServer_Shutdown; runASM(); }
+	void fSteamHTMLSurface() { PA = steam_api64.oSteamHTMLSurface; runASM(); }
+	void fSteamHTTP() { PA = steam_api64.oSteamHTTP; runASM(); }
+	void fSteamInventory() { PA = steam_api64.oSteamInventory; runASM(); }
+	void fSteamMatchmaking() { PA = steam_api64.oSteamMatchmaking; runASM(); }
+	void fSteamMatchmakingServers() { PA = steam_api64.oSteamMatchmakingServers; runASM(); }
+	void fSteamMusic() { PA = steam_api64.oSteamMusic; runASM(); }
+	void fSteamMusicRemote() { PA = steam_api64.oSteamMusicRemote; runASM(); }
+	void fSteamNetworking() { PA = steam_api64.oSteamNetworking; runASM(); }
+	void fSteamRemoteStorage() { PA = steam_api64.oSteamRemoteStorage; runASM(); }
+	void fSteamScreenshots() { PA = steam_api64.oSteamScreenshots; runASM(); }
+	void fSteamUGC() { PA = steam_api64.oSteamUGC; runASM(); }
+	void fSteamUnifiedMessages() { PA = steam_api64.oSteamUnifiedMessages; runASM(); }
+	void fSteamUser() { PA = steam_api64.oSteamUser; runASM(); }
+	void fSteamUserStats() { PA = steam_api64.oSteamUserStats; runASM(); }
+	void fSteamUtils() { PA = steam_api64.oSteamUtils; runASM(); }
+	void fSteamVideo() { PA = steam_api64.oSteamVideo; runASM(); }
+	void fSteam_GetHSteamUserCurrent() { PA = steam_api64.oSteam_GetHSteamUserCurrent; runASM(); }
+	void fSteam_RegisterInterfaceFuncs() { PA = steam_api64.oSteam_RegisterInterfaceFuncs; runASM(); }
+	void fSteam_RunCallbacks() { PA = steam_api64.oSteam_RunCallbacks; runASM(); }
+	void fg_pSteamClientGameServer() { PA = steam_api64.og_pSteamClientGameServer; runASM(); }
+}
+
+void setupFunctions() {
+	steam_api64.oGetHSteamPipe = GetProcAddress(steam_api64.dll, "GetHSteamPipe");
+	steam_api64.oGetHSteamUser = GetProcAddress(steam_api64.dll, "GetHSteamUser");
+	steam_api64.oSteamAPI_GetHSteamPipe = GetProcAddress(steam_api64.dll, "SteamAPI_GetHSteamPipe");
+	steam_api64.oSteamAPI_GetHSteamUser = GetProcAddress(steam_api64.dll, "SteamAPI_GetHSteamUser");
+	steam_api64.oSteamAPI_GetSteamInstallPath = GetProcAddress(steam_api64.dll, "SteamAPI_GetSteamInstallPath");
+	steam_api64.oSteamAPI_ISteamAppList_GetAppBuildId = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamAppList_GetAppBuildId");
+	steam_api64.oSteamAPI_ISteamAppList_GetAppInstallDir = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamAppList_GetAppInstallDir");
+	steam_api64.oSteamAPI_ISteamAppList_GetAppName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamAppList_GetAppName");
+	steam_api64.oSteamAPI_ISteamAppList_GetInstalledApps = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamAppList_GetInstalledApps");
+	steam_api64.oSteamAPI_ISteamAppList_GetNumInstalledApps = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamAppList_GetNumInstalledApps");
+	steam_api64.oSteamAPI_ISteamApps_BGetDLCDataByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BGetDLCDataByIndex");
+	steam_api64.oSteamAPI_ISteamApps_BIsAppInstalled = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsAppInstalled");
+	steam_api64.oSteamAPI_ISteamApps_BIsCybercafe = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsCybercafe");
+	steam_api64.oSteamAPI_ISteamApps_BIsDlcInstalled = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsDlcInstalled");
+	steam_api64.oSteamAPI_ISteamApps_BIsLowViolence = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsLowViolence");
+	steam_api64.oSteamAPI_ISteamApps_BIsSubscribed = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsSubscribed");
+	steam_api64.oSteamAPI_ISteamApps_BIsSubscribedApp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsSubscribedApp");
+	steam_api64.oSteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend");
+	steam_api64.oSteamAPI_ISteamApps_BIsVACBanned = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_BIsVACBanned");
+	steam_api64.oSteamAPI_ISteamApps_GetAppBuildId = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetAppBuildId");
+	steam_api64.oSteamAPI_ISteamApps_GetAppInstallDir = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetAppInstallDir");
+	steam_api64.oSteamAPI_ISteamApps_GetAppOwner = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetAppOwner");
+	steam_api64.oSteamAPI_ISteamApps_GetAvailableGameLanguages = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetAvailableGameLanguages");
+	steam_api64.oSteamAPI_ISteamApps_GetCurrentBetaName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetCurrentBetaName");
+	steam_api64.oSteamAPI_ISteamApps_GetCurrentGameLanguage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetCurrentGameLanguage");
+	steam_api64.oSteamAPI_ISteamApps_GetDLCCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetDLCCount");
+	steam_api64.oSteamAPI_ISteamApps_GetDlcDownloadProgress = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetDlcDownloadProgress");
+	steam_api64.oSteamAPI_ISteamApps_GetEarliestPurchaseUnixTime = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetEarliestPurchaseUnixTime");
+	steam_api64.oSteamAPI_ISteamApps_GetInstalledDepots = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetInstalledDepots");
+	steam_api64.oSteamAPI_ISteamApps_GetLaunchQueryParam = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_GetLaunchQueryParam");
+	steam_api64.oSteamAPI_ISteamApps_InstallDLC = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_InstallDLC");
+	steam_api64.oSteamAPI_ISteamApps_MarkContentCorrupt = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_MarkContentCorrupt");
+	steam_api64.oSteamAPI_ISteamApps_RequestAppProofOfPurchaseKey = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_RequestAppProofOfPurchaseKey");
+	steam_api64.oSteamAPI_ISteamApps_UninstallDLC = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamApps_UninstallDLC");
+	steam_api64.oSteamAPI_ISteamClient_BReleaseSteamPipe = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_BReleaseSteamPipe");
+	steam_api64.oSteamAPI_ISteamClient_BShutdownIfAllPipesClosed = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_BShutdownIfAllPipesClosed");
+	steam_api64.oSteamAPI_ISteamClient_ConnectToGlobalUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_ConnectToGlobalUser");
+	steam_api64.oSteamAPI_ISteamClient_CreateLocalUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_CreateLocalUser");
+	steam_api64.oSteamAPI_ISteamClient_CreateSteamPipe = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_CreateSteamPipe");
+	steam_api64.oSteamAPI_ISteamClient_GetIPCCallCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetIPCCallCount");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamAppList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamAppList");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamApps = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamApps");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamController = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamController");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamFriends = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamFriends");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamGameServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamGameServer");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamGameServerStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamGameServerStats");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamGenericInterface = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamGenericInterface");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamHTMLSurface = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamHTMLSurface");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamHTTP = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamHTTP");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamInventory = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamInventory");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamMatchmaking = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamMatchmaking");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamMatchmakingServers = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamMatchmakingServers");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamMusic = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamMusic");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamMusicRemote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamMusicRemote");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamNetworking = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamNetworking");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamRemoteStorage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamRemoteStorage");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamScreenshots = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamScreenshots");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamUGC = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamUGC");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamUnifiedMessages = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamUnifiedMessages");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamUser");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamUserStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamUserStats");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamUtils = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamUtils");
+	steam_api64.oSteamAPI_ISteamClient_GetISteamVideo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_GetISteamVideo");
+	steam_api64.oSteamAPI_ISteamClient_ReleaseUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_ReleaseUser");
+	steam_api64.oSteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_Remove_SteamAPI_CPostAPIResultInProcess");
+	steam_api64.oSteamAPI_ISteamClient_RunFrame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_RunFrame");
+	steam_api64.oSteamAPI_ISteamClient_SetLocalIPBinding = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_SetLocalIPBinding");
+	steam_api64.oSteamAPI_ISteamClient_SetWarningMessageHook = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_SetWarningMessageHook");
+	steam_api64.oSteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_Set_SteamAPI_CCheckCallbackRegisteredInProcess");
+	steam_api64.oSteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamClient_Set_SteamAPI_CPostAPIResultInProcess");
+	steam_api64.oSteamAPI_ISteamController_GetControllerState = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamController_GetControllerState");
+	steam_api64.oSteamAPI_ISteamController_Init = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamController_Init");
+	steam_api64.oSteamAPI_ISteamController_RunFrame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamController_RunFrame");
+	steam_api64.oSteamAPI_ISteamController_SetOverrideMode = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamController_SetOverrideMode");
+	steam_api64.oSteamAPI_ISteamController_Shutdown = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamController_Shutdown");
+	steam_api64.oSteamAPI_ISteamController_TriggerHapticPulse = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamController_TriggerHapticPulse");
+	steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlay = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ActivateGameOverlay");
+	steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ActivateGameOverlayInviteDialog");
+	steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayToStore = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ActivateGameOverlayToStore");
+	steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayToUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ActivateGameOverlayToUser");
+	steam_api64.oSteamAPI_ISteamFriends_ActivateGameOverlayToWebPage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ActivateGameOverlayToWebPage");
+	steam_api64.oSteamAPI_ISteamFriends_ClearRichPresence = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ClearRichPresence");
+	steam_api64.oSteamAPI_ISteamFriends_CloseClanChatWindowInSteam = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_CloseClanChatWindowInSteam");
+	steam_api64.oSteamAPI_ISteamFriends_DownloadClanActivityCounts = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_DownloadClanActivityCounts");
+	steam_api64.oSteamAPI_ISteamFriends_EnumerateFollowingList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_EnumerateFollowingList");
+	steam_api64.oSteamAPI_ISteamFriends_GetChatMemberByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetChatMemberByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanActivityCounts = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanActivityCounts");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanChatMemberCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanChatMemberCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanChatMessage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanChatMessage");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanName");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanOfficerByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanOfficerByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanOfficerCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanOfficerCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanOwner = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanOwner");
+	steam_api64.oSteamAPI_ISteamFriends_GetClanTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetClanTag");
+	steam_api64.oSteamAPI_ISteamFriends_GetCoplayFriend = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetCoplayFriend");
+	steam_api64.oSteamAPI_ISteamFriends_GetCoplayFriendCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetCoplayFriendCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetFollowerCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFollowerCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendCoplayGame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendCoplayGame");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendCoplayTime = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendCoplayTime");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendCountFromSource = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendCountFromSource");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendFromSourceByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendFromSourceByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendGamePlayed = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendGamePlayed");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendMessage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendMessage");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendPersonaName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendPersonaName");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendPersonaNameHistory = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendPersonaNameHistory");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendPersonaState = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendPersonaState");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendRelationship = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendRelationship");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendRichPresence = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendRichPresence");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendRichPresenceKeyByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendRichPresenceKeyCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendSteamLevel = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendSteamLevel");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendsGroupCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupIDByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendsGroupIDByIndex");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupMembersCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendsGroupMembersCount");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupMembersList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendsGroupMembersList");
+	steam_api64.oSteamAPI_ISteamFriends_GetFriendsGroupName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetFriendsGroupName");
+	steam_api64.oSteamAPI_ISteamFriends_GetLargeFriendAvatar = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetLargeFriendAvatar");
+	steam_api64.oSteamAPI_ISteamFriends_GetMediumFriendAvatar = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetMediumFriendAvatar");
+	steam_api64.oSteamAPI_ISteamFriends_GetPersonaName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetPersonaName");
+	steam_api64.oSteamAPI_ISteamFriends_GetPersonaState = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetPersonaState");
+	steam_api64.oSteamAPI_ISteamFriends_GetPlayerNickname = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetPlayerNickname");
+	steam_api64.oSteamAPI_ISteamFriends_GetSmallFriendAvatar = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetSmallFriendAvatar");
+	steam_api64.oSteamAPI_ISteamFriends_GetUserRestrictions = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_GetUserRestrictions");
+	steam_api64.oSteamAPI_ISteamFriends_HasFriend = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_HasFriend");
+	steam_api64.oSteamAPI_ISteamFriends_InviteUserToGame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_InviteUserToGame");
+	steam_api64.oSteamAPI_ISteamFriends_IsClanChatAdmin = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_IsClanChatAdmin");
+	steam_api64.oSteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_IsClanChatWindowOpenInSteam");
+	steam_api64.oSteamAPI_ISteamFriends_IsFollowing = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_IsFollowing");
+	steam_api64.oSteamAPI_ISteamFriends_IsUserInSource = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_IsUserInSource");
+	steam_api64.oSteamAPI_ISteamFriends_JoinClanChatRoom = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_JoinClanChatRoom");
+	steam_api64.oSteamAPI_ISteamFriends_LeaveClanChatRoom = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_LeaveClanChatRoom");
+	steam_api64.oSteamAPI_ISteamFriends_OpenClanChatWindowInSteam = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_OpenClanChatWindowInSteam");
+	steam_api64.oSteamAPI_ISteamFriends_ReplyToFriendMessage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_ReplyToFriendMessage");
+	steam_api64.oSteamAPI_ISteamFriends_RequestClanOfficerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_RequestClanOfficerList");
+	steam_api64.oSteamAPI_ISteamFriends_RequestFriendRichPresence = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_RequestFriendRichPresence");
+	steam_api64.oSteamAPI_ISteamFriends_RequestUserInformation = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_RequestUserInformation");
+	steam_api64.oSteamAPI_ISteamFriends_SendClanChatMessage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_SendClanChatMessage");
+	steam_api64.oSteamAPI_ISteamFriends_SetInGameVoiceSpeaking = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_SetInGameVoiceSpeaking");
+	steam_api64.oSteamAPI_ISteamFriends_SetListenForFriendsMessages = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_SetListenForFriendsMessages");
+	steam_api64.oSteamAPI_ISteamFriends_SetPersonaName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_SetPersonaName");
+	steam_api64.oSteamAPI_ISteamFriends_SetPlayedWith = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_SetPlayedWith");
+	steam_api64.oSteamAPI_ISteamFriends_SetRichPresence = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamFriends_SetRichPresence");
+	steam_api64.oSteamAPI_ISteamGameServerStats_ClearUserAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_ClearUserAchievement");
+	steam_api64.oSteamAPI_ISteamGameServerStats_GetUserAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_GetUserAchievement");
+	steam_api64.oSteamAPI_ISteamGameServerStats_GetUserStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_GetUserStat");
+	steam_api64.oSteamAPI_ISteamGameServerStats_GetUserStat0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_GetUserStat0");
+	steam_api64.oSteamAPI_ISteamGameServerStats_RequestUserStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_RequestUserStats");
+	steam_api64.oSteamAPI_ISteamGameServerStats_SetUserAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_SetUserAchievement");
+	steam_api64.oSteamAPI_ISteamGameServerStats_SetUserStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_SetUserStat");
+	steam_api64.oSteamAPI_ISteamGameServerStats_SetUserStat0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_SetUserStat0");
+	steam_api64.oSteamAPI_ISteamGameServerStats_StoreUserStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_StoreUserStats");
+	steam_api64.oSteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServerStats_UpdateUserAvgRateStat");
+	steam_api64.oSteamAPI_ISteamGameServer_AssociateWithClan = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_AssociateWithClan");
+	steam_api64.oSteamAPI_ISteamGameServer_BLoggedOn = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_BLoggedOn");
+	steam_api64.oSteamAPI_ISteamGameServer_BSecure = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_BSecure");
+	steam_api64.oSteamAPI_ISteamGameServer_BUpdateUserData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_BUpdateUserData");
+	steam_api64.oSteamAPI_ISteamGameServer_BeginAuthSession = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_BeginAuthSession");
+	steam_api64.oSteamAPI_ISteamGameServer_CancelAuthTicket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_CancelAuthTicket");
+	steam_api64.oSteamAPI_ISteamGameServer_ClearAllKeyValues = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_ClearAllKeyValues");
+	steam_api64.oSteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_ComputeNewPlayerCompatibility");
+	steam_api64.oSteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_CreateUnauthenticatedUserConnection");
+	steam_api64.oSteamAPI_ISteamGameServer_EnableHeartbeats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_EnableHeartbeats");
+	steam_api64.oSteamAPI_ISteamGameServer_EndAuthSession = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_EndAuthSession");
+	steam_api64.oSteamAPI_ISteamGameServer_ForceHeartbeat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_ForceHeartbeat");
+	steam_api64.oSteamAPI_ISteamGameServer_GetAuthSessionTicket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_GetAuthSessionTicket");
+	steam_api64.oSteamAPI_ISteamGameServer_GetGameplayStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_GetGameplayStats");
+	steam_api64.oSteamAPI_ISteamGameServer_GetNextOutgoingPacket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_GetNextOutgoingPacket");
+	steam_api64.oSteamAPI_ISteamGameServer_GetPublicIP = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_GetPublicIP");
+	steam_api64.oSteamAPI_ISteamGameServer_GetServerReputation = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_GetServerReputation");
+	steam_api64.oSteamAPI_ISteamGameServer_GetSteamID = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_GetSteamID");
+	steam_api64.oSteamAPI_ISteamGameServer_HandleIncomingPacket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_HandleIncomingPacket");
+	steam_api64.oSteamAPI_ISteamGameServer_InitGameServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_InitGameServer");
+	steam_api64.oSteamAPI_ISteamGameServer_LogOff = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_LogOff");
+	steam_api64.oSteamAPI_ISteamGameServer_LogOn = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_LogOn");
+	steam_api64.oSteamAPI_ISteamGameServer_LogOnAnonymous = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_LogOnAnonymous");
+	steam_api64.oSteamAPI_ISteamGameServer_RequestUserGroupStatus = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_RequestUserGroupStatus");
+	steam_api64.oSteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SendUserConnectAndAuthenticate");
+	steam_api64.oSteamAPI_ISteamGameServer_SendUserDisconnect = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SendUserDisconnect");
+	steam_api64.oSteamAPI_ISteamGameServer_SetBotPlayerCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetBotPlayerCount");
+	steam_api64.oSteamAPI_ISteamGameServer_SetDedicatedServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetDedicatedServer");
+	steam_api64.oSteamAPI_ISteamGameServer_SetGameData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetGameData");
+	steam_api64.oSteamAPI_ISteamGameServer_SetGameDescription = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetGameDescription");
+	steam_api64.oSteamAPI_ISteamGameServer_SetGameTags = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetGameTags");
+	steam_api64.oSteamAPI_ISteamGameServer_SetHeartbeatInterval = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetHeartbeatInterval");
+	steam_api64.oSteamAPI_ISteamGameServer_SetKeyValue = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetKeyValue");
+	steam_api64.oSteamAPI_ISteamGameServer_SetMapName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetMapName");
+	steam_api64.oSteamAPI_ISteamGameServer_SetMaxPlayerCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetMaxPlayerCount");
+	steam_api64.oSteamAPI_ISteamGameServer_SetModDir = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetModDir");
+	steam_api64.oSteamAPI_ISteamGameServer_SetPasswordProtected = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetPasswordProtected");
+	steam_api64.oSteamAPI_ISteamGameServer_SetProduct = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetProduct");
+	steam_api64.oSteamAPI_ISteamGameServer_SetRegion = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetRegion");
+	steam_api64.oSteamAPI_ISteamGameServer_SetServerName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetServerName");
+	steam_api64.oSteamAPI_ISteamGameServer_SetSpectatorPort = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetSpectatorPort");
+	steam_api64.oSteamAPI_ISteamGameServer_SetSpectatorServerName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_SetSpectatorServerName");
+	steam_api64.oSteamAPI_ISteamGameServer_UserHasLicenseForApp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_UserHasLicenseForApp");
+	steam_api64.oSteamAPI_ISteamGameServer_WasRestartRequested = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamGameServer_WasRestartRequested");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_AddHeader = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_AddHeader");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_AllowStartRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_AllowStartRequest");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_CopyToClipboard = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_CopyToClipboard");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_CreateBrowser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_CreateBrowser");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_DestructISteamHTMLSurface");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_ExecuteJavascript = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_ExecuteJavascript");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_FileLoadDialogResponse = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_FileLoadDialogResponse");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_Find = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_Find");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_GetLinkAtPosition = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_GetLinkAtPosition");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_GoBack = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_GoBack");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_GoForward = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_GoForward");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_Init = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_Init");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_JSDialogResponse = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_JSDialogResponse");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_KeyChar = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_KeyChar");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_KeyDown = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_KeyDown");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_KeyUp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_KeyUp");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_LoadURL = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_LoadURL");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_MouseDoubleClick = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_MouseDoubleClick");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_MouseDown = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_MouseDown");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_MouseMove = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_MouseMove");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_MouseUp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_MouseUp");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_MouseWheel = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_MouseWheel");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_PasteFromClipboard = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_PasteFromClipboard");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_Reload = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_Reload");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_RemoveBrowser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_RemoveBrowser");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetBackgroundMode = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetBackgroundMode");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetCookie = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetCookie");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetHorizontalScroll = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetHorizontalScroll");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetKeyFocus = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetKeyFocus");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetPageScaleFactor = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetPageScaleFactor");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetSize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetSize");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_SetVerticalScroll = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_SetVerticalScroll");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_Shutdown = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_Shutdown");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_StopFind = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_StopFind");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_StopLoad = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_StopLoad");
+	steam_api64.oSteamAPI_ISteamHTMLSurface_ViewSource = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTMLSurface_ViewSource");
+	steam_api64.oSteamAPI_ISteamHTTP_CreateCookieContainer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_CreateCookieContainer");
+	steam_api64.oSteamAPI_ISteamHTTP_CreateHTTPRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_CreateHTTPRequest");
+	steam_api64.oSteamAPI_ISteamHTTP_DeferHTTPRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_DeferHTTPRequest");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPDownloadProgressPct");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPRequestWasTimedOut");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseBodyData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPResponseBodyData");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseBodySize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPResponseBodySize");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPResponseHeaderSize");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPResponseHeaderValue");
+	steam_api64.oSteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_GetHTTPStreamingResponseBodyData");
+	steam_api64.oSteamAPI_ISteamHTTP_PrioritizeHTTPRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_PrioritizeHTTPRequest");
+	steam_api64.oSteamAPI_ISteamHTTP_ReleaseCookieContainer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_ReleaseCookieContainer");
+	steam_api64.oSteamAPI_ISteamHTTP_ReleaseHTTPRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_ReleaseHTTPRequest");
+	steam_api64.oSteamAPI_ISteamHTTP_SendHTTPRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SendHTTPRequest");
+	steam_api64.oSteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SendHTTPRequestAndStreamResponse");
+	steam_api64.oSteamAPI_ISteamHTTP_SetCookie = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetCookie");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestAbsoluteTimeoutMS");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestContextValue = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestContextValue");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestCookieContainer");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestGetOrPostParameter");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestHeaderValue");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestNetworkActivityTimeout");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestRawPostBody");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestRequiresVerifiedCertificate");
+	steam_api64.oSteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamHTTP_SetHTTPRequestUserAgentInfo");
+	steam_api64.oSteamAPI_ISteamInventory_AddPromoItem = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_AddPromoItem");
+	steam_api64.oSteamAPI_ISteamInventory_AddPromoItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_AddPromoItems");
+	steam_api64.oSteamAPI_ISteamInventory_CheckResultSteamID = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_CheckResultSteamID");
+	steam_api64.oSteamAPI_ISteamInventory_ConsumeItem = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_ConsumeItem");
+	steam_api64.oSteamAPI_ISteamInventory_DeserializeResult = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_DeserializeResult");
+	steam_api64.oSteamAPI_ISteamInventory_DestroyResult = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_DestroyResult");
+	steam_api64.oSteamAPI_ISteamInventory_ExchangeItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_ExchangeItems");
+	steam_api64.oSteamAPI_ISteamInventory_GenerateItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GenerateItems");
+	steam_api64.oSteamAPI_ISteamInventory_GetAllItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetAllItems");
+	steam_api64.oSteamAPI_ISteamInventory_GetItemDefinitionIDs = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetItemDefinitionIDs");
+	steam_api64.oSteamAPI_ISteamInventory_GetItemDefinitionProperty = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetItemDefinitionProperty");
+	steam_api64.oSteamAPI_ISteamInventory_GetItemsByID = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetItemsByID");
+	steam_api64.oSteamAPI_ISteamInventory_GetResultItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetResultItems");
+	steam_api64.oSteamAPI_ISteamInventory_GetResultStatus = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetResultStatus");
+	steam_api64.oSteamAPI_ISteamInventory_GetResultTimestamp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GetResultTimestamp");
+	steam_api64.oSteamAPI_ISteamInventory_GrantPromoItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_GrantPromoItems");
+	steam_api64.oSteamAPI_ISteamInventory_LoadItemDefinitions = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_LoadItemDefinitions");
+	steam_api64.oSteamAPI_ISteamInventory_SendItemDropHeartbeat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_SendItemDropHeartbeat");
+	steam_api64.oSteamAPI_ISteamInventory_SerializeResult = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_SerializeResult");
+	steam_api64.oSteamAPI_ISteamInventory_TradeItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_TradeItems");
+	steam_api64.oSteamAPI_ISteamInventory_TransferItemQuantity = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_TransferItemQuantity");
+	steam_api64.oSteamAPI_ISteamInventory_TriggerItemDrop = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamInventory_TriggerItemDrop");
+	steam_api64.oSteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingPingResponse_ServerFailedToRespond");
+	steam_api64.oSteamAPI_ISteamMatchmakingPingResponse_ServerResponded = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingPingResponse_ServerResponded");
+	steam_api64.oSteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingPlayersResponse_AddPlayerToList");
+	steam_api64.oSteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingPlayersResponse_PlayersFailedToRespond");
+	steam_api64.oSteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingPlayersResponse_PlayersRefreshComplete");
+	steam_api64.oSteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingRulesResponse_RulesFailedToRespond");
+	steam_api64.oSteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingRulesResponse_RulesRefreshComplete");
+	steam_api64.oSteamAPI_ISteamMatchmakingRulesResponse_RulesResponded = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingRulesResponse_RulesResponded");
+	steam_api64.oSteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServerListResponse_RefreshComplete");
+	steam_api64.oSteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServerListResponse_ServerFailedToRespond");
+	steam_api64.oSteamAPI_ISteamMatchmakingServerListResponse_ServerResponded = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServerListResponse_ServerResponded");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_CancelQuery = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_CancelQuery");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_CancelServerQuery = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_CancelServerQuery");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_GetServerCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_GetServerCount");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_GetServerDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_GetServerDetails");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_IsRefreshing = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_IsRefreshing");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_PingServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_PingServer");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_PlayerDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_PlayerDetails");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RefreshQuery = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RefreshQuery");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RefreshServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RefreshServer");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_ReleaseRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_ReleaseRequest");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RequestFavoritesServerList");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestFriendsServerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RequestFriendsServerList");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestHistoryServerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RequestHistoryServerList");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestInternetServerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RequestInternetServerList");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestLANServerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RequestLANServerList");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_RequestSpectatorServerList");
+	steam_api64.oSteamAPI_ISteamMatchmakingServers_ServerRules = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmakingServers_ServerRules");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddFavoriteGame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddFavoriteGame");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListCompatibleMembersFilter");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListDistanceFilter");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListFilterSlotsAvailable");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListNearValueFilter");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListNumericalFilter");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListResultCountFilter");
+	steam_api64.oSteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_AddRequestLobbyListStringFilter");
+	steam_api64.oSteamAPI_ISteamMatchmaking_CreateLobby = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_CreateLobby");
+	steam_api64.oSteamAPI_ISteamMatchmaking_DeleteLobbyData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_DeleteLobbyData");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetFavoriteGame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetFavoriteGame");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetFavoriteGameCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetFavoriteGameCount");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyByIndex");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyChatEntry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyChatEntry");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyData");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyDataByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyDataByIndex");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyDataCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyDataCount");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyGameServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyGameServer");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyMemberByIndex");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyMemberData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyMemberData");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyMemberLimit = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyMemberLimit");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetLobbyOwner = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetLobbyOwner");
+	steam_api64.oSteamAPI_ISteamMatchmaking_GetNumLobbyMembers = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_GetNumLobbyMembers");
+	steam_api64.oSteamAPI_ISteamMatchmaking_InviteUserToLobby = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_InviteUserToLobby");
+	steam_api64.oSteamAPI_ISteamMatchmaking_JoinLobby = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_JoinLobby");
+	steam_api64.oSteamAPI_ISteamMatchmaking_LeaveLobby = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_LeaveLobby");
+	steam_api64.oSteamAPI_ISteamMatchmaking_RemoveFavoriteGame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_RemoveFavoriteGame");
+	steam_api64.oSteamAPI_ISteamMatchmaking_RequestLobbyData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_RequestLobbyData");
+	steam_api64.oSteamAPI_ISteamMatchmaking_RequestLobbyList = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_RequestLobbyList");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SendLobbyChatMsg = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SendLobbyChatMsg");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLinkedLobby = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLinkedLobby");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyData");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyGameServer = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyGameServer");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyJoinable = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyJoinable");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyMemberData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyMemberData");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyMemberLimit = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyMemberLimit");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyOwner = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyOwner");
+	steam_api64.oSteamAPI_ISteamMatchmaking_SetLobbyType = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMatchmaking_SetLobbyType");
+	steam_api64.oSteamAPI_ISteamMusicRemote_BActivationSuccess = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_BActivationSuccess");
+	steam_api64.oSteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_BIsCurrentMusicRemote");
+	steam_api64.oSteamAPI_ISteamMusicRemote_CurrentEntryDidChange = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_CurrentEntryDidChange");
+	steam_api64.oSteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_CurrentEntryIsAvailable");
+	steam_api64.oSteamAPI_ISteamMusicRemote_CurrentEntryWillChange = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_CurrentEntryWillChange");
+	steam_api64.oSteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_DeregisterSteamMusicRemote");
+	steam_api64.oSteamAPI_ISteamMusicRemote_EnableLooped = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_EnableLooped");
+	steam_api64.oSteamAPI_ISteamMusicRemote_EnablePlayNext = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_EnablePlayNext");
+	steam_api64.oSteamAPI_ISteamMusicRemote_EnablePlayPrevious = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_EnablePlayPrevious");
+	steam_api64.oSteamAPI_ISteamMusicRemote_EnablePlaylists = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_EnablePlaylists");
+	steam_api64.oSteamAPI_ISteamMusicRemote_EnableQueue = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_EnableQueue");
+	steam_api64.oSteamAPI_ISteamMusicRemote_EnableShuffled = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_EnableShuffled");
+	steam_api64.oSteamAPI_ISteamMusicRemote_PlaylistDidChange = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_PlaylistDidChange");
+	steam_api64.oSteamAPI_ISteamMusicRemote_PlaylistWillChange = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_PlaylistWillChange");
+	steam_api64.oSteamAPI_ISteamMusicRemote_QueueDidChange = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_QueueDidChange");
+	steam_api64.oSteamAPI_ISteamMusicRemote_QueueWillChange = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_QueueWillChange");
+	steam_api64.oSteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_RegisterSteamMusicRemote");
+	steam_api64.oSteamAPI_ISteamMusicRemote_ResetPlaylistEntries = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_ResetPlaylistEntries");
+	steam_api64.oSteamAPI_ISteamMusicRemote_ResetQueueEntries = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_ResetQueueEntries");
+	steam_api64.oSteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_SetCurrentPlaylistEntry");
+	steam_api64.oSteamAPI_ISteamMusicRemote_SetCurrentQueueEntry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_SetCurrentQueueEntry");
+	steam_api64.oSteamAPI_ISteamMusicRemote_SetDisplayName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_SetDisplayName");
+	steam_api64.oSteamAPI_ISteamMusicRemote_SetPNGIcon_64x64 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_SetPNGIcon_64x64");
+	steam_api64.oSteamAPI_ISteamMusicRemote_SetPlaylistEntry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_SetPlaylistEntry");
+	steam_api64.oSteamAPI_ISteamMusicRemote_SetQueueEntry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_SetQueueEntry");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdateCurrentEntryCoverArt");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdateCurrentEntryElapsedSeconds");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdateCurrentEntryText = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdateCurrentEntryText");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdateLooped = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdateLooped");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdatePlaybackStatus = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdatePlaybackStatus");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdateShuffled = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdateShuffled");
+	steam_api64.oSteamAPI_ISteamMusicRemote_UpdateVolume = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusicRemote_UpdateVolume");
+	steam_api64.oSteamAPI_ISteamMusic_BIsEnabled = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_BIsEnabled");
+	steam_api64.oSteamAPI_ISteamMusic_BIsPlaying = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_BIsPlaying");
+	steam_api64.oSteamAPI_ISteamMusic_GetPlaybackStatus = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_GetPlaybackStatus");
+	steam_api64.oSteamAPI_ISteamMusic_GetVolume = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_GetVolume");
+	steam_api64.oSteamAPI_ISteamMusic_Pause = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_Pause");
+	steam_api64.oSteamAPI_ISteamMusic_Play = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_Play");
+	steam_api64.oSteamAPI_ISteamMusic_PlayNext = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_PlayNext");
+	steam_api64.oSteamAPI_ISteamMusic_PlayPrevious = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_PlayPrevious");
+	steam_api64.oSteamAPI_ISteamMusic_SetVolume = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamMusic_SetVolume");
+	steam_api64.oSteamAPI_ISteamNetworking_AcceptP2PSessionWithUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_AcceptP2PSessionWithUser");
+	steam_api64.oSteamAPI_ISteamNetworking_AllowP2PPacketRelay = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_AllowP2PPacketRelay");
+	steam_api64.oSteamAPI_ISteamNetworking_CloseP2PChannelWithUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_CloseP2PChannelWithUser");
+	steam_api64.oSteamAPI_ISteamNetworking_CloseP2PSessionWithUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_CloseP2PSessionWithUser");
+	steam_api64.oSteamAPI_ISteamNetworking_CreateConnectionSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_CreateConnectionSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_CreateListenSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_CreateListenSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_CreateP2PConnectionSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_CreateP2PConnectionSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_DestroyListenSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_DestroyListenSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_DestroySocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_DestroySocket");
+	steam_api64.oSteamAPI_ISteamNetworking_GetListenSocketInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_GetListenSocketInfo");
+	steam_api64.oSteamAPI_ISteamNetworking_GetMaxPacketSize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_GetMaxPacketSize");
+	steam_api64.oSteamAPI_ISteamNetworking_GetP2PSessionState = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_GetP2PSessionState");
+	steam_api64.oSteamAPI_ISteamNetworking_GetSocketConnectionType = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_GetSocketConnectionType");
+	steam_api64.oSteamAPI_ISteamNetworking_GetSocketInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_GetSocketInfo");
+	steam_api64.oSteamAPI_ISteamNetworking_IsDataAvailable = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_IsDataAvailable");
+	steam_api64.oSteamAPI_ISteamNetworking_IsDataAvailableOnSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_IsDataAvailableOnSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_IsP2PPacketAvailable = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_IsP2PPacketAvailable");
+	steam_api64.oSteamAPI_ISteamNetworking_ReadP2PPacket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_ReadP2PPacket");
+	steam_api64.oSteamAPI_ISteamNetworking_RetrieveData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_RetrieveData");
+	steam_api64.oSteamAPI_ISteamNetworking_RetrieveDataFromSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_RetrieveDataFromSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_SendDataOnSocket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_SendDataOnSocket");
+	steam_api64.oSteamAPI_ISteamNetworking_SendP2PPacket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamNetworking_SendP2PPacket");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_CommitPublishedFileUpdate");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_CreatePublishedFileUpdateRequest");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_DeletePublishedFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_DeletePublishedFile");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_EnumeratePublishedFilesByUserAction");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_EnumeratePublishedWorkshopFiles");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_EnumerateUserPublishedFiles");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_EnumerateUserSharedWorkshopFiles");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_EnumerateUserSubscribedFiles");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileDelete = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileDelete");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileExists = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileExists");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileForget = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileForget");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FilePersisted = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FilePersisted");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileRead = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileRead");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileShare = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileShare");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileWrite = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileWrite");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamCancel = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileWriteStreamCancel");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamClose = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileWriteStreamClose");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamOpen = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileWriteStreamOpen");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_FileWriteStreamWriteChunk");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetCachedUGCCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetCachedUGCCount");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetCachedUGCHandle = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetCachedUGCHandle");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetFileCount");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileNameAndSize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetFileNameAndSize");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileSize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetFileSize");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetFileTimestamp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetFileTimestamp");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetPublishedFileDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetPublishedFileDetails");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetPublishedItemVoteDetails");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetQuota = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetQuota");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetSyncPlatforms = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetSyncPlatforms");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetUGCDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetUGCDetails");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetUGCDownloadProgress");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_GetUserPublishedItemVoteDetails");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_IsCloudEnabledForAccount");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_IsCloudEnabledForApp");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_PublishVideo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_PublishVideo");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_PublishWorkshopFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_PublishWorkshopFile");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_SetCloudEnabledForApp");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_SetSyncPlatforms = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_SetSyncPlatforms");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_SetUserPublishedFileAction");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_SubscribePublishedFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_SubscribePublishedFile");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UGCDownload = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UGCDownload");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UGCDownloadToLocation = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UGCDownloadToLocation");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UGCRead = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UGCRead");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UnsubscribePublishedFile");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFileDescription");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFileFile");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFilePreviewFile");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFileSetChangeDescription");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFileTags");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFileTitle");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdatePublishedFileVisibility");
+	steam_api64.oSteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamRemoteStorage_UpdateUserPublishedItemVote");
+	steam_api64.oSteamAPI_ISteamScreenshots_AddScreenshotToLibrary = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_AddScreenshotToLibrary");
+	steam_api64.oSteamAPI_ISteamScreenshots_HookScreenshots = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_HookScreenshots");
+	steam_api64.oSteamAPI_ISteamScreenshots_SetLocation = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_SetLocation");
+	steam_api64.oSteamAPI_ISteamScreenshots_TagPublishedFile = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_TagPublishedFile");
+	steam_api64.oSteamAPI_ISteamScreenshots_TagUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_TagUser");
+	steam_api64.oSteamAPI_ISteamScreenshots_TriggerScreenshot = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_TriggerScreenshot");
+	steam_api64.oSteamAPI_ISteamScreenshots_WriteScreenshot = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamScreenshots_WriteScreenshot");
+	steam_api64.oSteamAPI_ISteamUGC_AddExcludedTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_AddExcludedTag");
+	steam_api64.oSteamAPI_ISteamUGC_AddItemKeyValueTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_AddItemKeyValueTag");
+	steam_api64.oSteamAPI_ISteamUGC_AddItemToFavorites = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_AddItemToFavorites");
+	steam_api64.oSteamAPI_ISteamUGC_AddRequiredKeyValueTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_AddRequiredKeyValueTag");
+	steam_api64.oSteamAPI_ISteamUGC_AddRequiredTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_AddRequiredTag");
+	steam_api64.oSteamAPI_ISteamUGC_CreateItem = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_CreateItem");
+	steam_api64.oSteamAPI_ISteamUGC_CreateQueryAllUGCRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_CreateQueryAllUGCRequest");
+	steam_api64.oSteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_CreateQueryUGCDetailsRequest");
+	steam_api64.oSteamAPI_ISteamUGC_CreateQueryUserUGCRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_CreateQueryUserUGCRequest");
+	steam_api64.oSteamAPI_ISteamUGC_DownloadItem = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_DownloadItem");
+	steam_api64.oSteamAPI_ISteamUGC_GetItemDownloadInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetItemDownloadInfo");
+	steam_api64.oSteamAPI_ISteamUGC_GetItemInstallInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetItemInstallInfo");
+	steam_api64.oSteamAPI_ISteamUGC_GetItemState = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetItemState");
+	steam_api64.oSteamAPI_ISteamUGC_GetItemUpdateProgress = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetItemUpdateProgress");
+	steam_api64.oSteamAPI_ISteamUGC_GetNumSubscribedItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetNumSubscribedItems");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCAdditionalPreview");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCChildren = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCChildren");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCKeyValueTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCKeyValueTag");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCMetadata = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCMetadata");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCNumAdditionalPreviews");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCNumKeyValueTags");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCPreviewURL = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCPreviewURL");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCResult = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCResult");
+	steam_api64.oSteamAPI_ISteamUGC_GetQueryUGCStatistic = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetQueryUGCStatistic");
+	steam_api64.oSteamAPI_ISteamUGC_GetSubscribedItems = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetSubscribedItems");
+	steam_api64.oSteamAPI_ISteamUGC_GetUserItemVote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_GetUserItemVote");
+	steam_api64.oSteamAPI_ISteamUGC_ReleaseQueryUGCRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_ReleaseQueryUGCRequest");
+	steam_api64.oSteamAPI_ISteamUGC_RemoveItemFromFavorites = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_RemoveItemFromFavorites");
+	steam_api64.oSteamAPI_ISteamUGC_RemoveItemKeyValueTags = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_RemoveItemKeyValueTags");
+	steam_api64.oSteamAPI_ISteamUGC_RequestUGCDetails = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_RequestUGCDetails");
+	steam_api64.oSteamAPI_ISteamUGC_SendQueryUGCRequest = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SendQueryUGCRequest");
+	steam_api64.oSteamAPI_ISteamUGC_SetAllowCachedResponse = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetAllowCachedResponse");
+	steam_api64.oSteamAPI_ISteamUGC_SetCloudFileNameFilter = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetCloudFileNameFilter");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemContent = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemContent");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemDescription = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemDescription");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemMetadata = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemMetadata");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemPreview = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemPreview");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemTags = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemTags");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemTitle = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemTitle");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemUpdateLanguage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemUpdateLanguage");
+	steam_api64.oSteamAPI_ISteamUGC_SetItemVisibility = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetItemVisibility");
+	steam_api64.oSteamAPI_ISteamUGC_SetLanguage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetLanguage");
+	steam_api64.oSteamAPI_ISteamUGC_SetMatchAnyTag = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetMatchAnyTag");
+	steam_api64.oSteamAPI_ISteamUGC_SetRankedByTrendDays = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetRankedByTrendDays");
+	steam_api64.oSteamAPI_ISteamUGC_SetReturnAdditionalPreviews = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetReturnAdditionalPreviews");
+	steam_api64.oSteamAPI_ISteamUGC_SetReturnChildren = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetReturnChildren");
+	steam_api64.oSteamAPI_ISteamUGC_SetReturnKeyValueTags = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetReturnKeyValueTags");
+	steam_api64.oSteamAPI_ISteamUGC_SetReturnLongDescription = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetReturnLongDescription");
+	steam_api64.oSteamAPI_ISteamUGC_SetReturnMetadata = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetReturnMetadata");
+	steam_api64.oSteamAPI_ISteamUGC_SetReturnTotalOnly = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetReturnTotalOnly");
+	steam_api64.oSteamAPI_ISteamUGC_SetSearchText = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetSearchText");
+	steam_api64.oSteamAPI_ISteamUGC_SetUserItemVote = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SetUserItemVote");
+	steam_api64.oSteamAPI_ISteamUGC_StartItemUpdate = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_StartItemUpdate");
+	steam_api64.oSteamAPI_ISteamUGC_SubmitItemUpdate = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SubmitItemUpdate");
+	steam_api64.oSteamAPI_ISteamUGC_SubscribeItem = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_SubscribeItem");
+	steam_api64.oSteamAPI_ISteamUGC_UnsubscribeItem = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUGC_UnsubscribeItem");
+	steam_api64.oSteamAPI_ISteamUnifiedMessages_GetMethodResponseData = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUnifiedMessages_GetMethodResponseData");
+	steam_api64.oSteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUnifiedMessages_GetMethodResponseInfo");
+	steam_api64.oSteamAPI_ISteamUnifiedMessages_ReleaseMethod = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUnifiedMessages_ReleaseMethod");
+	steam_api64.oSteamAPI_ISteamUnifiedMessages_SendMethod = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUnifiedMessages_SendMethod");
+	steam_api64.oSteamAPI_ISteamUnifiedMessages_SendNotification = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUnifiedMessages_SendNotification");
+	steam_api64.oSteamAPI_ISteamUserStats_AttachLeaderboardUGC = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_AttachLeaderboardUGC");
+	steam_api64.oSteamAPI_ISteamUserStats_ClearAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_ClearAchievement");
+	steam_api64.oSteamAPI_ISteamUserStats_DownloadLeaderboardEntries = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_DownloadLeaderboardEntries");
+	steam_api64.oSteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_DownloadLeaderboardEntriesForUsers");
+	steam_api64.oSteamAPI_ISteamUserStats_FindLeaderboard = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_FindLeaderboard");
+	steam_api64.oSteamAPI_ISteamUserStats_FindOrCreateLeaderboard = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_FindOrCreateLeaderboard");
+	steam_api64.oSteamAPI_ISteamUserStats_GetAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetAchievement");
+	steam_api64.oSteamAPI_ISteamUserStats_GetAchievementAchievedPercent = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetAchievementAchievedPercent");
+	steam_api64.oSteamAPI_ISteamUserStats_GetAchievementAndUnlockTime = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetAchievementAndUnlockTime");
+	steam_api64.oSteamAPI_ISteamUserStats_GetAchievementDisplayAttribute = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute");
+	steam_api64.oSteamAPI_ISteamUserStats_GetAchievementIcon = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetAchievementIcon");
+	steam_api64.oSteamAPI_ISteamUserStats_GetAchievementName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetAchievementName");
+	steam_api64.oSteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetDownloadedLeaderboardEntry");
+	steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetGlobalStat");
+	steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStat0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetGlobalStat0");
+	steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStatHistory = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetGlobalStatHistory");
+	steam_api64.oSteamAPI_ISteamUserStats_GetGlobalStatHistory0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetGlobalStatHistory0");
+	steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardDisplayType = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetLeaderboardDisplayType");
+	steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardEntryCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetLeaderboardEntryCount");
+	steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardName = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetLeaderboardName");
+	steam_api64.oSteamAPI_ISteamUserStats_GetLeaderboardSortMethod = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetLeaderboardSortMethod");
+	steam_api64.oSteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetMostAchievedAchievementInfo");
+	steam_api64.oSteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetNextMostAchievedAchievementInfo");
+	steam_api64.oSteamAPI_ISteamUserStats_GetNumAchievements = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetNumAchievements");
+	steam_api64.oSteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetNumberOfCurrentPlayers");
+	steam_api64.oSteamAPI_ISteamUserStats_GetStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetStat");
+	steam_api64.oSteamAPI_ISteamUserStats_GetStat0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetStat0");
+	steam_api64.oSteamAPI_ISteamUserStats_GetUserAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetUserAchievement");
+	steam_api64.oSteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetUserAchievementAndUnlockTime");
+	steam_api64.oSteamAPI_ISteamUserStats_GetUserStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetUserStat");
+	steam_api64.oSteamAPI_ISteamUserStats_GetUserStat0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_GetUserStat0");
+	steam_api64.oSteamAPI_ISteamUserStats_IndicateAchievementProgress = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_IndicateAchievementProgress");
+	steam_api64.oSteamAPI_ISteamUserStats_RequestCurrentStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_RequestCurrentStats");
+	steam_api64.oSteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_RequestGlobalAchievementPercentages");
+	steam_api64.oSteamAPI_ISteamUserStats_RequestGlobalStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_RequestGlobalStats");
+	steam_api64.oSteamAPI_ISteamUserStats_RequestUserStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_RequestUserStats");
+	steam_api64.oSteamAPI_ISteamUserStats_ResetAllStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_ResetAllStats");
+	steam_api64.oSteamAPI_ISteamUserStats_SetAchievement = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_SetAchievement");
+	steam_api64.oSteamAPI_ISteamUserStats_SetStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_SetStat");
+	steam_api64.oSteamAPI_ISteamUserStats_SetStat0 = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_SetStat0");
+	steam_api64.oSteamAPI_ISteamUserStats_StoreStats = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_StoreStats");
+	steam_api64.oSteamAPI_ISteamUserStats_UpdateAvgRateStat = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_UpdateAvgRateStat");
+	steam_api64.oSteamAPI_ISteamUserStats_UploadLeaderboardScore = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUserStats_UploadLeaderboardScore");
+	steam_api64.oSteamAPI_ISteamUser_AdvertiseGame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_AdvertiseGame");
+	steam_api64.oSteamAPI_ISteamUser_BIsBehindNAT = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_BIsBehindNAT");
+	steam_api64.oSteamAPI_ISteamUser_BLoggedOn = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_BLoggedOn");
+	steam_api64.oSteamAPI_ISteamUser_BeginAuthSession = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_BeginAuthSession");
+	steam_api64.oSteamAPI_ISteamUser_CancelAuthTicket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_CancelAuthTicket");
+	steam_api64.oSteamAPI_ISteamUser_DecompressVoice = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_DecompressVoice");
+	steam_api64.oSteamAPI_ISteamUser_EndAuthSession = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_EndAuthSession");
+	steam_api64.oSteamAPI_ISteamUser_GetAuthSessionTicket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetAuthSessionTicket");
+	steam_api64.oSteamAPI_ISteamUser_GetAvailableVoice = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetAvailableVoice");
+	steam_api64.oSteamAPI_ISteamUser_GetEncryptedAppTicket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetEncryptedAppTicket");
+	steam_api64.oSteamAPI_ISteamUser_GetGameBadgeLevel = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetGameBadgeLevel");
+	steam_api64.oSteamAPI_ISteamUser_GetHSteamUser = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetHSteamUser");
+	steam_api64.oSteamAPI_ISteamUser_GetPlayerSteamLevel = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetPlayerSteamLevel");
+	steam_api64.oSteamAPI_ISteamUser_GetSteamID = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetSteamID");
+	steam_api64.oSteamAPI_ISteamUser_GetUserDataFolder = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetUserDataFolder");
+	steam_api64.oSteamAPI_ISteamUser_GetVoice = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetVoice");
+	steam_api64.oSteamAPI_ISteamUser_GetVoiceOptimalSampleRate = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_GetVoiceOptimalSampleRate");
+	steam_api64.oSteamAPI_ISteamUser_InitiateGameConnection = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_InitiateGameConnection");
+	steam_api64.oSteamAPI_ISteamUser_RequestEncryptedAppTicket = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_RequestEncryptedAppTicket");
+	steam_api64.oSteamAPI_ISteamUser_RequestStoreAuthURL = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_RequestStoreAuthURL");
+	steam_api64.oSteamAPI_ISteamUser_StartVoiceRecording = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_StartVoiceRecording");
+	steam_api64.oSteamAPI_ISteamUser_StopVoiceRecording = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_StopVoiceRecording");
+	steam_api64.oSteamAPI_ISteamUser_TerminateGameConnection = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_TerminateGameConnection");
+	steam_api64.oSteamAPI_ISteamUser_TrackAppUsageEvent = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_TrackAppUsageEvent");
+	steam_api64.oSteamAPI_ISteamUser_UserHasLicenseForApp = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUser_UserHasLicenseForApp");
+	steam_api64.oSteamAPI_ISteamUtils_BOverlayNeedsPresent = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_BOverlayNeedsPresent");
+	steam_api64.oSteamAPI_ISteamUtils_CheckFileSignature = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_CheckFileSignature");
+	steam_api64.oSteamAPI_ISteamUtils_GetAPICallFailureReason = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetAPICallFailureReason");
+	steam_api64.oSteamAPI_ISteamUtils_GetAPICallResult = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetAPICallResult");
+	steam_api64.oSteamAPI_ISteamUtils_GetAppID = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetAppID");
+	steam_api64.oSteamAPI_ISteamUtils_GetCSERIPPort = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetCSERIPPort");
+	steam_api64.oSteamAPI_ISteamUtils_GetConnectedUniverse = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetConnectedUniverse");
+	steam_api64.oSteamAPI_ISteamUtils_GetCurrentBatteryPower = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetCurrentBatteryPower");
+	steam_api64.oSteamAPI_ISteamUtils_GetEnteredGamepadTextInput = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetEnteredGamepadTextInput");
+	steam_api64.oSteamAPI_ISteamUtils_GetEnteredGamepadTextLength = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetEnteredGamepadTextLength");
+	steam_api64.oSteamAPI_ISteamUtils_GetIPCCallCount = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetIPCCallCount");
+	steam_api64.oSteamAPI_ISteamUtils_GetIPCountry = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetIPCountry");
+	steam_api64.oSteamAPI_ISteamUtils_GetImageRGBA = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetImageRGBA");
+	steam_api64.oSteamAPI_ISteamUtils_GetImageSize = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetImageSize");
+	steam_api64.oSteamAPI_ISteamUtils_GetSecondsSinceAppActive = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetSecondsSinceAppActive");
+	steam_api64.oSteamAPI_ISteamUtils_GetSecondsSinceComputerActive = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetSecondsSinceComputerActive");
+	steam_api64.oSteamAPI_ISteamUtils_GetServerRealTime = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetServerRealTime");
+	steam_api64.oSteamAPI_ISteamUtils_GetSteamUILanguage = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_GetSteamUILanguage");
+	steam_api64.oSteamAPI_ISteamUtils_IsAPICallCompleted = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_IsAPICallCompleted");
+	steam_api64.oSteamAPI_ISteamUtils_IsOverlayEnabled = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_IsOverlayEnabled");
+	steam_api64.oSteamAPI_ISteamUtils_IsSteamRunningInVR = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_IsSteamRunningInVR");
+	steam_api64.oSteamAPI_ISteamUtils_RunFrame = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_RunFrame");
+	steam_api64.oSteamAPI_ISteamUtils_SetOverlayNotificationInset = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_SetOverlayNotificationInset");
+	steam_api64.oSteamAPI_ISteamUtils_SetOverlayNotificationPosition = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_SetOverlayNotificationPosition");
+	steam_api64.oSteamAPI_ISteamUtils_SetWarningMessageHook = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_SetWarningMessageHook");
+	steam_api64.oSteamAPI_ISteamUtils_ShowGamepadTextInput = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamUtils_ShowGamepadTextInput");
+	steam_api64.oSteamAPI_ISteamVideo_GetVideoURL = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamVideo_GetVideoURL");
+	steam_api64.oSteamAPI_ISteamVideo_IsBroadcasting = GetProcAddress(steam_api64.dll, "SteamAPI_ISteamVideo_IsBroadcasting");
+	steam_api64.oSteamAPI_Init = GetProcAddress(steam_api64.dll, "SteamAPI_Init");
+	steam_api64.oSteamAPI_InitSafe = GetProcAddress(steam_api64.dll, "SteamAPI_InitSafe");
+	steam_api64.oSteamAPI_IsSteamRunning = GetProcAddress(steam_api64.dll, "SteamAPI_IsSteamRunning");
+	steam_api64.oSteamAPI_RegisterCallResult = GetProcAddress(steam_api64.dll, "SteamAPI_RegisterCallResult");
+	steam_api64.oSteamAPI_RegisterCallback = GetProcAddress(steam_api64.dll, "SteamAPI_RegisterCallback");
+	steam_api64.oSteamAPI_RestartAppIfNecessary = GetProcAddress(steam_api64.dll, "SteamAPI_RestartAppIfNecessary");
+	steam_api64.oSteamAPI_RunCallbacks = GetProcAddress(steam_api64.dll, "SteamAPI_RunCallbacks");
+	steam_api64.oSteamAPI_SetBreakpadAppID = GetProcAddress(steam_api64.dll, "SteamAPI_SetBreakpadAppID");
+	steam_api64.oSteamAPI_SetMiniDumpComment = GetProcAddress(steam_api64.dll, "SteamAPI_SetMiniDumpComment");
+	steam_api64.oSteamAPI_SetTryCatchCallbacks = GetProcAddress(steam_api64.dll, "SteamAPI_SetTryCatchCallbacks");
+	steam_api64.oSteamAPI_Shutdown = GetProcAddress(steam_api64.dll, "SteamAPI_Shutdown");
+	steam_api64.oSteamAPI_UnregisterCallResult = GetProcAddress(steam_api64.dll, "SteamAPI_UnregisterCallResult");
+	steam_api64.oSteamAPI_UnregisterCallback = GetProcAddress(steam_api64.dll, "SteamAPI_UnregisterCallback");
+	steam_api64.oSteamAPI_UseBreakpadCrashHandler = GetProcAddress(steam_api64.dll, "SteamAPI_UseBreakpadCrashHandler");
+	steam_api64.oSteamAPI_WriteMiniDump = GetProcAddress(steam_api64.dll, "SteamAPI_WriteMiniDump");
+	steam_api64.oSteamAppList = GetProcAddress(steam_api64.dll, "SteamAppList");
+	steam_api64.oSteamApps = GetProcAddress(steam_api64.dll, "SteamApps");
+	steam_api64.oSteamClient = GetProcAddress(steam_api64.dll, "SteamClient");
+	steam_api64.oSteamController = GetProcAddress(steam_api64.dll, "SteamController");
+	steam_api64.oSteamController_GetControllerState = GetProcAddress(steam_api64.dll, "SteamController_GetControllerState");
+	steam_api64.oSteamController_Init = GetProcAddress(steam_api64.dll, "SteamController_Init");
+	steam_api64.oSteamController_SetOverrideMode = GetProcAddress(steam_api64.dll, "SteamController_SetOverrideMode");
+	steam_api64.oSteamController_Shutdown = GetProcAddress(steam_api64.dll, "SteamController_Shutdown");
+	steam_api64.oSteamController_TriggerHapticPulse = GetProcAddress(steam_api64.dll, "SteamController_TriggerHapticPulse");
+	steam_api64.oSteamFriends = GetProcAddress(steam_api64.dll, "SteamFriends");
+	steam_api64.oSteamGameServer = GetProcAddress(steam_api64.dll, "SteamGameServer");
+	steam_api64.oSteamGameServerApps = GetProcAddress(steam_api64.dll, "SteamGameServerApps");
+	steam_api64.oSteamGameServerHTTP = GetProcAddress(steam_api64.dll, "SteamGameServerHTTP");
+	steam_api64.oSteamGameServerInventory = GetProcAddress(steam_api64.dll, "SteamGameServerInventory");
+	steam_api64.oSteamGameServerNetworking = GetProcAddress(steam_api64.dll, "SteamGameServerNetworking");
+	steam_api64.oSteamGameServerStats = GetProcAddress(steam_api64.dll, "SteamGameServerStats");
+	steam_api64.oSteamGameServerUGC = GetProcAddress(steam_api64.dll, "SteamGameServerUGC");
+	steam_api64.oSteamGameServerUtils = GetProcAddress(steam_api64.dll, "SteamGameServerUtils");
+	steam_api64.oSteamGameServer_BSecure = GetProcAddress(steam_api64.dll, "SteamGameServer_BSecure");
+	steam_api64.oSteamGameServer_GetHSteamPipe = GetProcAddress(steam_api64.dll, "SteamGameServer_GetHSteamPipe");
+	steam_api64.oSteamGameServer_GetHSteamUser = GetProcAddress(steam_api64.dll, "SteamGameServer_GetHSteamUser");
+	steam_api64.oSteamGameServer_GetIPCCallCount = GetProcAddress(steam_api64.dll, "SteamGameServer_GetIPCCallCount");
+	steam_api64.oSteamGameServer_GetSteamID = GetProcAddress(steam_api64.dll, "SteamGameServer_GetSteamID");
+	steam_api64.oSteamGameServer_Init = GetProcAddress(steam_api64.dll, "SteamGameServer_Init");
+	steam_api64.oSteamGameServer_InitSafe = GetProcAddress(steam_api64.dll, "SteamGameServer_InitSafe");
+	steam_api64.oSteamGameServer_RunCallbacks = GetProcAddress(steam_api64.dll, "SteamGameServer_RunCallbacks");
+	steam_api64.oSteamGameServer_Shutdown = GetProcAddress(steam_api64.dll, "SteamGameServer_Shutdown");
+	steam_api64.oSteamHTMLSurface = GetProcAddress(steam_api64.dll, "SteamHTMLSurface");
+	steam_api64.oSteamHTTP = GetProcAddress(steam_api64.dll, "SteamHTTP");
+	steam_api64.oSteamInventory = GetProcAddress(steam_api64.dll, "SteamInventory");
+	steam_api64.oSteamMatchmaking = GetProcAddress(steam_api64.dll, "SteamMatchmaking");
+	steam_api64.oSteamMatchmakingServers = GetProcAddress(steam_api64.dll, "SteamMatchmakingServers");
+	steam_api64.oSteamMusic = GetProcAddress(steam_api64.dll, "SteamMusic");
+	steam_api64.oSteamMusicRemote = GetProcAddress(steam_api64.dll, "SteamMusicRemote");
+	steam_api64.oSteamNetworking = GetProcAddress(steam_api64.dll, "SteamNetworking");
+	steam_api64.oSteamRemoteStorage = GetProcAddress(steam_api64.dll, "SteamRemoteStorage");
+	steam_api64.oSteamScreenshots = GetProcAddress(steam_api64.dll, "SteamScreenshots");
+	steam_api64.oSteamUGC = GetProcAddress(steam_api64.dll, "SteamUGC");
+	steam_api64.oSteamUnifiedMessages = GetProcAddress(steam_api64.dll, "SteamUnifiedMessages");
+	steam_api64.oSteamUser = GetProcAddress(steam_api64.dll, "SteamUser");
+	steam_api64.oSteamUserStats = GetProcAddress(steam_api64.dll, "SteamUserStats");
+	steam_api64.oSteamUtils = GetProcAddress(steam_api64.dll, "SteamUtils");
+	steam_api64.oSteamVideo = GetProcAddress(steam_api64.dll, "SteamVideo");
+	steam_api64.oSteam_GetHSteamUserCurrent = GetProcAddress(steam_api64.dll, "Steam_GetHSteamUserCurrent");
+	steam_api64.oSteam_RegisterInterfaceFuncs = GetProcAddress(steam_api64.dll, "Steam_RegisterInterfaceFuncs");
+	steam_api64.oSteam_RunCallbacks = GetProcAddress(steam_api64.dll, "Steam_RunCallbacks");
+	steam_api64.og_pSteamClientGameServer = GetProcAddress(steam_api64.dll, "g_pSteamClientGameServer");
+}
+#pragma endregion
