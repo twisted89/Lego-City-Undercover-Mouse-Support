@@ -34,24 +34,25 @@ HWND hwnd = NULL;
 WNDPROC fpWndProc = nullptr;
 
 float sensitivity = 1, distance = 1;
+int* isFirstPerson = nullptr;
 int x = 0, y = 0;
 float rotation = 0;
 bool initialised = false;
 bool capture = false;
 unsigned short leftClickKey = 0x51, rightClickKey = 0x45;
 
-void OnMouseInput(int mx, int my)
+static void OnMouseInput(int mx, int my)
 {
 	x += mx;
 	y += my;
 }
 
-void OnMouseScroll(bool up)
+static void OnMouseScroll(bool up)
 {
 	distance += up ? -0.1f : 0.1f;
 }
 
-void SendButton(unsigned short key, bool down)
+static void SendButton(unsigned short key, bool down)
 {
 	//DEBUG_PRINTF("Sending key %d %s\n", key, down ? "DOWN" : "UP");
 	INPUT input_config = {};
@@ -61,7 +62,7 @@ void SendButton(unsigned short key, bool down)
 	SendInput(1, &input_config, sizeof(input_config));
 }
 
-void OnMouseButton(unsigned short buttonFlags)
+static void OnMouseButton(unsigned short buttonFlags)
 {
 	if (buttonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
 		SendButton(leftClickKey, true );
@@ -130,7 +131,7 @@ int64_t __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos ,
 	if (!initialised)
 		initialised = input.Init();
 
-	if (initialised)
+	if (initialised && !(*isFirstPerson))
 	{
 		input.Update(capture);
 
@@ -163,9 +164,25 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		uintptr_t moduleBase = (uintptr_t)GetModuleHandle(nullptr);
 
 		TCHAR modulePath[MAX_PATH];
-		GetModuleFileName(GetModuleHandle(nullptr), modulePath, MAX_PATH);
+		GetModuleFileName(hModule, modulePath, MAX_PATH);
 
-		const TCHAR* dllPath = _T("proxy\\steam_api64.dll");
+		// Extract directory from module path
+		TCHAR moduleDir[MAX_PATH];
+		_tcscpy_s(moduleDir, MAX_PATH, modulePath);
+		TCHAR* lastBackslash = _tcsrchr(moduleDir, _T('\\'));
+		if (lastBackslash) {
+			*lastBackslash = _T('\0');
+		}
+
+		// Check if gog.ico exists
+		TCHAR launchPath[MAX_PATH];
+		_sntprintf_s(launchPath, MAX_PATH, _TRUNCATE, _T("%s\\gog.ico"), moduleDir);
+
+		const TCHAR* steam_dllPath = _T("proxy\\steam_api64_steam.dll");
+		const TCHAR* gog_dllPath = _T("proxy\\steam_api64_gog.dll");
+
+		// Choose DLL path based on gog icon
+		const TCHAR* dllPath = (GetFileAttributes(launchPath) != INVALID_FILE_ATTRIBUTES) ? gog_dllPath : steam_dllPath;
 
 		steam_api64.dll = LoadLibrary(dllPath);
 		setupFunctions();
@@ -204,6 +221,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 			return FALSE;
 		}
 
+		isFirstPerson = reinterpret_cast<int*>(moduleBase + 0x18152A4);
 		auto cameraUpdateFP = reinterpret_cast<LPVOID>(moduleBase + 0x991500);
 		auto cameraUpdateTestFP = reinterpret_cast<LPVOID>(moduleBase + 0x8ED0A0);
 		auto wndProcFP = reinterpret_cast<LPVOID>(moduleBase + 0x449410);

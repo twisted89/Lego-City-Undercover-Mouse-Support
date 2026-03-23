@@ -1333,7 +1333,7 @@ extern "C" {
 	void fSteamAPI_RegisterCallResult() { PA = steam_api64.oSteamAPI_RegisterCallResult; runASM(); }
 	void fSteamAPI_RegisterCallback() { PA = steam_api64.oSteamAPI_RegisterCallback; runASM(); }
 	void fSteamAPI_RestartAppIfNecessary() { PA = steam_api64.oSteamAPI_RestartAppIfNecessary; runASM(); }
-	void fSteamAPI_RunCallbacks() { PA = steam_api64.oSteamAPI_RunCallbacks; runASM(); }
+	void fSteamAPI_RunCallbacks() { if (steam_api64.oSteamAPI_RunCallbacks) { PA = steam_api64.oSteamAPI_RunCallbacks; runASM(); } else return; }
 	void fSteamAPI_SetBreakpadAppID() { PA = steam_api64.oSteamAPI_SetBreakpadAppID; runASM(); }
 	void fSteamAPI_SetMiniDumpComment() { PA = steam_api64.oSteamAPI_SetMiniDumpComment; runASM(); }
 	void fSteamAPI_SetTryCatchCallbacks() { PA = steam_api64.oSteamAPI_SetTryCatchCallbacks; runASM(); }
