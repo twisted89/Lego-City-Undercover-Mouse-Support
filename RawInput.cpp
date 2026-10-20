@@ -318,6 +318,8 @@ void RawInput::cleanup_window() {
 	if (is_event_queue_window(m_hwnd)) {
 		MSG Msg;
 		DWORD ownerThread = GetWindowThreadProcessId(m_hwnd, nullptr);
+		// Windows only permits the creating thread to destroy this message-only window.
+		// A load may already have ended that thread and destroyed the HWND for us.
 		if (ownerThread == GetCurrentThreadId())
 		{
 			DestroyWindow(m_hwnd);
@@ -416,6 +418,8 @@ bool RawInput::init_event_queue()
 	}
 
 	SetLastError(ERROR_SUCCESS);
+	// Tag the HWND so a recycled handle belonging to another window cannot be mistaken
+	// for this RawInput instance after a loading-thread transition.
 	if (SetWindowLongPtr(m_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this)) == 0 &&
 		GetLastError() != ERROR_SUCCESS)
 	{
@@ -446,6 +450,8 @@ bool RawInput::is_event_queue_window(HWND window) const
 
 bool RawInput::ensure_event_queue()
 {
+	// Message-only windows are thread-owned. Reuse the queue only on its owner thread;
+	// otherwise unregister the stale target and rebuild it on the current camera thread.
 	if (is_event_queue_window(m_hwnd))
 	{
 		const DWORD ownerThread = GetWindowThreadProcessId(m_hwnd, nullptr);
@@ -469,6 +475,8 @@ void RawInput::Update(bool capture) {
 
 	if (!capture)
 	{
+		// Disabling must not create a queue on a transient loading thread. It only
+		// unregisters capture and drains a queue already owned by this thread.
 		register_raw_input(false);
 		if (is_event_queue_window(m_hwnd) &&
 			GetWindowThreadProcessId(m_hwnd, nullptr) == GetCurrentThreadId())

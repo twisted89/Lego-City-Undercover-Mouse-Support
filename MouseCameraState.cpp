@@ -104,6 +104,8 @@ namespace mouse_camera
 
 	bool IsInitialKeyDown(std::uintptr_t pressedKey, std::intptr_t lParam, unsigned short toggleKey)
 	{
+		// WM_KEYDOWN bit 30 is set for auto-repeat. Ignoring it makes a held toggle key
+		// produce exactly one transition.
 		constexpr std::uintptr_t PreviousKeyState = 1ULL << 30;
 		return pressedKey == toggleKey && (static_cast<std::uintptr_t>(lParam) & PreviousKeyState) == 0;
 	}
@@ -115,6 +117,9 @@ namespace mouse_camera
 
 	void CameraModeGate::OnUpdateGap()
 	{
+		// A gap is recovery evidence only if the last usable camera was third-person.
+		// This prevents startup or a load entered from genuine first-person mode from
+		// authorizing an override.
 		recoveryPending = thirdPersonObserved;
 		staleFirstPersonOverride = false;
 		thirdPersonObserved = false;
@@ -132,12 +137,20 @@ namespace mouse_camera
 
 		if (!staleFirstPersonOverride)
 		{
-			thirdPersonObserved = false;
+			// The ferry raises the game flag before camera updates pause. Preserve the last
+			// third-person observation while its orbit is still valid, but continue blocking
+			// input until a subsequent gap and post-update validation authorize recovery.
+			if (!orbitUsable)
+			{
+				thirdPersonObserved = false;
+			}
 			return false;
 		}
 
 		if (!orbitUsable)
 		{
+			// Geometry is the independent signal for a real first-person/invalid camera.
+			// Revoke the local override immediately instead of trusting stale history.
 			staleFirstPersonOverride = false;
 			recoveryPending = false;
 			thirdPersonObserved = false;
@@ -157,6 +170,8 @@ namespace mouse_camera
 
 		if (recoveryPending && orbitUsable)
 		{
+			// This override affects only the mod's gate. Leaving the game flag untouched
+			// avoids interfering with scripts that legitimately own camera mode.
 			recoveryPending = false;
 			staleFirstPersonOverride = true;
 			thirdPersonObserved = true;

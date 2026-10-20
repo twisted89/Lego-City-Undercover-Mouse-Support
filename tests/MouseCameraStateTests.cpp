@@ -96,9 +96,16 @@ int main()
 	Check(!cameraMode.AllowsCamera(true, false), "a real first-person orbit revokes the stale-flag bypass");
 	Check(!cameraMode.RecoverAfterUpdate(true, true), "first-person mode cannot recover again without another load gap");
 	Check(cameraMode.AllowsCamera(false, true), "a game-reported third-person camera is always allowed");
-	Check(!cameraMode.AllowsCamera(true, true), "a later genuine first-person transition is blocked");
+	Check(!cameraMode.AllowsCamera(true, true), "a stale first-person report is blocked before the load gap");
 	cameraMode.OnUpdateGap();
-	Check(!cameraMode.RecoverAfterUpdate(true, true), "a load entered from first-person mode remains blocked");
+	Check(cameraMode.RecoverAfterUpdate(true, true),
+		"a first-person report immediately before the ferry gap retains the prior third-person state");
+
+	CameraModeGate firstPersonMode;
+	Check(firstPersonMode.AllowsCamera(false, true), "the first-person test starts from third-person mode");
+	Check(!firstPersonMode.AllowsCamera(true, false), "a genuine first-person orbit is blocked");
+	firstPersonMode.OnUpdateGap();
+	Check(!firstPersonMode.RecoverAfterUpdate(true, true), "a load entered from genuine first-person mode remains blocked");
 
 	CameraModeGate settlingMode;
 	Check(settlingMode.AllowsCamera(false, true), "a settling test starts from third-person mode");

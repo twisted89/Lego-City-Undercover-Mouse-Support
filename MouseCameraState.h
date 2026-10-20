@@ -53,6 +53,9 @@ namespace mouse_camera
 	bool IsInitialKeyDown(std::uintptr_t pressedKey, std::intptr_t lParam, unsigned short toggleKey);
 	bool HasCameraUpdateGap(std::uint64_t previousTick, std::uint64_t currentTick, std::uint64_t maximumGap);
 
+	// The game's first-person flag can remain set after ferry loads. This gate permits a
+	// local override only when a load gap follows a known third-person camera and the
+	// resulting camera/target positions still describe a usable orbit.
 	class CameraModeGate
 	{
 	public:
@@ -61,8 +64,11 @@ namespace mouse_camera
 		bool RecoverAfterUpdate(bool reportedFirstPerson, bool orbitUsable);
 
 	private:
+		// Armed by a camera-update gap only when third-person geometry was previously observed.
 		bool recoveryPending = false;
+		// Bypasses a stale game flag locally; the game-owned flag is never modified.
 		bool staleFirstPersonOverride = false;
+		// Retained when the ferry raises its mode flag before the actual update gap.
 		bool thirdPersonObserved = false;
 	};
 

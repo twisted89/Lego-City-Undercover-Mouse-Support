@@ -185,6 +185,8 @@ static void SuspendMouseCameraInputImmediately()
 
 static bool HasUsableOrbit(float* camPos, float* playerPos)
 {
+	// Validate camera geometry independently of the game mode flag. Ferry travel can
+	// leave that flag stale even though these positions still form a third-person orbit.
 	float ignoredRotation = 0.0f;
 	float ignoredDistance = 0.0f;
 	return camPos != nullptr && playerPos != nullptr &&
@@ -223,6 +225,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 	const std::uint64_t currentTick = GetTickCount64();
 	if (mouse_camera::HasCameraUpdateGap(lastCameraUpdateTick, currentTick, MaximumCameraUpdateGapMs))
 	{
+		// Loading and fast travel stop this hook long enough to invalidate accumulated
+		// input and, potentially, the thread-owned raw-input message window.
 		needsCameraResync = true;
 		cameraModeGate.OnUpdateGap();
 	}
@@ -264,6 +268,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 
 	if (needsCameraResync)
 	{
+		// Let the game establish its post-transition camera before deriving our orbit.
+		// Suspending first also prevents pre-load mouse deltas from causing a jump.
 		SuspendMouseCameraInput();
 		fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
 		desired = desiredState.Get();
@@ -299,6 +305,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 				return;
 			}
 
+			// Update(true) also recreates the raw-input queue if loading replaced the
+			// camera thread that owned its message-only window.
 			input.Update(true);
 			SetMouseCameraInputAccepting(true);
 			desired = desiredState.Get();
