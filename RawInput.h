@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <mutex>
 #include <Windows.h>
 #include <Setupapi.h>
 
@@ -13,6 +14,7 @@ public:
 	~RawInput();
 
 	void Update(bool enable);
+	void DisableCapture();
 	bool Init();
 
 private:
@@ -29,6 +31,8 @@ private:
 	void cleanup_window();
 	void rawinput_quit();
 	bool init_event_queue();
+	bool ensure_event_queue();
+	bool is_event_queue_window(HWND window) const;
 
 private:
 	struct deviceInfo {
@@ -55,5 +59,7 @@ private:
 	HWND m_hwnd;
 	ATOM m_class_atom;
 	BOOL m_isWow64;
+	std::mutex m_updateMutex;
+	std::mutex m_registrationMutex;
 };
 

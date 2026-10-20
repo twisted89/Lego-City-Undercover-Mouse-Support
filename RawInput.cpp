@@ -315,15 +315,19 @@ void RawInput::init_device(const RAWINPUTDEVICELIST* dev) {
 
 void RawInput::cleanup_window() {
 
-	if (m_hwnd) {
+	if (is_event_queue_window(m_hwnd)) {
 		MSG Msg;
-		DestroyWindow(m_hwnd);
-		while (PeekMessage(&Msg, m_hwnd, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
+		DWORD ownerThread = GetWindowThreadProcessId(m_hwnd, nullptr);
+		if (ownerThread == GetCurrentThreadId())
+		{
+			DestroyWindow(m_hwnd);
+			while (PeekMessage(&Msg, m_hwnd, 0, 0, PM_REMOVE)) {
+				TranslateMessage(&Msg);
+				DispatchMessage(&Msg);
+			}
 		}
-		m_hwnd = 0;
 	}
+	m_hwnd = 0;
 
 	if (m_class_atom) {
 		UnregisterClass(class_name, GetModuleHandle(NULL));
@@ -346,6 +350,7 @@ void RawInput::rawinput_quit() {
 }
 
 bool RawInput::register_raw_input(bool enable) {
+	std::lock_guard<std::mutex> lock(m_registrationMutex);
 
 	if (m_registered == enable) {
 		return false;
@@ -378,18 +383,26 @@ bool RawInput::register_raw_input(bool enable) {
 	return true;
 }
 
+void RawInput::DisableCapture()
+{
+	register_raw_input(false);
+}
+
 bool RawInput::init_event_queue()
 {
 	HANDLE hInstance = GetModuleHandle(NULL);
 
-	WNDCLASSEX wce = {  };
-	wce.cbSize = sizeof(WNDCLASSEX);
-	wce.lpfnWndProc = RawWndProc;
-	wce.lpszClassName = class_name;
-	wce.hInstance = (HINSTANCE)hInstance;
-	m_class_atom = RegisterClassEx(&wce);
 	if (m_class_atom == 0)
-		return false;
+	{
+		WNDCLASSEX wce = {  };
+		wce.cbSize = sizeof(WNDCLASSEX);
+		wce.lpfnWndProc = RawWndProc;
+		wce.lpszClassName = class_name;
+		wce.hInstance = (HINSTANCE)hInstance;
+		m_class_atom = RegisterClassEx(&wce);
+		if (m_class_atom == 0)
+			return false;
+	}
 
 	//create the window at the position of the cursor
 	POINT cursor_pos;
@@ -402,12 +415,77 @@ bool RawInput::init_event_queue()
 		return false;
 	}
 
+	SetLastError(ERROR_SUCCESS);
+	if (SetWindowLongPtr(m_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this)) == 0 &&
+		GetLastError() != ERROR_SUCCESS)
+	{
+		printf("SetWindowLongPtr failed %d", GetLastError());
+		DestroyWindow(m_hwnd);
+		m_hwnd = NULL;
+		return false;
+	}
+
 	ShowWindow(m_hwnd, SW_HIDE);
 
 	return true;
 }
 
+bool RawInput::is_event_queue_window(HWND window) const
+{
+	if (window == NULL || !IsWindow(window))
+	{
+		return false;
+	}
+
+	DWORD processId = 0;
+	GetWindowThreadProcessId(window, &processId);
+	return processId == GetCurrentProcessId() &&
+		static_cast<ATOM>(GetClassLongPtr(window, GCW_ATOM)) == m_class_atom &&
+		GetWindowLongPtr(window, GWLP_USERDATA) == reinterpret_cast<LONG_PTR>(this);
+}
+
+bool RawInput::ensure_event_queue()
+{
+	if (is_event_queue_window(m_hwnd))
+	{
+		const DWORD ownerThread = GetWindowThreadProcessId(m_hwnd, nullptr);
+		if (ownerThread == GetCurrentThreadId())
+		{
+			return true;
+		}
+	}
+
+	register_raw_input(false);
+	{
+		std::lock_guard<std::mutex> lock(m_registrationMutex);
+		m_registered = false;
+	}
+	m_hwnd = NULL;
+	return init_event_queue();
+}
+
 void RawInput::Update(bool capture) {
+	std::lock_guard<std::mutex> lock(m_updateMutex);
+
+	if (!capture)
+	{
+		register_raw_input(false);
+		if (is_event_queue_window(m_hwnd) &&
+			GetWindowThreadProcessId(m_hwnd, nullptr) == GetCurrentThreadId())
+		{
+			MSG Msg;
+			while (PeekMessage(&Msg, m_hwnd, 0, 0, PM_REMOVE)) {
+				TranslateMessage(&Msg);
+				DispatchMessage(&Msg);
+			}
+		}
+		return;
+	}
+
+	if (!ensure_event_queue())
+	{
+		return;
+	}
 
 	register_raw_input(capture);
 	MSG Msg;
@@ -419,6 +497,8 @@ void RawInput::Update(bool capture) {
 
 bool RawInput::Init()
 {
+	std::lock_guard<std::mutex> lock(m_updateMutex);
+
 	if (!get_devinfos()) {
 		return false;
 	}

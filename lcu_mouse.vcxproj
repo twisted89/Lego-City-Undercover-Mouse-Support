@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="MouseCameraState.cpp" />
     <ClCompile Include="minhook\buffer.c" />
     <ClCompile Include="minhook\hde\hde32.c" />
     <ClCompile Include="minhook\hde\hde64.c" />
@@ -173,6 +174,7 @@
     <ClInclude Include="minhook\hde\table64.h" />
     <ClInclude Include="minhook\MinHook.h" />
     <ClInclude Include="minhook\trampoline.h" />
+    <ClInclude Include="MouseCameraState.h" />
     <ClInclude Include="Proxy.h" />
     <ClInclude Include="RawInput.h" />
     <ClInclude Include="Vector3.h" />

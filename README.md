@@ -17,4 +17,5 @@
 
 - Scroll adjust camera distance
 - Home/End buttons increase/decrease sensitivity in game or adjust in ini file
+- F8 enables/disables mouse-camera control. Set `togglekey` under `[settings]` in `lcu.ini` to another hexadecimal Windows virtual-key code (default `0x77`).
 - By default Left and right click are bound to Q + E. Edit the ini file to change these or adjust your in game mappings accordingly. Use virtual keycodes in ini https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

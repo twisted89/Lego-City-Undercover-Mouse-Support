@@ -7,7 +7,11 @@
 #include "vector3.h"
 #include "Proxy.h"
 #include "RawInput.h"
+#include "MouseCameraState.h"
 #include "ini.h"
+
+#include <mutex>
+#include <type_traits>
 
 #define DEBUG_PRINTF(...) {char cad[512]; sprintf(cad, __VA_ARGS__);  OutputDebugStringA(cad);}
 
@@ -19,37 +23,48 @@ struct ButtonEvent
 	bool pressed;
 };
 
-typedef int64_t(__fastcall* UPDATECAM)(__int64, float*, float*, float, int, int, char, char, __int64);
+typedef void(__fastcall* UPDATECAM)(__int64, float*, float*, float, int, int, char, char, __int64);
+static_assert(std::is_void<std::result_of<UPDATECAM(__int64, float*, float*, float, int, int, char, char, __int64)>::type>::value,
+	"The game's camera update routine has no return value");
 UPDATECAM fpUpdateCam = nullptr;
-
-typedef int64_t(__fastcall* FORCECAMDIRECTION)(__int64, __int64);
-FORCECAMDIRECTION fpForceCamDir = nullptr;
 
 typedef int64_t(__fastcall* KEYPRESSFUNC)(int);
 KEYPRESSFUNC fpKeyPress = nullptr;
 unsigned char* keyStates = nullptr;
 unsigned char* keyCounter = nullptr;
 
-HWND hwnd = NULL;
 WNDPROC fpWndProc = nullptr;
 
 float sensitivity = 1, distance = 1;
 int* isFirstPerson = nullptr;
-int x = 0, y = 0;
 float rotation = 0;
+mouse_camera::InputState mouseInput;
+mouse_camera::DesiredState desiredState;
+mouse_camera::CameraModeGate cameraModeGate;
+std::mutex mouseInputMutex;
 bool initialised = false;
-bool capture = false;
+bool needsCameraResync = true;
+bool leftClickDown = false, rightClickDown = false;
 unsigned short leftClickKey = 0x51, rightClickKey = 0x45;
+unsigned short toggleKey = mouse_camera::DefaultToggleKey;
+std::uint64_t lastCameraUpdateTick = 0;
+std::uint64_t lastDesiredStateRevision = UINT64_MAX;
+
+static constexpr std::uint64_t MaximumCameraUpdateGapMs = 500;
 
 static void OnMouseInput(int mx, int my)
 {
-	x += mx;
-	y += my;
+	std::lock_guard<std::mutex> lock(mouseInputMutex);
+	mouseInput.AddDelta(mx, my);
 }
 
 static void OnMouseScroll(bool up)
 {
-	distance += up ? -0.1f : 0.1f;
+	std::lock_guard<std::mutex> lock(mouseInputMutex);
+	if (mouseInput.accepting)
+	{
+		distance += up ? -0.1f : 0.1f;
+	}
 }
 
 static void SendButton(unsigned short key, bool down)
@@ -64,18 +79,77 @@ static void SendButton(unsigned short key, bool down)
 
 static void OnMouseButton(unsigned short buttonFlags)
 {
+	std::lock_guard<std::mutex> lock(mouseInputMutex);
+	if (!mouseInput.accepting)
+	{
+		return;
+	}
+
 	if (buttonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
-		SendButton(leftClickKey, true );
+		if (!leftClickDown)
+		{
+			SendButton(leftClickKey, true);
+			leftClickDown = true;
+		}
 	}
 	if (buttonFlags & RI_MOUSE_LEFT_BUTTON_UP) {
-		SendButton(leftClickKey, false );
+		if (leftClickDown)
+		{
+			SendButton(leftClickKey, false);
+			leftClickDown = false;
+		}
 	}
 	if (buttonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN) {
-		SendButton(rightClickKey, true );
+		if (!rightClickDown)
+		{
+			SendButton(rightClickKey, true);
+			rightClickDown = true;
+		}
 	}
 	if (buttonFlags & RI_MOUSE_RIGHT_BUTTON_UP) {
-		SendButton(rightClickKey, false );
+		if (rightClickDown)
+		{
+			SendButton(rightClickKey, false);
+			rightClickDown = false;
+		}
 	}
+}
+
+static void ClearMouseCameraInput()
+{
+	bool releaseLeft;
+	bool releaseRight;
+	{
+		std::lock_guard<std::mutex> lock(mouseInputMutex);
+		mouseInput.SetAccepting(false);
+		releaseLeft = leftClickDown;
+		releaseRight = rightClickDown;
+		leftClickDown = false;
+		rightClickDown = false;
+	}
+
+	if (releaseLeft)
+	{
+		SendButton(leftClickKey, false);
+	}
+	if (releaseRight)
+	{
+		SendButton(rightClickKey, false);
+	}
+}
+
+static void SetMouseCameraInputAccepting(bool accepting)
+{
+	std::lock_guard<std::mutex> lock(mouseInputMutex);
+	mouseInput.SetAccepting(accepting);
+}
+
+static int ConsumeHorizontalMouseDelta()
+{
+	std::lock_guard<std::mutex> lock(mouseInputMutex);
+	const int delta = mouseInput.x;
+	mouseInput.Clear();
+	return delta;
 }
 
 Vector3 static RotateCam(Vector3 cam, Vector3 point, double angle)
@@ -92,62 +166,196 @@ Vector3 static RotateCam(Vector3 cam, Vector3 point, double angle)
 	return Vector3(static_cast<float>(point.x + nRelativeX), static_cast<float>(point.y + relativeY), 0);
 }
 
-RawInput input = RawInput(OnMouseInput, OnMouseScroll, OnMouseButton);
+RawInput input(OnMouseInput, OnMouseScroll, OnMouseButton);
+
+static void SuspendMouseCameraInput()
+{
+	ClearMouseCameraInput();
+	if (initialised)
+	{
+		input.Update(false);
+	}
+}
+
+static void SuspendMouseCameraInputImmediately()
+{
+	ClearMouseCameraInput();
+	input.DisableCapture();
+}
+
+static bool HasUsableOrbit(float* camPos, float* playerPos)
+{
+	float ignoredRotation = 0.0f;
+	float ignoredDistance = 0.0f;
+	return camPos != nullptr && playerPos != nullptr &&
+		mouse_camera::RebaseOrbit(camPos[0], camPos[2], playerPos[0], playerPos[2],
+			ignoredRotation, ignoredDistance);
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
-	hwnd = hWnd;
-	
 	switch (Msg)
 	{
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		if (mouse_camera::ProcessToggleKey(desiredState, wParam, lParam, toggleKey) ==
+			mouse_camera::ToggleTransition::Disabled)
+		{
+			SuspendMouseCameraInputImmediately();
+		}
+		break;
 	case WM_ACTIVATE:
 		if (LOWORD(wParam) == WA_INACTIVE)
-			capture = false;
-		else // WA_ACTIVE or WA_CLICKACTIVE 
-			capture = true;
+		{
+			desiredState.SetFocused(false);
+			SuspendMouseCameraInputImmediately();
+		}
+		else
+		{
+			desiredState.SetFocused(true);
+		}
 		break;
 	}
 	return fpWndProc(hWnd, Msg, wParam, lParam);
 }
 
-int64_t __fastcall UpdateCamDirection(__int64 a1, __int64 a2)
+void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , float a4, int a5, int a6, char a7, char a8, __int64 a9)
 {
-	*reinterpret_cast<int*>(a1 + 0x32D4) = 0;
-	*reinterpret_cast<char*>(a1 + 0x32D8) = 1;
+	const std::uint64_t currentTick = GetTickCount64();
+	if (mouse_camera::HasCameraUpdateGap(lastCameraUpdateTick, currentTick, MaximumCameraUpdateGapMs))
+	{
+		needsCameraResync = true;
+		cameraModeGate.OnUpdateGap();
+	}
+	lastCameraUpdateTick = currentTick;
 
-	return fpForceCamDir(a1, a2);
-}
+	auto desired = desiredState.Get();
+	if (desired.revision != lastDesiredStateRevision)
+	{
+		lastDesiredStateRevision = desired.revision;
+		needsCameraResync = true;
+	}
 
-int64_t __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , float a4, int a5, int a6, char a7, char a8, __int64 a9)
-{
-	if (GetAsyncKeyState(VK_HOME)) {
+	const bool positionsValid = camPos != nullptr && playerPos != nullptr;
+	const bool baseActive = mouse_camera::IsMouseCameraActive(
+		desired, lastDesiredStateRevision, true, positionsValid);
+	if (!baseActive)
+	{
+		needsCameraResync = true;
+		SuspendMouseCameraInput();
+		fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
+		return;
+	}
+
+	const bool cameraModeAllowed = isFirstPerson != nullptr && cameraModeGate.AllowsCamera(
+		*isFirstPerson != 0, HasUsableOrbit(camPos, playerPos));
+	if (!cameraModeAllowed)
+	{
+		needsCameraResync = true;
+	}
+
+	if (cameraModeAllowed && GetAsyncKeyState(VK_HOME)) {
 		sensitivity += 0.005f;
 	}
-	if (GetAsyncKeyState(VK_END)) {
+	if (cameraModeAllowed && GetAsyncKeyState(VK_END)) {
 		sensitivity -= 0.005f;
 		if (sensitivity <= 0)
 			sensitivity = 0.01f;
 	}
 
-	if (!initialised)
-		initialised = input.Init();
-
-	if (initialised && !(*isFirstPerson))
+	if (needsCameraResync)
 	{
-		input.Update(capture);
+		SuspendMouseCameraInput();
+		fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
+		desired = desiredState.Get();
+		const bool baseStillActive = mouse_camera::IsMouseCameraActive(
+			desired, lastDesiredStateRevision, true, camPos != nullptr && playerPos != nullptr);
+		if (!baseStillActive)
+		{
+			lastDesiredStateRevision = desired.revision;
+			needsCameraResync = true;
+		}
+		else
+		{
+			float rebasedRotation = rotation;
+			float rebasedDistance = distance;
+			const bool orbitUsable = mouse_camera::RebaseOrbit(
+				camPos[0], camPos[2], playerPos[0], playerPos[2], rebasedRotation, rebasedDistance);
+			const bool modeRecovered = isFirstPerson != nullptr &&
+				cameraModeGate.RecoverAfterUpdate(*isFirstPerson != 0, orbitUsable);
+			if (!orbitUsable || !modeRecovered)
+			{
+				return;
+			}
 
-		rotation = static_cast<float>(static_cast<int>((rotation + (-x * sensitivity))) % 360);
-		auto rotatedCam = RotateCam(Vector3(playerPos[0] - distance, playerPos[2] - distance, 0), Vector3(playerPos[0], playerPos[2], 0), rotation);
-		
-		camPos[0] = rotatedCam.x;
-		camPos[2] = rotatedCam.y;
+			rotation = rebasedRotation;
+			distance = rebasedDistance;
+			if (!initialised)
+			{
+				initialised = input.Init();
+			}
+			if (!initialised)
+			{
+				ClearMouseCameraInput();
+				return;
+			}
 
-		//DEBUG_PRINTF("ROTATION %.6f %.6f\n", rotatedCam.x, rotatedCam.y);
-
-		x = 0;
-		y = 0;
+			input.Update(true);
+			SetMouseCameraInputAccepting(true);
+			desired = desiredState.Get();
+			const bool modeStillAllowed = isFirstPerson != nullptr && cameraModeGate.AllowsCamera(
+				*isFirstPerson != 0, HasUsableOrbit(camPos, playerPos));
+			if (mouse_camera::IsMouseCameraActive(desired, lastDesiredStateRevision,
+				true, camPos != nullptr && playerPos != nullptr) && modeStillAllowed)
+			{
+				needsCameraResync = false;
+			}
+			else
+			{
+				lastDesiredStateRevision = desired.revision;
+				needsCameraResync = true;
+				SuspendMouseCameraInput();
+			}
+		}
+		return;
 	}
 
-	return fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
+	if (!initialised)
+	{
+		needsCameraResync = true;
+		ClearMouseCameraInput();
+		fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
+		return;
+	}
+
+	SetMouseCameraInputAccepting(true);
+	input.Update(true);
+	desired = desiredState.Get();
+	const bool modeStillAllowed = isFirstPerson != nullptr && cameraModeGate.AllowsCamera(
+		*isFirstPerson != 0, HasUsableOrbit(camPos, playerPos));
+	const bool stillActive = mouse_camera::IsMouseCameraActive(
+		desired, lastDesiredStateRevision, true, camPos != nullptr && playerPos != nullptr) && modeStillAllowed;
+	if (!stillActive)
+	{
+		lastDesiredStateRevision = desired.revision;
+		needsCameraResync = true;
+		SuspendMouseCameraInput();
+		fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
+		return;
+	}
+
+	const int horizontalMouseDelta = ConsumeHorizontalMouseDelta();
+	if (horizontalMouseDelta != 0)
+	{
+		rotation = static_cast<float>(static_cast<int>((rotation + (-horizontalMouseDelta * sensitivity))) % 360);
+	}
+	auto rotatedCam = RotateCam(Vector3(playerPos[0] - distance, playerPos[2] - distance, 0), Vector3(playerPos[0], playerPos[2], 0), rotation);
+
+	camPos[0] = rotatedCam.x;
+	camPos[2] = rotatedCam.y;
+
+	//DEBUG_PRINTF("ROTATION %.6f %.6f\n", rotatedCam.x, rotatedCam.y);
+
+	fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule,
@@ -208,6 +416,14 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 					{
 						rightClickKey = static_cast<unsigned short>(std::stoi(collection["rightclick"], 0, 16));
 					}
+					if (collection.has("togglekey"))
+					{
+						const int configuredToggleKey = std::stoi(collection["togglekey"], 0, 16);
+						if (configuredToggleKey > 0 && configuredToggleKey <= 0xFF)
+						{
+							toggleKey = static_cast<unsigned short>(configuredToggleKey);
+						}
+					}
 				}
 			}
 		}
@@ -223,7 +439,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 
 		isFirstPerson = reinterpret_cast<int*>(moduleBase + 0x18152A4);
 		auto cameraUpdateFP = reinterpret_cast<LPVOID>(moduleBase + 0x991500);
-		auto cameraUpdateTestFP = reinterpret_cast<LPVOID>(moduleBase + 0x8ED0A0);
 		auto wndProcFP = reinterpret_cast<LPVOID>(moduleBase + 0x449410);
 		fpKeyPress = reinterpret_cast<KEYPRESSFUNC>(moduleBase + 0x449940);
 		keyStates = reinterpret_cast<unsigned char*>(moduleBase + 0x1C2D870);
@@ -236,17 +451,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		}
 
 		if (MH_EnableHook(cameraUpdateFP) != MH_OK)
-		{
-			return FALSE;
-		}
-
-		if (MH_CreateHook(cameraUpdateTestFP, &UpdateCamDirection,
-			reinterpret_cast<LPVOID*>(&fpForceCamDir)) != MH_OK)
-		{
-			return FALSE;
-		}
-
-		if (MH_EnableHook(cameraUpdateTestFP) != MH_OK)
 		{
 			return FALSE;
 		}
@@ -273,13 +477,16 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 
 			char leftclickHex[16];
 			char rightclickHex[16];
+			char toggleKeyHex[16];
 			sprintf(leftclickHex, "%X", leftClickKey);
 			sprintf(rightclickHex, "%X", rightClickKey);
+			sprintf(toggleKeyHex, "%X", toggleKey);
 
 			ini["settings"]["sensitivity"] = std::to_string(sensitivity);
 
 			ini["settings"]["leftclick"] = "0x" + std::string(leftclickHex);
 			ini["settings"]["rightclick"] = "0x" +  std::string(rightclickHex);
+			ini["settings"]["togglekey"] = "0x" + std::string(toggleKeyHex);
 
 			file.write(ini);
 		}
