@@ -1,344 +1,138 @@
-# Mouse-Camera Bug: Human Guide
+# LEGO City Undercover Mouse Mod — Human Guide
 
-This document is the human-oriented companion to `docs/mousework.md`.
+This is the human-oriented companion to `mousework.md`. It keeps the important technical details, but tells the story of the bug and fix in a way that is easier to follow.
 
-`mousework.md` is useful as a compact technical record for coding agents and future implementation work. This file explains the same bug and fix more narratively: what the player saw, what the mod was doing, why the failure was confusing, how the diagnosis evolved, and what the current fix is trying to guarantee.
+## What was broken
 
----
+The original mouse-camera mod worked normally until ferry travel to Albatross Island.
 
-## 1. What the player actually experienced
+The first symptom was a continuously spinning camera after arrival. Once that was fixed, a second problem became visible: the camera stopped spinning, but mouse-camera control remained dead on Albatross and could stay dead after returning to the mainland.
 
-The original mouse-camera mod works normally through most of *LEGO City Undercover*. The failure appeared when traveling by ferry to Albatross Island.
+These turned out to be separate failures triggered by the same transition.
 
-At first, the symptom was dramatic:
+## Problem 1: the mod was fighting the game's scripted camera
 
-- the ferry transition completed;
-- the player arrived on Albatross Island;
-- the camera began spinning continuously.
+The original mod hooked a scripted/forced-camera routine at RVA `0x8ED0A0` and changed camera fields every time the game used that routine.
 
-Removing one suspicious camera hook stopped the spinning. That revealed a second problem:
+That was harmless during ordinary play, but the ferry transition uses scripted camera behavior heavily. The game and the mod were effectively trying to control the same camera at the same time, which produced the spin.
 
-- the camera no longer spun;
-- but mouse-camera control stayed disabled after arrival;
-- returning to the mainland did not necessarily restore it.
+The fix was simple: remove that forced-camera hook and leave scripted camera transitions alone. The mod now hooks only the normal camera update at RVA `0x991500`.
 
-Those two symptoms turned out to have different causes.
+That eliminated the spinning.
 
-That distinction matters. “Camera spin” and “mouse no longer works” looked like one ferry bug from the player's point of view, but the mod was actually failing in several independent ways during the same loading transition.
+## Problem 2: the supposed `isFirstPerson` flag is unreliable
 
----
+The mod also watches a game value at RVA `0x18152A4`, historically treated as `isFirstPerson`.
 
-## 2. What the original mod does
+Live inspection showed that this value changes to `1` during the ferry transition and can remain `1` even after the player is clearly back in normal third-person play on Albatross.
 
-The mod is a native C++ DLL injected into the game as a Steam API proxy.
-
-Its job is roughly:
-
-1. receive raw mouse movement from Windows;
-2. hook the game's camera-update function;
-3. turn horizontal mouse movement into an orbit angle;
-4. modify the camera position before the game finishes its update.
-
-The important pieces are:
-
-- `dllmain.cpp` — installs hooks and coordinates game state, camera state, and input;
-- `RawInput.cpp/.h` — receives raw mouse input through a hidden Windows message-only window;
-- `MouseCameraState.cpp/.h` — new code that isolates the mouse-camera state machine, transition handling, and orbit rebasing;
-- `tests/` — focused tests for state transitions and Raw Input lifecycle behavior.
-
-The mod necessarily depends on reverse-engineered game addresses. The current work targets executable version `1.0.0.15609011`.
-
----
-
-## 3. The first problem: the mod was fighting a scripted camera
-
-The original mod hooked two camera-related game functions.
-
-The regular third-person camera update at:
+So the old logic:
 
 ```text
-RVA 0x991500
+game says first person
+→ disable mouse camera
 ```
 
-was expected.
+was too trusting.
 
-The more suspicious hook was installed at:
+The final camera logic now combines two signals:
 
-```text
-RVA 0x8ED0A0
-```
+- what the game reports;
+- whether the actual camera and player positions still form a valid third-person orbit.
 
-and the detour forcibly wrote values inside a game camera object whenever the game tried to force a camera direction.
+If the game suddenly reports first person but the camera still looks like a normal third-person camera, the mod blocks input temporarily but preserves the fact that third-person play was previously confirmed.
 
-Conceptually, that meant:
+After a loading-sized pause, it lets the game establish the new camera first, checks the resulting geometry, and only then decides whether the first-person flag is stale.
 
-```text
-Game: "For this scripted sequence, point the camera this way."
-Mod:  "No. Replace part of that camera state."
-Game: "Point it this way."
-Mod:  "No."
-Game: "Point it this way."
-Mod:  "No."
-```
+The important safety point is that the mod does not patch the game's flag. It only decides whether to trust it.
 
-The ferry arrival makes heavy use of scripted camera behavior. The mod and game therefore kept fighting over the camera state, producing the continuous spin.
+## Why the first recovery attempt still failed
 
-### The fix
-
-That forced-camera detour was removed.
-
-The mod now hooks only the normal camera update and allows scripted camera transitions to run without those unexplained writes into the game's camera object.
-
-This was the change that stopped the spinning.
-
----
-
-## 4. The second problem: `isFirstPerson` is not trustworthy during the ferry transition
-
-The mod has historically treated the value at:
+The ferry changes the mode flag before the long loading pause:
 
 ```text
-RVA 0x18152A4
-```
-
-as an `isFirstPerson` flag.
-
-That name is useful shorthand, but it is reverse-engineered game state, not an official API contract.
-
-Live inspection showed something important:
-
-1. On the mainland, ordinary third-person play behaves as expected.
-2. As the ferry transition begins, the value changes to `1`.
-3. Camera updates then pause for loading.
-4. After arrival on Albatross Island, the value can remain `1`.
-5. Visually, however, the game is clearly back in an ordinary third-person camera.
-
-The old logic effectively said:
-
-```text
-if game says first-person:
-    disable mouse camera
-```
-
-That is conservative, but on Albatross it becomes permanently wrong.
-
-This explains the second symptom: once the spin was fixed, the mod still refused to resume mouse control because it believed the stale game flag.
-
----
-
-## 5. Why the first attempted recovery still failed
-
-The first recovery design was intentionally cautious.
-
-It tried to remember whether the mod had previously seen a valid third-person camera, then use a long camera-update gap as evidence that a loading transition had occurred.
-
-That was reasonable, but the ferry has an awkward event ordering:
-
-```text
-Normal third-person play
+normal third-person play
         ↓
-game's "first-person" value flips to 1
+game flag changes to "first person"
         ↓
-camera is STILL geometrically third-person
+camera is still geometrically third-person
         ↓
-camera updates pause for ferry/loading
+camera updates stop for loading
         ↓
 Albatross loads
-        ↓
-the game value is still 1
 ```
 
-The first implementation erased its memory of “we were in third person” as soon as the game value changed to `1`.
+The first recovery implementation erased its memory of third-person play as soon as the flag changed. By the time the actual load gap occurred, it had thrown away the evidence needed to recognize the ferry case.
 
-By the time the actual loading gap occurred, the mod had thrown away the evidence it needed to recognize the stale-flag case.
+The corrected `CameraModeGate` keeps that evidence as long as the camera geometry still looks third-person.
 
-That is the subtle bug fixed by the latest commit.
+## Problem 3: Raw Input was attached to a short-lived thread
 
----
+This was the deeper input bug.
 
-## 6. The key insight: trust camera geometry as an independent signal
+The original Raw Input code created a hidden message-only window on whichever camera-update thread happened to call it. Windows windows are owned by the thread that created them.
 
-The fix no longer treats the game flag as sufficient evidence by itself.
+During loading, LEGO City Undercover can replace that camera worker thread. When the old thread exits, Windows destroys its hidden window.
 
-The mod also asks:
-
-> Do the camera and player positions still describe a usable third-person orbit?
-
-`HasUsableOrbit()` checks the geometry independently of the game mode flag.
-
-This gives the mod two kinds of evidence:
-
-- **reported mode** — what the reverse-engineered game value says;
-- **actual geometry** — whether the camera is physically separated from the player in a finite, non-zero orbit.
-
-So when the ferry raises the mode flag *before* the loading gap, the current code behaves like this:
+That left the mod with something like:
 
 ```text
-Game says "first person"
-        +
-Camera still looks like a valid third-person orbit
-        ↓
-Block mouse input for now,
-but KEEP the memory that we had a valid third-person camera.
+camera hook: running
+mod enabled: yes
+input accepted: yes
+Raw Input target HWND: dead
 ```
 
-Then the camera-update gap occurs.
+The camera code was healthy, but Windows had nowhere valid to deliver raw mouse messages.
 
-After loading, the mod lets the original game camera update run first. If the resulting camera geometry is again a usable third-person orbit, the mod can conclude:
+An earlier attempt tried to detect the dead window and recreate it on the next camera thread. Live testing showed why that was not durable: the replacement camera thread could also be short-lived, so the same failure simply happened again.
 
-> The mode flag is stale. It is safe to ignore it locally and resume mouse-camera control.
+## The final Raw Input design
 
-Importantly, the mod does **not** change the game's flag in memory. It only changes its own interpretation of it.
+The final solution stops using a camera-thread-owned hidden window entirely.
 
----
+The mod already hooks the game's main `WndProc`, so it now uses the game's persistent window as the Raw Input target.
 
-## 7. `CameraModeGate`: what it is protecting
-
-The new `CameraModeGate` class exists to make that decision explicit and testable.
-
-It tracks three ideas:
-
-### `thirdPersonObserved`
-
-The mod recently observed evidence consistent with normal third-person play.
-
-During the ferry's early mode-flag change, this evidence is now preserved as long as the camera geometry is still usable.
-
-### `recoveryPending`
-
-A long camera-update gap occurred after known third-person play, so a load/fast-travel recovery may be needed.
-
-A gap by itself is not enough. Startup also contains a gap, and genuine first-person sequences can contain pauses.
-
-### `staleFirstPersonOverride`
-
-The mod has enough evidence to conclude that the game-reported first-person state is stale for the current third-person camera.
-
-This is only a **local override inside the mod**. The game-owned value is left untouched.
-
-If camera geometry later becomes invalid or collapses in a way consistent with genuine first-person behavior, the override is revoked.
-
----
-
-## 8. Camera resynchronization after a load
-
-Another important part of the fix is that the mod no longer assumes its old orbit state is still correct after a transition.
-
-Before ferry travel, the mod has its own:
-
-- `rotation`;
-- `distance`;
-- accumulated mouse deltas.
-
-During a scripted transition, the game may move the camera independently. If the mod immediately resumes using its old values, the camera can jump or fight the game.
-
-The resynchronization path therefore does this:
-
-1. stop accepting mouse-camera input;
-2. clear accumulated mouse deltas;
-3. call the game's original camera update first;
-4. observe the camera position the game chose;
-5. reconstruct the mod's rotation and distance from that resulting orbit;
-6. resume capture only if all relevant state is still valid.
-
-This is what `RebaseOrbit()` is for.
-
-Rather than forcing the post-load camera back to where the mod *used* to think it belonged, the mod asks:
-
-> Where did the game put the camera? Good. That is now our starting orbit.
-
-That makes transitions much less disruptive.
-
----
-
-## 9. The third problem: Raw Input is tied to a Windows thread
-
-The ferry exposed another issue unrelated to the camera mathematics.
-
-Windows Raw Input is received through a hidden **message-only window**.
-
-That window belongs to the thread that created it.
-
-The original implementation effectively assumed that the camera-update thread would remain the same indefinitely. Loading can violate that assumption.
-
-If the thread owning the message window exits:
-
-- Windows destroys that window;
-- the stored `HWND` becomes stale;
-- the mod may no longer have a valid destination for raw mouse input.
-
-So the camera hook can still be running correctly while the mouse appears dead.
-
-### The fix
-
-`RawInput` now validates:
-
-- that the stored handle is still a real window;
-- that it belongs to this process;
-- that it is the mod's own Raw Input window;
-- that the current camera thread actually owns it.
-
-If not, the mod unregisters stale capture and creates a new message-only window on the current camera thread.
-
-The code also tags the hidden window with the `RawInput` object pointer through `GWLP_USERDATA`. This prevents a recycled Windows handle from accidentally being mistaken for the mod's old window.
-
-This is subtle Windows plumbing, but it matters because the symptom is otherwise indistinguishable from a broken camera state machine: the mouse simply stops affecting the game.
-
----
-
-## 10. Why the latest change is convincing
-
-The latest commit is relatively small compared with the earlier refactor.
-
-The central behavioral change is essentially:
-
-```cpp
-if (!staleFirstPersonOverride)
-{
-    if (!orbitUsable)
-    {
-        thirdPersonObserved = false;
-    }
-    return false;
-}
-```
-
-Previously, the mod always cleared `thirdPersonObserved` as soon as the game reported first person.
-
-Now it clears that evidence only when the geometry also stops looking like a usable third-person orbit.
-
-That matches the observed ferry ordering.
-
-The diagnosis is also stronger than a source-code guess because live inspection reportedly confirmed the failure state:
-
-- the camera hook was still executing;
-- the mod was enabled;
-- the game window was focused;
-- the game-reported first-person value was `1`;
-- camera resynchronization remained pending;
-- mouse input acceptance was off.
-
-Temporarily arming only the mod's recovery gate moved the system into:
+The flow is now:
 
 ```text
-override active
-resync complete
-input accepting
+game HWND
+   ↓
+WM_INPUT
+   ↓
+hooked game WndProc
+   ↓
+RawInput::HandleRawInput(...)
+   ↓
+mouse-camera state
 ```
 
-and mouse control immediately resumed.
+Camera worker threads no longer own or pump an input window. They only request whether Raw Input should be registered or unregistered.
 
-No game memory had to be patched to make that happen.
+This is much more durable because ferry/loading transitions can replace camera workers without destroying the Raw Input destination.
 
-That is good evidence that the stale mode flag and the recovery state machine were central to the remaining failure.
+The game's original `WndProc` still receives the message afterward, so normal game handling is preserved.
 
----
+## Camera resynchronization after transitions
 
-## 11. The F8 enable/disable toggle
+The mod also avoids carrying stale camera state across loads.
 
-The mod also now has an explicit mouse-camera enable/disable hotkey.
+When a transition is detected, it:
 
-Default:
+1. stops accepting mouse input;
+2. clears accumulated mouse deltas;
+3. lets the original game camera update run first;
+4. reads the camera position chosen by the game;
+5. reconstructs the mod's rotation and distance from that position;
+6. resumes capture only if the game state is still valid.
+
+This means the mod adapts to the game's new camera instead of snapping the game back to an old pre-load orbit.
+
+## F8 toggle
+
+F8 now enables or disables mouse-camera control.
+
+The default is:
 
 ```ini
 [settings]
@@ -347,300 +141,104 @@ togglekey=0x77
 
 `0x77` is F8.
 
-The toggle is designed as more than a simple boolean around one line of camera code.
+Disabling does more than flip a boolean: it unregisters Raw Input, clears pending movement, and releases any synthesized mouse-button key presses.
 
-When disabling, the mod:
+Re-enabling uses the same camera resynchronization path, so stale deltas or an old orbit should not cause a jump.
 
-- stops accepting new mouse-camera deltas;
-- clears accumulated deltas;
-- unregisters Raw Input capture;
-- releases synthesized mouse-button keyboard actions if necessary.
+Holding F8 does not repeatedly toggle because only the initial key-down event is accepted.
 
-When re-enabling, it goes through the camera-resynchronization path rather than immediately applying stale camera state.
+## What was actually validated in the game
 
-The toggle also ignores Windows key-repeat, so holding F8 does not rapidly toggle the mod on and off.
+The final Raw Input redesign was tested live, not just in unit tests.
 
----
+The rebuilt DLL was verified on executable version `1.0.0.15609011` and successfully handled:
 
-## 12. Why the state revision exists
+- normal mouse-camera movement on Albatross;
+- ferry travel back to the mainland;
+- no return of the original spinning camera;
+- Raw Input staying registered to the same persistent game HWND;
+- F8 disable;
+- F8 re-enable;
+- held-F8 key-repeat protection;
+- focus loss correctly disabling and unregistering input.
 
-Enable/disable and focus changes can occur in the game's window-message thread while camera work may occur elsewhere.
+During those transitions, the camera detour remained active, resynchronization completed, input acceptance returned, and Raw Input remained attached to the persistent game window.
 
-That means state can change while a camera update is in progress.
+That is much stronger evidence than the earlier source-level theory alone.
 
-`DesiredState` therefore publishes:
+## Smooth-rotation follow-up
 
-- enabled state;
-- focus state;
-- a monotonically changing revision.
+A separate camera-quality issue was also found afterward.
 
-The camera path can check that the state revision it started with is still current before accepting input or completing a transition.
+The original rotation calculation converted the floating-point angle to an integer solely so it could use `% 360`.
 
-This is defensive synchronization: it reduces the chance that a focus loss, F8 press, or re-enable event races with the camera thread and leaves the mod half-enabled.
+That meant fractional movement was discarded on every update.
 
----
+At low sensitivity, tiny mouse movements might never accumulate properly, and left/right movement could behave slightly differently because integer conversion truncates toward zero.
 
-## 13. The tests and what they actually prove
+The code now keeps the calculation in floating point and normalizes with `std::fmod`.
 
-### `MouseCameraStateTests`
-
-These tests cover logic that can be exercised without running the game:
-
-- F8 only toggles on the initial key-down;
-- held-key auto-repeat is ignored;
-- enable/focus revisions behave correctly;
-- stale mouse deltas are cleared;
-- update gaps are detected;
-- orbit rotation/distance can be reconstructed;
-- a startup gap cannot automatically authorize a first-person override;
-- the ferry ordering is preserved:
-  - first-person report arrives,
-  - third-person geometry remains valid,
-  - loading gap follows,
-  - recovery is then permitted;
-- a modeled genuine first-person case is rejected.
-
-### `RawInputLifecycleTests`
-
-These use real Win32 message windows to test the OS-level plumbing:
-
-- the original Raw Input window disappears when its creating thread exits;
-- `RawInput` can recover by creating a new one;
-- the queue can migrate to the current camera thread;
-- mouse registration targets the recovered window.
-
-These tests are valuable because the Raw Input problem is partly about Windows lifecycle behavior, not just pure C++ logic.
-
----
-
-## 14. What the tests do **not** prove
-
-The final authority is still the real game.
-
-The biggest remaining assumption is the definition of “usable third-person orbit.”
-
-At present, the geometry check is intentionally simple: the camera/player positions must be finite and have non-zero horizontal separation.
-
-That works for the observed ferry failure, but an unusual scripted or first-person camera could theoretically also have non-zero separation.
-
-The dangerous pattern would be:
+Conceptually:
 
 ```text
-genuine special/first-person camera
-        +
-non-zero camera/player horizontal separation
-        +
-long (>500 ms) camera-update gap
+old:
+fractional angle
+→ convert to int
+→ lose fraction
+→ wrap
+
+new:
+fractional angle
+→ keep fraction
+→ floating-point wrap
 ```
 
-If such a sequence exists, the recovery gate could potentially classify it as the stale ferry condition.
+This was tested in-game at `sensitivity=0.160000`, where slow camera movement was reported as “smooth as butter.”
 
-That does not mean the fix is wrong. It means the remaining risk is now narrow and testable.
+Tests also cover fractional movement and wrapping across both 0° and 360°.
 
----
+## Where to look in the code
 
-## 15. Manual validation that matters most
+For someone new to the project, the easiest reading order is:
 
-Before considering this finished, test these in the actual game:
+1. `MouseCameraState.h` — names the important state and concepts.
+2. `MouseCameraState.cpp` — contains the camera-mode gate, transition logic, orbit rebasing, and smooth rotation helper.
+3. `dllmain.cpp` — connects that state logic to the actual game hooks.
+4. `RawInput.cpp/.h` — handles registration and delivery of Windows Raw Input through the game's HWND.
+5. `tests/` — shows the behaviors the code is expected to preserve.
 
-1. **Normal mainland play**
-   - mouse rotates the camera normally;
-   - scroll distance still behaves normally;
-   - mouse-button mappings still work.
+The most important concepts are:
 
-2. **F8 disable/re-enable**
-   - disabling immediately stops mouse-camera behavior;
-   - no synthetic button remains stuck down;
-   - re-enabling does not jump the camera;
-   - stale mouse movement is not applied afterward.
+- `CameraModeGate` — decides whether the reported first-person state is trustworthy;
+- `RebaseOrbit` — derives the mod's orbit from the camera chosen by the game after a transition;
+- `AdvanceRotation` — preserves fractional mouse movement;
+- the hooked game `WndProc` — now serves as the stable Raw Input delivery point.
 
-3. **Mainland → ferry → Albatross**
-   - no spinning during or after arrival;
-   - mouse-camera control resumes on the island.
+## What future changes should preserve
 
-4. **Albatross → mainland**
-   - mouse-camera control remains healthy after the return transition.
+A future contributor should be careful not to undo the lessons from this bug:
 
-5. **Criminal Scanner and other special cameras**
-   - these are especially useful because they exercise non-standard camera modes.
+- do not restore the old forced-camera hook without strong evidence;
+- do not assume `isFirstPerson` is authoritative across loads;
+- do not patch the game's mode flag merely to satisfy the mod;
+- do not attach Raw Input lifetime to a transient camera worker thread;
+- clear stale deltas when disabling or transitioning;
+- let the game establish its post-load camera before rebasing;
+- keep rotation calculations in floating point;
+- remember that all hard-coded RVAs are specific to game version `1.0.0.15609011`.
 
-6. **Cutscenes / scripted camera sequences**
-   - the mod should defer to the game;
-   - mouse control should resume cleanly afterward.
+## Bottom line
 
-7. **Any genuine first-person-like sequence**
-   - verify that the new stale-flag override does not accidentally activate there.
+The ferry bug was not one bug.
 
-If all of those work, the current diagnosis and fix are strong enough that I would be comfortable calling the ferry bug fixed.
-
----
-
-## 16. A useful mental model of the current mod
-
-The easiest way to understand the new behavior is:
-
-```text
-                    ┌───────────────────┐
-                    │ Game owns camera  │
-                    └─────────┬─────────┘
-                              │
-                       normal update
-                              │
-                              ▼
-                    ┌───────────────────┐
-Mouse Raw Input ───►│ Mouse-camera mod  │
-                    │ applies orbit     │
-                    └───────────────────┘
-```
-
-During a transition:
-
-```text
-       loading / ferry / script detected
-                    │
-                    ▼
-        stop accepting mouse input
-                    │
-                    ▼
-        let game establish camera
-                    │
-                    ▼
-      inspect resulting camera geometry
-                    │
-          ┌─────────┴─────────┐
-          │                   │
-      usable orbit       invalid/special
-          │                   │
-          ▼                   ▼
-  rebase mod state       remain suspended
-          │
-          ▼
-   resume mouse input
-```
-
-And when the reverse-engineered first-person flag disagrees with the visible geometry:
-
-```text
-game flag says first person
-        │
-        ├── geometry invalid ──► trust it; block mouse camera
-        │
-        └── geometry still third-person
-                  │
-                  ▼
-           preserve evidence
-                  │
-          wait for load gap
-                  │
-                  ▼
-       validate post-load orbit
-                  │
-                  ▼
-       locally ignore stale flag
-```
-
-That is the conceptual heart of the fix.
-
----
-
-## 17. Code-reading guide for a new contributor
-
-If someone new wants to understand the current code, this is the order I would read it.
-
-### First: `docs/mousework.md`
-
-Read the compact technical record so you know the facts the implementation is trying to preserve.
-
-### Second: `MouseCameraState.h`
-
-This gives the vocabulary:
-
-- `DesiredState`
-- `InputState`
-- `CameraModeGate`
-- `RebaseOrbit`
-
-### Third: `MouseCameraState.cpp`
-
-Read the state transitions without the distraction of Win32 or hooking code.
-
-Focus especially on:
-
-```cpp
-CameraModeGate::AllowsCamera()
-CameraModeGate::RecoverAfterUpdate()
-RebaseOrbit()
-```
-
-### Fourth: `dllmain.cpp`
-
-Then see how those abstractions are applied to the actual game.
-
-The most important function is:
-
-```cpp
-UpdateCamDetour(...)
-```
-
-Read it in phases:
-
-1. detect update gap;
-2. notice state revision changes;
-3. decide whether mouse camera may be active;
-4. resynchronize if needed;
-5. update Raw Input;
-6. consume horizontal mouse delta;
-7. apply the orbit;
-8. call the original game camera update.
-
-### Fifth: `RawInput.cpp`
-
-Only after the camera logic makes sense should you dive into the Windows message-window lifecycle.
-
-The crucial functions are:
-
-```cpp
-register_raw_input()
-init_event_queue()
-is_event_queue_window()
-ensure_event_queue()
-Update()
-```
-
-### Finally: `tests/`
-
-The tests are useful as executable documentation. They show what behaviors the author considers invariants.
-
----
-
-## 18. Things future changes should be careful not to break
-
-A future contributor or coding agent should preserve these properties unless there is strong evidence to change them:
-
-- do not restore the old forced-camera memory writes casually;
-- do not assume the value named `isFirstPerson` is authoritative across loading;
-- do not modify that game-owned mode value just to make the mod happy;
-- do not resume with pre-load mouse deltas;
-- let the game establish the camera before rebasing after a transition;
-- remember that the Raw Input message window is thread-owned;
-- disabling the mod should genuinely stop capture, not merely stop applying rotation;
-- re-enabling should resynchronize rather than immediately applying stale orbit state;
-- hard-coded RVAs are executable-version-specific and should be treated as such.
-
----
-
-## 19. Current conclusion
-
-The current fix is compelling because the observed failure is now explained by concrete state transitions rather than by a generic “ferry breaks mouse input” theory.
-
-There were at least three interacting problems:
+It was a chain of three interacting problems:
 
 1. the mod fought a scripted camera and caused spinning;
-2. a reverse-engineered mode value remained stale after ferry travel and prevented recovery;
-3. Windows Raw Input state could become invalid when loading replaced the owning camera thread.
+2. a stale game mode flag prevented mouse-camera recovery;
+3. Raw Input was attached to a window owned by a short-lived camera thread.
 
-The code now addresses each problem separately.
+The final design addresses each one separately.
 
-The latest change—preserving known third-person evidence when the game flag flips early but the camera geometry remains third-person—is particularly important because it matches the actual ordering observed during ferry travel.
+After that, the rotation math was also cleaned up so low-sensitivity movement retains fractional precision.
 
-The remaining work is primarily real-game validation, especially around unusual scripted and first-person camera modes. If those tests pass, this is a strong and understandable fix rather than a ferry-specific hack.
+The result is a much more robust mod: scripted transitions are left alone, camera state is re-established after loads, Raw Input is tied to the persistent game window instead of worker-thread lifetime, and slow mouse movement remains smooth.
