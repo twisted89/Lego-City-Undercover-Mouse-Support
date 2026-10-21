@@ -18,6 +18,10 @@ cl /nologo /std:c++17 /EHsc /W4 src\tests\RawInputLifecycleTests.cpp src\input\R
 
 The first command produces `Release\steam_api64.dll`; intermediates are written to `Release\obj\`. The next two compile and run the state tests independently with warnings treated as errors. The final two compile and run the Raw Input lifecycle tests.
 
+## Local Deployment
+
+The local Steam installation is `D:\Program Files (x86)\Steam\steamapps\common\LEGO City Undercover`. Deploy `Release\steam_api64.dll` there as `steam_api64.dll` while the game is stopped, then verify the source and destination SHA-256 hashes match.
+
 ## Coding Style & Naming Conventions
 
 Use tabs for indentation, Allman braces, and the existing C++ style. Types and public methods use `PascalCase`; local variables and state use `camelCase`. Keep Windows-specific operations in the hook/input layer and deterministic state logic in `MouseCameraState.*`. Document reverse-engineered offsets with evidence, and avoid speculative memory writes. Preserve the Win64 ABI exactly when declaring hook signatures.

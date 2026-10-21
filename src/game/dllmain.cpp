@@ -35,6 +35,25 @@ unsigned char* keyCounter = nullptr;
 
 WNDPROC fpWndProc = nullptr;
 
+struct WindowPlacement
+{
+	LONG_PTR style = 0;
+	LONG_PTR extendedStyle = 0;
+	RECT rect = {};
+	bool valid = false;
+};
+
+struct WindowModeState
+{
+	HWND window = nullptr;
+	bool initialized = false;
+	bool windowed = false;
+	WindowPlacement windowedPlacement;
+	WindowPlacement fullscreenPlacement;
+};
+
+WindowModeState windowModeState;
+
 float sensitivity = 1, distance = 1;
 int* isFirstPerson = nullptr;
 float rotation = 0;
@@ -52,11 +71,244 @@ std::uint64_t lastDesiredStateRevision = UINT64_MAX;
 
 static constexpr std::uint64_t MaximumCameraUpdateGapMs = 500;
 
+
+
+static bool GetWindowPlacement(HWND window, WindowPlacement& placement)
+{
+	SetLastError(ERROR_SUCCESS);
+	const LONG_PTR style = GetWindowLongPtr(window, GWL_STYLE);
+	if (style == 0 && GetLastError() != ERROR_SUCCESS)
+	{
+		DEBUG_PRINTF("Unable to read game window style: %lu\n", GetLastError());
+		return false;
+	}
+
+	SetLastError(ERROR_SUCCESS);
+	const LONG_PTR extendedStyle = GetWindowLongPtr(window, GWL_EXSTYLE);
+	if (extendedStyle == 0 && GetLastError() != ERROR_SUCCESS)
+	{
+		DEBUG_PRINTF("Unable to read game window extended style: %lu\n", GetLastError());
+		return false;
+	}
+
+	RECT rect = {};
+	if (!GetWindowRect(window, &rect))
+	{
+		DEBUG_PRINTF("Unable to read game window bounds: %lu\n", GetLastError());
+		return false;
+	}
+
+	placement.style = style;
+	placement.extendedStyle = extendedStyle;
+	placement.rect = rect;
+	placement.valid = true;
+	return true;
+}
+
+
+
+static bool ApplyWindowPlacement(HWND window, const WindowPlacement& placement)
+{
+	if (!placement.valid)
+	{
+		return false;
+	}
+
+	SetLastError(ERROR_SUCCESS);
+	if (SetWindowLongPtr(window, GWL_STYLE, placement.style) == 0 &&
+		GetLastError() != ERROR_SUCCESS)
+	{
+		DEBUG_PRINTF("Unable to set game window style: %lu\n", GetLastError());
+		return false;
+	}
+
+	SetLastError(ERROR_SUCCESS);
+	if (SetWindowLongPtr(window, GWL_EXSTYLE, placement.extendedStyle) == 0 &&
+		GetLastError() != ERROR_SUCCESS)
+	{
+		DEBUG_PRINTF("Unable to set game window extended style: %lu\n", GetLastError());
+		return false;
+	}
+
+	const HWND insertAfter = (placement.extendedStyle & WS_EX_TOPMOST) != 0
+		? HWND_TOPMOST : HWND_NOTOPMOST;
+	if (!SetWindowPos(window, insertAfter, placement.rect.left, placement.rect.top,
+		placement.rect.right - placement.rect.left, placement.rect.bottom - placement.rect.top,
+		SWP_FRAMECHANGED | SWP_SHOWWINDOW))
+	{
+		DEBUG_PRINTF("Unable to resize game window: %lu\n", GetLastError());
+		return false;
+	}
+	return true;
+}
+
+
+
+static bool GetMonitorBounds(HWND window, RECT& monitorBounds, RECT& workArea)
+{
+	const HMONITOR monitor = MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO monitorInfo = {};
+	monitorInfo.cbSize = sizeof(monitorInfo);
+	if (!GetMonitorInfo(monitor, &monitorInfo))
+	{
+		DEBUG_PRINTF("Unable to read game monitor bounds: %lu\n", GetLastError());
+		return false;
+	}
+
+	monitorBounds = monitorInfo.rcMonitor;
+	workArea = monitorInfo.rcWork;
+	return true;
+}
+
+
+
+static bool MakeWindowedPlacement(HWND window, const WindowPlacement& current,
+	WindowPlacement& windowed)
+{
+	RECT monitorBounds = {};
+	RECT workArea = {};
+	if (!GetMonitorBounds(window, monitorBounds, workArea))
+	{
+		return false;
+	}
+
+	windowed.style = (current.style & ~(WS_POPUP | WS_CHILD)) | WS_OVERLAPPEDWINDOW;
+	windowed.extendedStyle = current.extendedStyle & ~WS_EX_TOPMOST;
+
+	const LONG monitorWidth = monitorBounds.right - monitorBounds.left;
+	const LONG monitorHeight = monitorBounds.bottom - monitorBounds.top;
+	const LONG workWidth = workArea.right - workArea.left;
+	const LONG workHeight = workArea.bottom - workArea.top;
+	if (monitorWidth <= 0 || monitorHeight <= 0 || workWidth <= 0 || workHeight <= 0)
+	{
+		DEBUG_PRINTF("Invalid game monitor dimensions\n");
+		return false;
+	}
+
+	LONG clientWidth = workWidth * 4 / 5;
+	LONG clientHeight = workHeight * 4 / 5;
+	if (static_cast<double>(clientWidth) / clientHeight >
+		static_cast<double>(monitorWidth) / monitorHeight)
+	{
+		clientWidth = static_cast<LONG>(
+			static_cast<double>(clientHeight) * monitorWidth / monitorHeight);
+	}
+	else
+	{
+		clientHeight = static_cast<LONG>(
+			static_cast<double>(clientWidth) * monitorHeight / monitorWidth);
+	}
+
+	RECT rect = { 0, 0, clientWidth, clientHeight };
+	if (!AdjustWindowRectEx(&rect, static_cast<DWORD>(windowed.style), FALSE,
+		static_cast<DWORD>(windowed.extendedStyle)))
+	{
+		DEBUG_PRINTF("Unable to calculate game window bounds: %lu\n", GetLastError());
+		return false;
+	}
+
+	const LONG windowWidth = rect.right - rect.left;
+	const LONG windowHeight = rect.bottom - rect.top;
+	rect.left = workArea.left + (workWidth - windowWidth) / 2;
+	rect.top = workArea.top + (workHeight - windowHeight) / 2;
+	rect.right = rect.left + windowWidth;
+	rect.bottom = rect.top + windowHeight;
+
+	windowed.rect = rect;
+	windowed.valid = true;
+	return true;
+}
+
+
+
+static bool MakeFullscreenPlacement(HWND window, const WindowPlacement& current, WindowPlacement& fullscreen)
+{
+	RECT workArea = {};
+	if (!GetMonitorBounds(window, fullscreen.rect, workArea))
+	{
+		return false;
+	}
+
+	fullscreen.style = (current.style & ~WS_OVERLAPPEDWINDOW & ~WS_CHILD) | WS_POPUP;
+	fullscreen.extendedStyle = current.extendedStyle | WS_EX_TOPMOST;
+	fullscreen.extendedStyle &= ~(WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE |
+		WS_EX_DLGMODALFRAME);
+	fullscreen.valid = true;
+	return true;
+}
+
+
+
+static void ToggleWindowMode(HWND window)
+{
+	if (!IsWindow(window))
+	{
+		DEBUG_PRINTF("Cannot toggle mode for an invalid game window\n");
+		return;
+	}
+
+	if (windowModeState.window != window)
+	{
+		windowModeState = {};
+		windowModeState.window = window;
+	}
+
+	WindowPlacement current;
+	if (!GetWindowPlacement(window, current))
+	{
+		return;
+	}
+
+	if (!windowModeState.initialized)
+	{
+		windowModeState.windowed = (current.style & WS_CAPTION) != 0;
+		windowModeState.initialized = true;
+		if (windowModeState.windowed)
+		{
+			windowModeState.windowedPlacement = current;
+		}
+		else
+		{
+			windowModeState.fullscreenPlacement = current;
+		}
+	}
+
+	if (windowModeState.windowed)
+	{
+		windowModeState.windowedPlacement = current;
+		if (!windowModeState.fullscreenPlacement.valid &&
+			!MakeFullscreenPlacement(window, current, windowModeState.fullscreenPlacement))
+		{
+			return;
+		}
+		if (ApplyWindowPlacement(window, windowModeState.fullscreenPlacement))
+		{
+			windowModeState.windowed = false;
+		}
+		return;
+	}
+
+	windowModeState.fullscreenPlacement = current;
+	if (!windowModeState.windowedPlacement.valid &&
+		!MakeWindowedPlacement(window, current, windowModeState.windowedPlacement))
+	{
+		return;
+	}
+	if (ApplyWindowPlacement(window, windowModeState.windowedPlacement))
+	{
+		windowModeState.windowed = true;
+	}
+}
+
+
+
 static void OnMouseInput(int mx, int my)
 {
 	std::lock_guard<std::mutex> lock(mouseInputMutex);
 	mouseInput.AddDelta(mx, my);
 }
+
+
 
 static void OnMouseScroll(bool up)
 {
@@ -67,6 +319,8 @@ static void OnMouseScroll(bool up)
 	}
 }
 
+
+
 static void SendButton(unsigned short key, bool down)
 {
 	//DEBUG_PRINTF("Sending key %d %s\n", key, down ? "DOWN" : "UP");
@@ -76,6 +330,8 @@ static void SendButton(unsigned short key, bool down)
 	input_config.ki.dwFlags = (KEYEVENTF_SCANCODE | (down ? 0 : KEYEVENTF_KEYUP));
 	SendInput(1, &input_config, sizeof(input_config));
 }
+
+
 
 static void OnMouseButton(unsigned short buttonFlags)
 {
@@ -115,6 +371,8 @@ static void OnMouseButton(unsigned short buttonFlags)
 	}
 }
 
+
+
 static void ClearMouseCameraInput()
 {
 	bool releaseLeft;
@@ -138,11 +396,15 @@ static void ClearMouseCameraInput()
 	}
 }
 
+
+
 static void SetMouseCameraInputAccepting(bool accepting)
 {
 	std::lock_guard<std::mutex> lock(mouseInputMutex);
 	mouseInput.SetAccepting(accepting);
 }
+
+
 
 static int ConsumeHorizontalMouseDelta()
 {
@@ -151,6 +413,8 @@ static int ConsumeHorizontalMouseDelta()
 	mouseInput.Clear();
 	return delta;
 }
+
+
 
 Vector3 static RotateCam(Vector3 cam, Vector3 point, double angle)
 {
@@ -168,6 +432,8 @@ Vector3 static RotateCam(Vector3 cam, Vector3 point, double angle)
 
 RawInput input(OnMouseInput, OnMouseScroll, OnMouseButton);
 
+
+
 static void SuspendMouseCameraInput()
 {
 	ClearMouseCameraInput();
@@ -177,11 +443,15 @@ static void SuspendMouseCameraInput()
 	}
 }
 
+
+
 static void SuspendMouseCameraInputImmediately()
 {
 	ClearMouseCameraInput();
 	input.DisableCapture();
 }
+
+
 
 static bool HasUsableOrbit(float* camPos, float* playerPos)
 {
@@ -194,6 +464,8 @@ static bool HasUsableOrbit(float* camPos, float* playerPos)
 			ignoredRotation, ignoredDistance);
 }
 
+
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	// Raw input must target a window whose lifetime is independent of the camera
 	// worker thread. The game's own window supplies that stable target, and this
@@ -202,6 +474,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	if (Msg == WM_INPUT)
 	{
 		input.HandleRawInput(wParam, lParam);
+	}
+
+	if ((Msg == WM_KEYDOWN || Msg == WM_SYSKEYDOWN) && wParam == VK_F9)
+	{
+		if ((static_cast<std::uintptr_t>(lParam) & (1ULL << 30)) == 0)
+		{
+			ToggleWindowMode(hWnd);
+		}
+		return 0;
+	}
+	if ((Msg == WM_KEYUP || Msg == WM_SYSKEYUP) && wParam == VK_F9)
+	{
+		return 0;
 	}
 
 	switch (Msg)
@@ -228,6 +513,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	}
 	return fpWndProc(hWnd, Msg, wParam, lParam);
 }
+
+
 
 void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , float a4, int a5, int a6, char a7, char a8, __int64 a9)
 {
@@ -376,6 +663,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 
 	fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
 }
+
+
 
 BOOL APIENTRY DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
