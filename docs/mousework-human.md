@@ -201,11 +201,11 @@ Tests also cover fractional movement and wrapping across both 0° and 360°.
 
 For someone new to the project, the easiest reading order is:
 
-1. `MouseCameraState.h` — names the important state and concepts.
-2. `MouseCameraState.cpp` — contains the camera-mode gate, transition logic, orbit rebasing, and smooth rotation helper.
-3. `dllmain.cpp` — connects that state logic to the actual game hooks.
-4. `RawInput.cpp/.h` — handles registration and delivery of Windows Raw Input through the game's HWND.
-5. `tests/` — shows the behaviors the code is expected to preserve.
+1. `src/camera/MouseCameraState.h` — names the important state and concepts.
+2. `src/camera/MouseCameraState.cpp` — contains the camera-mode gate, transition logic, orbit rebasing, and smooth rotation helper.
+3. `src/game/dllmain.cpp` — connects that state logic to the actual game hooks.
+4. `src/input/RawInput.cpp` and `src/input/RawInput.h` — handle registration and delivery of Windows Raw Input through the game's HWND.
+5. `src/tests/` — shows the behaviors the code is expected to preserve.
 
 The most important concepts are:
 

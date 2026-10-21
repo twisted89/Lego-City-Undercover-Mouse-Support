@@ -21,11 +21,13 @@ If work continues, preserve the validated behavior below. The most useful immedi
 
 ## Relevant files
 
-- `dllmain.cpp` - hook installation, WndProc forwarding, transition/resync flow, and camera detour.
-- `MouseCameraState.{h,cpp}` - deterministic desired/input state, gap detection, mode gate, orbit rebasing, and `AdvanceRotation`.
-- `RawInput.{h,cpp}` - persistent target HWND, registration, and `WM_INPUT` processing.
-- `tests/MouseCameraStateTests.cpp` - toggle, stale input, revision, ferry ordering, first-person rejection, rebase, and fractional rotation tests.
-- `tests/RawInputLifecycleTests.cpp` - real Win32 registration tests for a persistent/replaced target HWND.
+- `src/game/dllmain.cpp` - hook installation, WndProc forwarding, transition/resync flow, and camera detour.
+- `src/camera/MouseCameraState.{h,cpp}` - deterministic desired/input state, gap detection, mode gate, orbit rebasing, and `AdvanceRotation`.
+- `src/input/RawInput.{h,cpp}` - persistent target HWND, registration, and `WM_INPUT` processing.
+- `src/tests/MouseCameraStateTests.cpp` - toggle, stale input, revision, ferry ordering, first-person rejection, rebase, and fractional rotation tests.
+- `src/tests/RawInputLifecycleTests.cpp` - real Win32 registration tests for a persistent/replaced target HWND.
+- `src/steam_proxy/` - proxy exports and forwarding assembly/definition files.
+- `src/third_party/minhook/` and `src/third_party/mini/` - vendored dependencies.
 - `docs/mousework.md` - authoritative investigation and validation record; later dated sections supersede earlier descriptions.
 - `docs/mousework-human.md` - useful background, but its Raw Input message-window description and "remaining validation" status are stale.
 
@@ -41,9 +43,10 @@ If work continues, preserve the validated behavior below. The most useful immedi
 
 Fresh checks run while creating this handoff:
 
-- `msbuild lcu_mouse.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64 /v:minimal` - passed; produced `x64/Release/steam_api64.dll`. Only the existing `Vector3.cpp(16)` C4244 double-to-float warning appeared.
-- `cl /nologo /std:c++17 /EHsc /W4 /WX tests\MouseCameraStateTests.cpp MouseCameraState.cpp /Fe:tests\MouseCameraStateTests.exe`, then the executable - passed.
-- `cl /nologo /std:c++17 /EHsc /W4 tests\RawInputLifecycleTests.cpp RawInput.cpp Setupapi.lib User32.lib /Fe:tests\RawInputLifecycleTests.exe`, then the executable - passed (`RawInput stable-target tests passed`). With `/WX`, compilation currently fails on existing C4456 and C4018 warnings at `RawInput.cpp:282` and `RawInput.cpp:301`.
+- `msbuild LegoCitiesUndercoverPlus.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64 /v:minimal` - passed after source reorganization; produces `Release/steam_api64.dll`, with intermediates under `Release/obj/`. The existing `src/camera/Vector3.cpp(16)` C4244 warning remains.
+- `cl /nologo /std:c++17 /EHsc /W4 /WX src\tests\MouseCameraStateTests.cpp src\camera\MouseCameraState.cpp /Fe:Release\obj\MouseCameraStateTests.exe`, then the executable - passed.
+- `cl /nologo /std:c++17 /EHsc /W4 src\tests\RawInputLifecycleTests.cpp src\input\RawInput.cpp Setupapi.lib User32.lib /Fe:Release\obj\RawInputLifecycleTests.exe`, then the executable - passed (`RawInput stable-target tests passed`). The test compile reports the existing C4456 and C4018 warnings at `RawInput.cpp:282` and `RawInput.cpp:301`.
+- `lcu_mouse.vcxproj.filters` mirrors the `src/` folder tree in Solution Explorer. `steam_api64.def` and the two standalone test sources are project items but are not compiled into the DLL.
 
 `docs/mousework.md` records successful in-game validation on 2026-10-20 for mainland-to-Albatross ferry travel, return travel, F8 hold/disable/re-enable, focus loss, and smooth low-speed rotation at `sensitivity=0.160000`. The historically installed validated DLL hash is `C91F779BC2B9C803BCDD38AB377FE4980D4D40F2EA0269D9FAC11AA578C67041`; the currently installed game copy was not rechecked during this handoff.
 

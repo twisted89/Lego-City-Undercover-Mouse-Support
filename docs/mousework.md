@@ -80,7 +80,7 @@ The F8 behavior and camera-transition safeguards remain unchanged: disabling imm
 1. A persistent target window remains valid and registered after the transient camera worker that initializes capture has exited.
 2. Destroying and replacing the target removes stale registration and retargets capture to the replacement HWND.
 
-`MouseCameraStateTests` still covers F8 edge handling, state revisions, input clearing, update gaps, ferry ordering, stale mode recovery, valid orbit rebasing, and genuine first-person rejection. Both test executables pass, and a Release x64 rebuild produces `x64\Release\steam_api64.dll`. The only build diagnostic is the pre-existing `Vector3.cpp` double-to-float warning.
+`MouseCameraStateTests` still covers F8 edge handling, state revisions, input clearing, update gaps, ferry ordering, stale mode recovery, valid orbit rebasing, and genuine first-person rejection. Both test executables pass, and a Release x64 rebuild produces `Release\steam_api64.dll` with intermediates under `Release\obj\`. The only build diagnostic is the pre-existing `Vector3.cpp` double-to-float warning.
 
 ### Remaining manual validation
 

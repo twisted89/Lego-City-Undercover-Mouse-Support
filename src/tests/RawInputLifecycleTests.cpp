@@ -1,4 +1,4 @@
-#include "../RawInput.h"
+#include "../input/RawInput.h"
 
 #include <iostream>
 #include <thread>
