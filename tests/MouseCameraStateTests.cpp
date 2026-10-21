@@ -81,6 +81,13 @@ int main()
 	Check(HasCameraUpdateGap(1000, 1501, 500), "long update gap requires resynchronization");
 	Check(HasCameraUpdateGap(1500, 1000, 500), "backward clock requires resynchronization");
 
+	CheckNear(AdvanceRotation(10.0f, 1, 0.25f), 9.75f,
+		"mouse rotation preserves sub-degree movement");
+	CheckNear(AdvanceRotation(0.125f, 1, 0.25f), 359.875f,
+		"mouse rotation wraps below zero without losing its fraction");
+	CheckNear(AdvanceRotation(359.875f, -1, 0.25f), 0.125f,
+		"mouse rotation wraps above 360 without losing its fraction");
+
 	CameraModeGate startupMode;
 	startupMode.OnUpdateGap();
 	Check(!startupMode.RecoverAfterUpdate(true, true),

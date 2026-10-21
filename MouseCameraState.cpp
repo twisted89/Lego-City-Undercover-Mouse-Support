@@ -115,6 +115,19 @@ namespace mouse_camera
 		return previousTick == 0 || currentTick < previousTick || currentTick - previousTick > maximumGap;
 	}
 
+	float AdvanceRotation(float rotation, int horizontalMouseDelta, float sensitivity)
+	{
+		constexpr float FullRotation = 360.0f;
+		float updatedRotation = std::fmod(
+			rotation - static_cast<float>(horizontalMouseDelta) * sensitivity,
+			FullRotation);
+		if (updatedRotation < 0.0f)
+		{
+			updatedRotation += FullRotation;
+		}
+		return updatedRotation;
+	}
+
 	void CameraModeGate::OnUpdateGap()
 	{
 		// A gap is recovery evidence only if the last usable camera was third-person.

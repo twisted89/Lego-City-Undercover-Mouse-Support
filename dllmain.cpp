@@ -363,7 +363,9 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 	const int horizontalMouseDelta = ConsumeHorizontalMouseDelta();
 	if (horizontalMouseDelta != 0)
 	{
-		rotation = static_cast<float>(static_cast<int>((rotation + (-horizontalMouseDelta * sensitivity))) % 360);
+		// Preserve fractional degrees between frames. Integer modulo quantized every raw
+		// mouse count to whole degrees and made low-speed movement visibly asymmetric.
+		rotation = mouse_camera::AdvanceRotation(rotation, horizontalMouseDelta, sensitivity);
 	}
 	auto rotatedCam = RotateCam(Vector3(playerPos[0] - distance, playerPos[2] - distance, 0), Vector3(playerPos[0], playerPos[2], 0), rotation);
 

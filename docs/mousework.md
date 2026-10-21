@@ -101,3 +101,17 @@ This completes the manual ferry-to-Albatross, return-ferry, hotkey-edge, disable
 ### Handoff boundary
 
 The post-commit work begins at **Investigation Update — 2026-10-20**. Everything before that heading reflects commit `5168d81`; the appended material records only the subsequent live diagnosis, final Raw Input redesign, build/install, and successful in-game validation.
+
+### Smooth-rotation follow-up — 2026-10-20
+
+The original camera calculation converted the updated floating-point angle to `int` solely to use integer `% 360`. That discarded fractional degrees on every camera update, made opposite directions asymmetric because integer conversion truncates toward zero, and prevented small sensitivity adjustments from accumulating smoothly.
+
+`AdvanceRotation` now performs the complete calculation in floating point and uses `std::fmod` to normalize into `[0, 360)` without losing the fraction. `UpdateCamDetour` calls this tested helper instead of the integer expression. Regression cases cover quarter-degree movement plus wrapping below 0° and above 360°; the tests were observed failing before the helper existed and passing afterward. The full Release x64 build and Raw Input lifecycle suite also pass.
+
+The rebuilt and installed DLL both have SHA-256 `C91F779BC2B9C803BCDD38AB377FE4980D4D40F2EA0269D9FAC11AA578C67041`. Manual feel testing remains pending. The saved `lcu.ini` sensitivity was `3.280027` at installation time, which is still more than three degrees per raw mouse count; use a value such as `0.25` when specifically evaluating sub-degree motion.
+
+### Smooth-rotation live validation — 2026-10-20
+
+The installed `C91F...7041` build was tested in game with `sensitivity=0.160000`. Slow horizontal camera movement was reported as “smooth as butter,” confirming that fractional rotation now survives from raw mouse input through the camera calculation. The earlier `3.280027` value was a historical read of the same INI before the game later saved `0.160000`; no additional sensitivity change is needed.
+
+The production call site is commented to record why `AdvanceRotation` must remain floating-point: the former integer modulo discarded sub-degree movement and made low-speed rotation asymmetric. Automated coverage protects fractional movement and wrapping across both 0° and 360°.
