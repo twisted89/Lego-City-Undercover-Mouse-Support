@@ -4,11 +4,6 @@
 #define HID_USAGE_PAGE_GENERIC 1
 #define HID_USAGE_GENERIC_MOUSE 2
 
-static const wchar_t* class_name = L"RawInputCatcher";
-static const wchar_t* win_name = L"RawInputMsgWindow";
-
-RawInput* RawInput::ctx = nullptr;
-
 RawInput::RawInput(std::function<void(int x, int y)> moveCallback, 
 	std::function<void(bool up)> scrollCallback,
 	std::function<void(unsigned short button)> buttonCallback) :
@@ -21,11 +16,8 @@ RawInput::RawInput(std::function<void(int x, int y)> moveCallback,
 	m_mice(nullptr),
 	nb_mice(0),
 	m_registered(false),
-	m_isWow64(false),
-	m_hwnd(0),
-	m_class_atom(0)
+	m_targetWindow(nullptr)
 {
-	ctx = this;
 }
 
 bool RawInput::get_devinfos() {
@@ -171,7 +163,7 @@ void RawInput::rawinput_handler(const RAWINPUT* raw, UINT align) {
 	}
 }
 
-void RawInput::wminput_handler(WPARAM wParam, LPARAM lParam)
+void RawInput::HandleRawInput(WPARAM wParam, LPARAM lParam)
 {
 	(void)(wParam);
 	UINT dwSize = 0;
@@ -183,29 +175,19 @@ void RawInput::wminput_handler(WPARAM wParam, LPARAM lParam)
 	}
 
 	LPBYTE lpb = (LPBYTE)malloc(dwSize);
-
-	if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+	if (lpb == nullptr)
+	{
 		return;
 	}
 
-	if(ctx)
-		ctx->rawinput_handler((RAWINPUT*)lpb, 0);
+	if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+		free(lpb);
+		return;
+	}
+
+	rawinput_handler((RAWINPUT*)lpb, 0);
 
 	free(lpb);
-}
-
-LRESULT CALLBACK RawInput::RawWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
-
-	if (Msg == WM_DESTROY) {
-		return 0;
-	}
-
-	if (Msg == WM_INPUT) {
-		wminput_handler(wParam, lParam);
-		return true;
-	}
-
-	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
 
 char* RawInput::get_dev_name_by_instance(const char* devinstance) {
@@ -313,36 +295,9 @@ void RawInput::init_device(const RAWINPUTDEVICELIST* dev) {
 	free(abuf);
 }
 
-void RawInput::cleanup_window() {
-
-	if (is_event_queue_window(m_hwnd)) {
-		MSG Msg;
-		DWORD ownerThread = GetWindowThreadProcessId(m_hwnd, nullptr);
-		// Windows only permits the creating thread to destroy this message-only window.
-		// A load may already have ended that thread and destroyed the HWND for us.
-		if (ownerThread == GetCurrentThreadId())
-		{
-			DestroyWindow(m_hwnd);
-			while (PeekMessage(&Msg, m_hwnd, 0, 0, PM_REMOVE)) {
-				TranslateMessage(&Msg);
-				DispatchMessage(&Msg);
-			}
-		}
-	}
-	m_hwnd = 0;
-
-	if (m_class_atom) {
-		UnregisterClass(class_name, GetModuleHandle(NULL));
-		m_class_atom = 0;
-	}
-
-	//LockSetForegroundWindow(LSFW_UNLOCK);
-}
-
 void RawInput::rawinput_quit() {
 
 	register_raw_input(0);
-	cleanup_window();
 	for (int i = 0; i < nb_mice; ++i) {
 		free(m_mice[i].name);
 	}
@@ -357,14 +312,14 @@ bool RawInput::register_raw_input(bool enable) {
 	if (m_registered == enable) {
 		return false;
 	}
-	if (enable && m_hwnd == NULL)
+	if (enable && (m_targetWindow == nullptr || !IsWindow(m_targetWindow)))
 	{
-		printf("Raw HWND null, unable to register input");
+		printf("Raw input target unavailable");
 		return false;
 	}
 
 	DWORD dwFlags = enable ? (RIDEV_NOLEGACY | RIDEV_EXINPUTSINK) : RIDEV_REMOVE;
-	HWND hwndTarget = enable ? m_hwnd : 0;
+	HWND hwndTarget = enable ? m_targetWindow : nullptr;
 
 	RAWINPUTDEVICE rid[] = {
 		{
@@ -387,120 +342,37 @@ bool RawInput::register_raw_input(bool enable) {
 
 void RawInput::DisableCapture()
 {
+	std::lock_guard<std::mutex> lock(m_updateMutex);
 	register_raw_input(false);
 }
 
-bool RawInput::init_event_queue()
+void RawInput::SetTargetWindow(HWND window)
 {
-	HANDLE hInstance = GetModuleHandle(NULL);
-
-	if (m_class_atom == 0)
+	std::lock_guard<std::mutex> lock(m_updateMutex);
+	if (m_targetWindow == window)
 	{
-		WNDCLASSEX wce = {  };
-		wce.cbSize = sizeof(WNDCLASSEX);
-		wce.lpfnWndProc = RawWndProc;
-		wce.lpszClassName = class_name;
-		wce.hInstance = (HINSTANCE)hInstance;
-		m_class_atom = RegisterClassEx(&wce);
-		if (m_class_atom == 0)
-			return false;
+		return;
 	}
 
-	//create the window at the position of the cursor
-	POINT cursor_pos;
-	GetCursorPos(&cursor_pos);
-
-	m_hwnd = CreateWindowEx(0, class_name, win_name, /*WS_POPUP*/ 0, cursor_pos.x, cursor_pos.y, 0, 0, HWND_MESSAGE, 0, (HINSTANCE)hInstance, 0);
-
-	if (m_hwnd == NULL) {
-		printf("CreateWindow failed %d", GetLastError());
-		return false;
-	}
-
-	SetLastError(ERROR_SUCCESS);
-	// Tag the HWND so a recycled handle belonging to another window cannot be mistaken
-	// for this RawInput instance after a loading-thread transition.
-	if (SetWindowLongPtr(m_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this)) == 0 &&
-		GetLastError() != ERROR_SUCCESS)
-	{
-		printf("SetWindowLongPtr failed %d", GetLastError());
-		DestroyWindow(m_hwnd);
-		m_hwnd = NULL;
-		return false;
-	}
-
-	ShowWindow(m_hwnd, SW_HIDE);
-
-	return true;
-}
-
-bool RawInput::is_event_queue_window(HWND window) const
-{
-	if (window == NULL || !IsWindow(window))
-	{
-		return false;
-	}
-
-	DWORD processId = 0;
-	GetWindowThreadProcessId(window, &processId);
-	return processId == GetCurrentProcessId() &&
-		static_cast<ATOM>(GetClassLongPtr(window, GCW_ATOM)) == m_class_atom &&
-		GetWindowLongPtr(window, GWLP_USERDATA) == reinterpret_cast<LONG_PTR>(this);
-}
-
-bool RawInput::ensure_event_queue()
-{
-	// Message-only windows are thread-owned. Reuse the queue only on its owner thread;
-	// otherwise unregister the stale target and rebuild it on the current camera thread.
-	if (is_event_queue_window(m_hwnd))
-	{
-		const DWORD ownerThread = GetWindowThreadProcessId(m_hwnd, nullptr);
-		if (ownerThread == GetCurrentThreadId())
-		{
-			return true;
-		}
-	}
-
+	// A registration is tied to its HWND. Remove it before changing targets so a
+	// destroyed/replaced game window can never leave capture bound to a stale handle.
 	register_raw_input(false);
-	{
-		std::lock_guard<std::mutex> lock(m_registrationMutex);
-		m_registered = false;
-	}
-	m_hwnd = NULL;
-	return init_event_queue();
+	m_targetWindow = IsWindow(window) ? window : nullptr;
 }
 
 void RawInput::Update(bool capture) {
 	std::lock_guard<std::mutex> lock(m_updateMutex);
 
-	if (!capture)
+	if (capture && (m_targetWindow == nullptr || !IsWindow(m_targetWindow)))
 	{
-		// Disabling must not create a queue on a transient loading thread. It only
-		// unregisters capture and drains a queue already owned by this thread.
+		// Never keep a successful-registration bit for a window Windows has destroyed.
+		// WndProc will provide the replacement HWND before capture can resume.
 		register_raw_input(false);
-		if (is_event_queue_window(m_hwnd) &&
-			GetWindowThreadProcessId(m_hwnd, nullptr) == GetCurrentThreadId())
-		{
-			MSG Msg;
-			while (PeekMessage(&Msg, m_hwnd, 0, 0, PM_REMOVE)) {
-				TranslateMessage(&Msg);
-				DispatchMessage(&Msg);
-			}
-		}
-		return;
-	}
-
-	if (!ensure_event_queue())
-	{
+		m_targetWindow = nullptr;
 		return;
 	}
 
 	register_raw_input(capture);
-	MSG Msg;
-	while (PeekMessage(&Msg, m_hwnd, 0, 0, PM_REMOVE)) {
-		TranslateMessage(&Msg);
-		DispatchMessage(&Msg);
-	}
 }
 
 bool RawInput::Init()
@@ -537,13 +409,6 @@ bool RawInput::Init()
 		rawinput_quit();
 		return false;
 	}
-
-	if (!init_event_queue()) {
-		rawinput_quit();
-		return false;
-	}
-
-	IsWow64Process(GetCurrentProcess(), &m_isWow64);
 
 	return true;
 }

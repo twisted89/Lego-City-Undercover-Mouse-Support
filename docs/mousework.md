@@ -54,3 +54,50 @@ Final manual validation should cover:
 5. A genuine first-person/scripted camera sequence.
 
 The reverse-engineered RVAs apply to executable version `1.0.0.15609011`.
+
+## Investigation Update — 2026-10-20
+
+### Why the previous Raw Input recovery still failed
+
+The first ferry-gate fix was correct, but the installed build still lost mouse input on Albatross. A second live-process inspection separated the camera state from the input transport. At the failure point the camera detour was still running approximately every 15 ms, the mod was enabled and focused, the stale-mode recovery gate was armed, resynchronization had completed, and input acceptance was enabled. However, `RawInput` reported itself registered to an HWND for which `IsWindow` returned false.
+
+That evidence identified a lifetime error rather than another camera-mode error. Camera updates can execute on short-lived worker threads. The previous implementation created a message-only Raw Input window on whichever camera thread called `Update(true)`. Windows owns that HWND through the creating thread, so it destroys the window when that worker exits. Recreating the window on a later camera worker only repeats the failure. This supersedes the earlier recovery approach described above; validating and recreating a camera-thread-owned message window is not a durable solution.
+
+No game memory was changed during diagnosis. A temporary in-process state probe was used only to read the mod state and validate the camera gate.
+
+### Durable Raw Input design
+
+`RawInput` no longer creates a hidden window or pumps a camera-thread message queue. The already-hooked game `WndProc` now supplies the game's persistent HWND through `SetTargetWindow` and forwards `WM_INPUT` to `HandleRawInput`. The message is still passed to the original game WndProc afterward, preserving normal game handling.
+
+Camera workers now only request registration state through `Update(bool)`. Enabling registers mouse input to the persistent game HWND; disabling unregisters it. A destroyed or replaced target is detected before registration, and changing targets first removes the old registration. Consequently, a camera worker can exit without destroying the Raw Input destination.
+
+The F8 behavior and camera-transition safeguards remain unchanged: disabling immediately unregisters capture, releases synthesized mouse-button keys, and clears deltas; re-enabling waits for a valid camera update and rebases the orbit before accepting new input.
+
+### Automated evidence
+
+`RawInputLifecycleTests` now uses a real Win32 Raw Input registration and verifies both important lifetime cases:
+
+1. A persistent target window remains valid and registered after the transient camera worker that initializes capture has exited.
+2. Destroying and replacing the target removes stale registration and retargets capture to the replacement HWND.
+
+`MouseCameraStateTests` still covers F8 edge handling, state revisions, input clearing, update gaps, ferry ordering, stale mode recovery, valid orbit rebasing, and genuine first-person rejection. Both test executables pass, and a Release x64 rebuild produces `x64\Release\steam_api64.dll`. The only build diagnostic is the pre-existing `Vector3.cpp` double-to-float warning.
+
+### Remaining manual validation
+
+The redesigned DLL still requires an in-game ferry run when a tester is available. Verify mainland mouse movement, F8 disable/re-enable, mainland to Albatross, continued movement after arrival, return to the mainland, and at least one genuine first-person or scripted-camera sequence. If a failure recurs, capture whether the camera moves under keyboard/controller input and whether F8 disable/re-enable changes the symptom; those observations distinguish camera gating from Raw Input delivery.
+
+### Installed artifact
+
+The failing DLL inspected during the final live session had SHA-256 `55CDF534322E939F0EEA09D8E03E40550BD071540D1063F57159300E582E565D`. After the persistent-HWND change, the freshly rebuilt DLL and the copy installed in the game directory both have SHA-256 `6A5CF165507058564C629C15DFD5EDE533712056474C8655204496A889FBEAE5`. The game was not running during replacement, and `steam_api64.pre-codex.dll` remains the untouched original backup.
+
+### Final live validation — 2026-10-20
+
+The installed `6A5CF...AE5` build was tested in the running game while a read-only external state probe watched the mod globals. Mouse-camera control worked on Albatross, continued working after ferry travel back to the mainland, and did not resume the original spin. After each active transition the camera detour was current, resynchronization was clear, input acceptance was enabled, and Raw Input was registered to the same persistent game HWND.
+
+The F8 lifecycle was also validated live. Holding F8 caused one disable transition (revision 10): input acceptance became false, deltas remained clear, and Raw Input unregistered. The held key did not toggle repeatedly. A second F8 key-down caused one enable transition (revision 11), completed camera resynchronization, restored input acceptance, and re-registered Raw Input. Focus loss afterward independently cleared and unregistered input as designed.
+
+This completes the manual ferry-to-Albatross, return-ferry, hotkey-edge, disable cleanup, and re-enable recovery checks for executable version `1.0.0.15609011`.
+
+### Handoff boundary
+
+The post-commit work begins at **Investigation Update — 2026-10-20**. Everything before that heading reflects commit `5168d81`; the appended material records only the subsequent live diagnosis, final Raw Input redesign, build/install, and successful in-game validation.

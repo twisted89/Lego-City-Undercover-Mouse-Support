@@ -195,6 +195,15 @@ static bool HasUsableOrbit(float* camPos, float* playerPos)
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
+	// Raw input must target a window whose lifetime is independent of the camera
+	// worker thread. The game's own window supplies that stable target, and this
+	// existing hook lets us consume WM_INPUT without owning another message queue.
+	input.SetTargetWindow(hWnd);
+	if (Msg == WM_INPUT)
+	{
+		input.HandleRawInput(wParam, lParam);
+	}
+
 	switch (Msg)
 	{
 	case WM_KEYDOWN:
@@ -225,8 +234,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 	const std::uint64_t currentTick = GetTickCount64();
 	if (mouse_camera::HasCameraUpdateGap(lastCameraUpdateTick, currentTick, MaximumCameraUpdateGapMs))
 	{
-		// Loading and fast travel stop this hook long enough to invalidate accumulated
-		// input and, potentially, the thread-owned raw-input message window.
+		// Loading and fast travel stop this hook long enough to make accumulated mouse
+		// deltas and the pre-load camera orbit unsafe to reuse.
 		needsCameraResync = true;
 		cameraModeGate.OnUpdateGap();
 	}
@@ -305,8 +314,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 				return;
 			}
 
-			// Update(true) also recreates the raw-input queue if loading replaced the
-			// camera thread that owned its message-only window.
+			// Re-register against the persistent game HWND after the post-load orbit has
+			// been rebased. No camera-thread-owned window is involved.
 			input.Update(true);
 			SetMouseCameraInputAccepting(true);
 			desired = desiredState.Get();

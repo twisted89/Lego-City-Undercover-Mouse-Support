@@ -1,15 +1,12 @@
 #include "../RawInput.h"
 
-#include <condition_variable>
 #include <iostream>
-#include <mutex>
 #include <thread>
 #include <vector>
 
 namespace
 {
-	constexpr wchar_t RawInputClassName[] = L"RawInputCatcher";
-	constexpr wchar_t RawInputWindowName[] = L"RawInputMsgWindow";
+	constexpr wchar_t TestWindowClass[] = L"RawInputStableTargetTest";
 
 	bool Require(bool condition, const char* message)
 	{
@@ -21,18 +18,26 @@ namespace
 		return true;
 	}
 
-	HWND FindRawInputWindowOwnedBy(DWORD threadId)
+	LRESULT CALLBACK TestWndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		HWND window = nullptr;
-		while ((window = FindWindowEx(
-			HWND_MESSAGE, window, RawInputClassName, RawInputWindowName)) != nullptr)
+		return DefWindowProc(window, message, wParam, lParam);
+	}
+
+	HWND CreateTestWindow()
+	{
+		static ATOM windowClass = 0;
+		if (windowClass == 0)
 		{
-			if (GetWindowThreadProcessId(window, nullptr) == threadId)
-			{
-				return window;
-			}
+			WNDCLASSEXW definition = {};
+			definition.cbSize = sizeof(definition);
+			definition.lpfnWndProc = TestWndProc;
+			definition.lpszClassName = TestWindowClass;
+			definition.hInstance = GetModuleHandle(nullptr);
+			windowClass = RegisterClassExW(&definition);
 		}
-		return nullptr;
+
+		return CreateWindowExW(0, TestWindowClass, L"RawInput target", 0,
+			0, 0, 0, 0, HWND_MESSAGE, nullptr, GetModuleHandle(nullptr), nullptr);
 	}
 
 	bool IsMouseRegisteredTo(HWND expectedWindow)
@@ -60,103 +65,74 @@ namespace
 		return false;
 	}
 
-	bool RecoversAfterOriginalThreadExits()
+	bool RegistersToPersistentGameWindow()
 	{
-		RawInput input(
-			[](int, int) {},
-			[](bool) {},
-			[](unsigned short) {});
-
-		bool initialised = false;
-		HWND originalWindow = nullptr;
-		std::thread originalCameraThread([&]()
-		{
-			initialised = input.Init();
-			input.Update(true);
-			originalWindow = FindRawInputWindowOwnedBy(GetCurrentThreadId());
-		});
-		originalCameraThread.join();
-
-		if (!Require(initialised, "raw input should initialise on the original camera thread") ||
-			!Require(originalWindow != nullptr, "initialisation should create a message-only window") ||
-			!Require(!IsWindow(originalWindow), "Windows should destroy the message window when its thread exits"))
+		HWND target = CreateTestWindow();
+		if (!Require(target != nullptr, "the stable target window should be created"))
 		{
 			return false;
 		}
 
+		RawInput input(
+			[](int, int) {},
+			[](bool) {},
+			[](unsigned short) {});
+		input.SetTargetWindow(target);
+		bool initialised = false;
+		std::thread transientCameraWorker([&]()
+		{
+			initialised = input.Init();
+			input.Update(true);
+		});
+		transientCameraWorker.join();
+
+		bool passed = Require(initialised, "raw input should initialise without creating its own window");
+		passed = Require(IsWindow(target), "the target should survive after the camera worker exits") && passed;
+		passed = Require(IsMouseRegisteredTo(target), "raw mouse input should target the persistent game window") && passed;
+
 		input.Update(false);
-		bool passed = Require(FindRawInputWindowOwnedBy(GetCurrentThreadId()) == nullptr,
-			"disabled updates should not create a queue on a transient camera thread");
-
-		input.Update(true);
-
-		HWND recoveredWindow = FindRawInputWindowOwnedBy(GetCurrentThreadId());
-		passed = Require(recoveredWindow != nullptr && IsWindow(recoveredWindow),
-			"Update should recreate a message window after the original thread exits") && passed;
-		passed = Require(GetWindowLongPtr(recoveredWindow, GWLP_USERDATA) == reinterpret_cast<LONG_PTR>(&input),
-			"the recovered handle should be identifiable as this RawInput window") && passed;
-		passed = Require(IsMouseRegisteredTo(recoveredWindow),
-			"Update should register raw mouse input to the recovered window") && passed;
+		passed = Require(!IsMouseRegisteredTo(target), "disabling should unregister the persistent target") && passed;
+		DestroyWindow(target);
 		return passed;
 	}
 
-	bool MovesQueueToCurrentCameraThread()
+	bool RetargetsAfterWindowReplacement()
 	{
 		RawInput input(
 			[](int, int) {},
 			[](bool) {},
 			[](unsigned short) {});
-
-		std::mutex mutex;
-		std::condition_variable readyCondition;
-		std::condition_variable exitCondition;
-		bool ready = false;
-		bool shouldExit = false;
-		bool initialised = false;
-		HWND originalWindow = nullptr;
-		std::thread originalCameraThread([&]()
+		if (!Require(input.Init(), "raw input should initialise before retargeting"))
 		{
-			initialised = input.Init();
-			input.Update(true);
-			originalWindow = FindRawInputWindowOwnedBy(GetCurrentThreadId());
-			{
-				std::lock_guard<std::mutex> lock(mutex);
-				ready = true;
-			}
-			readyCondition.notify_one();
-
-			std::unique_lock<std::mutex> lock(mutex);
-			exitCondition.wait(lock, [&]() { return shouldExit; });
-		});
-
-		{
-			std::unique_lock<std::mutex> lock(mutex);
-			readyCondition.wait(lock, [&]() { return ready; });
+			return false;
 		}
 
-		bool passed = Require(initialised && originalWindow != nullptr && IsWindow(originalWindow),
-			"the original thread should still own a valid message window");
+		HWND original = CreateTestWindow();
+		input.SetTargetWindow(original);
 		input.Update(true);
-		passed = Require(FindRawInputWindowOwnedBy(GetCurrentThreadId()) != nullptr,
-			"Update should move the message queue to a replacement camera thread") && passed;
+		bool passed = Require(IsMouseRegisteredTo(original), "the original game window should receive raw input");
+		DestroyWindow(original);
+		input.Update(true);
 
-		{
-			std::lock_guard<std::mutex> lock(mutex);
-			shouldExit = true;
-		}
-		exitCondition.notify_one();
-		originalCameraThread.join();
+		HWND replacement = CreateTestWindow();
+		input.SetTargetWindow(replacement);
+		input.Update(true);
+		passed = Require(IsWindow(replacement), "the replacement game window should remain valid") && passed;
+		passed = Require(IsMouseRegisteredTo(replacement), "raw input should move to the replacement game window") && passed;
+
+		input.Update(false);
+		DestroyWindow(replacement);
 		return passed;
 	}
 }
 
 int main()
 {
-	if (!RecoversAfterOriginalThreadExits() || !MovesQueueToCurrentCameraThread())
+	if (!RegistersToPersistentGameWindow() || !RetargetsAfterWindowReplacement())
 	{
 		return 1;
 	}
 
-	std::cout << "RawInput lifecycle tests passed\n";
+	std::cout << "RawInput stable-target tests passed\n";
 	return 0;
 }
