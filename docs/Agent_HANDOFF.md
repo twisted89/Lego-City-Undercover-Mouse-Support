@@ -16,7 +16,9 @@ If work continues, preserve the validated behavior below. The most useful immedi
 - Raw Input must target the game's persistent HWND supplied by the hooked `WndProc`. `WndProc` forwards `WM_INPUT` to `RawInput::HandleRawInput` and then calls the original game WndProc. Do not recreate the superseded camera-worker-owned message window.
 - On focus, toggle, or load transitions: suspend input, clear deltas, let the game update first, rebase rotation/distance from the resulting orbit, then resume only if the desired-state revision and camera conditions still match.
 - Keep rotation floating-point end to end. `AdvanceRotation` uses `std::fmod` and normalizes to `[0, 360)`; the former integer `% 360` path discarded fractional degrees.
-- F8 is the default toggle (`togglekey=0x77`). Initial key-down toggles once; disable must unregister capture, clear deltas, and release synthesized buttons.
+- F8 is the default mouse-camera toggle (`[mouse] toggle=F8`); F9 is the default window-mode toggle (`[window] toggle=F9`). Toggle bindings are keyboard-only and accept friendly names, single characters, or decimal/hex virtual-key codes.
+- Mouse-camera sensitivity defaults to `0.003`; Home/End adjust it by `0.001`. Windowed mode defaults to 80% aspect-preserving scale, with fixed client defaults of `1280x720`.
+- Initial key-down toggles once; disabling mouse-camera control must unregister capture, clear deltas, and release synthesized buttons.
 - Preserve Win64 hook signatures/ABI, tabs, and Allman braces. Do not add support for another executable build without re-verifying RVAs.
 
 ## Relevant files

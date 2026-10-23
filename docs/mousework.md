@@ -31,7 +31,7 @@ During resynchronization, the mod:
 
 `RawInput` now validates the message-window identity, process, and owning thread. `Update(true)` unregisters stale capture, creates a new queue on the current camera thread, and registers the mouse against it. Disabled updates never create a new queue.
 
-The added F8 toggle is configurable as hexadecimal `togglekey` under `[settings]` in `lcu.ini` (default `0x77`). It reacts only to the initial key-down event. Disabling releases synthesized buttons, unregisters capture, and clears deltas; re-enabling uses the same camera resynchronization path to avoid a jump.
+The mouse-camera toggle uses `[mouse] toggle` in `lcu.ini` (default `F8`); the window-mode toggle uses `[window] toggle` (default `F9`). Both accept friendly key names, single characters, or decimal/hexadecimal virtual-key codes, and reject mouse-button codes. Initial key-down toggles once. Disabling mouse-camera control releases synthesized buttons, unregisters capture, and clears deltas; re-enabling uses the same camera resynchronization path to avoid a jump. Sensitivity is configured as `[mouse] sensitivity` (default `0.003`, matching the installed `lcu.ini`), and Home/End adjust it by `0.001`.
 
 ## Safety Conditions
 

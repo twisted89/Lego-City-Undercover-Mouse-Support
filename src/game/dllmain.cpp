@@ -1,6 +1,9 @@
 #include <windows.h>
 #include <tchar.h>
 #include <stdint.h>
+#include <algorithm>
+#include <cctype>
+#include <limits>
 #include <MinHook.h>
 #include <stdio.h>
 #include <math.h>
@@ -8,9 +11,13 @@
 #include "Proxy.h"
 #include "RawInput.h"
 #include "MouseCameraState.h"
+#include "Settings.h"
 #include "ini.h"
 
+#include <fstream>
+#include <iomanip>
 #include <mutex>
+#include <sstream>
 #include <type_traits>
 
 #define DEBUG_PRINTF(...) {char cad[512]; sprintf(cad, __VA_ARGS__);  OutputDebugStringA(cad);}
@@ -53,8 +60,8 @@ struct WindowModeState
 };
 
 WindowModeState windowModeState;
-
-float sensitivity = 1, distance = 1;
+lcu_config::Settings configSettings;
+float distance = 1;
 int* isFirstPerson = nullptr;
 float rotation = 0;
 mouse_camera::InputState mouseInput;
@@ -65,7 +72,6 @@ bool initialised = false;
 bool needsCameraResync = true;
 bool leftClickDown = false, rightClickDown = false;
 unsigned short leftClickKey = 0x51, rightClickKey = 0x45;
-unsigned short toggleKey = mouse_camera::DefaultToggleKey;
 std::uint64_t lastCameraUpdateTick = 0;
 std::uint64_t lastDesiredStateRevision = UINT64_MAX;
 
@@ -175,28 +181,86 @@ static bool MakeWindowedPlacement(HWND window, const WindowPlacement& current,
 	windowed.style = (current.style & ~(WS_POPUP | WS_CHILD)) | WS_OVERLAPPEDWINDOW;
 	windowed.extendedStyle = current.extendedStyle & ~WS_EX_TOPMOST;
 
-	const LONG monitorWidth = monitorBounds.right - monitorBounds.left;
-	const LONG monitorHeight = monitorBounds.bottom - monitorBounds.top;
 	const LONG workWidth = workArea.right - workArea.left;
 	const LONG workHeight = workArea.bottom - workArea.top;
-	if (monitorWidth <= 0 || monitorHeight <= 0 || workWidth <= 0 || workHeight <= 0)
+	if (workWidth <= 0 || workHeight <= 0)
 	{
-		DEBUG_PRINTF("Invalid game monitor dimensions\n");
+		DEBUG_PRINTF("Invalid game monitor work area\n");
 		return false;
 	}
 
-	LONG clientWidth = workWidth * 4 / 5;
-	LONG clientHeight = workHeight * 4 / 5;
-	if (static_cast<double>(clientWidth) / clientHeight >
-		static_cast<double>(monitorWidth) / monitorHeight)
+	// Determine the normal decorated-frame overhead before calculating the
+	// largest client rectangle that can fit entirely in the monitor work area.
+	RECT frameBounds = {};
+	if (!AdjustWindowRectEx(&frameBounds, static_cast<DWORD>(windowed.style), FALSE,
+		static_cast<DWORD>(windowed.extendedStyle)))
 	{
-		clientWidth = static_cast<LONG>(
-			static_cast<double>(clientHeight) * monitorWidth / monitorHeight);
+		DEBUG_PRINTF("Unable to calculate game window frame: %lu\n", GetLastError());
+		return false;
+	}
+	const LONG frameWidth = frameBounds.right - frameBounds.left;
+	const LONG frameHeight = frameBounds.bottom - frameBounds.top;
+	const LONG maxClientWidth = workWidth - frameWidth;
+	const LONG maxClientHeight = workHeight - frameHeight;
+	if (maxClientWidth <= 0 || maxClientHeight <= 0)
+	{
+		DEBUG_PRINTF("Monitor work area cannot fit a decorated game window\n");
+		return false;
+	}
+
+	// Fixed mode dimensions refer to the client area. If the decorated outer
+	// window would exceed the work area, use the documented default scale rather
+	// than silently shrinking the user's requested fixed dimensions.
+	LONG clientWidth = 0;
+	LONG clientHeight = 0;
+	if (configSettings.windowSizingMode == lcu_config::WindowSizingMode::Fixed &&
+		configSettings.windowWidth > 0 && configSettings.windowHeight > 0 &&
+		configSettings.windowWidth <= maxClientWidth &&
+		configSettings.windowHeight <= maxClientHeight)
+	{
+		clientWidth = configSettings.windowWidth;
+		clientHeight = configSettings.windowHeight;
 	}
 	else
 	{
-		clientHeight = static_cast<LONG>(
-			static_cast<double>(clientWidth) * monitorHeight / monitorWidth);
+		float windowScale = configSettings.windowScale;
+		if (configSettings.windowSizingMode == lcu_config::WindowSizingMode::Fixed)
+		{
+			DEBUG_PRINTF("Fixed window dimensions do not fit this monitor; using default scale\n");
+			configSettings.windowSizingMode = lcu_config::WindowSizingMode::Scale;
+			windowScale = lcu_config::DefaultWindowScale;
+			configSettings.windowScale = windowScale;
+			configSettings.windowWidth = lcu_config::DefaultWindowWidth;
+			configSettings.windowHeight = lcu_config::DefaultWindowHeight;
+		}
+
+		// Only scale mode needs the current rendering aspect ratio. Fixed mode
+		// uses the client's explicitly requested dimensions without adjustment.
+		RECT currentClientRect = {};
+		if (!GetClientRect(window, &currentClientRect))
+		{
+			DEBUG_PRINTF("Unable to read game client bounds: %lu\n", GetLastError());
+			return false;
+		}
+		const LONG currentClientWidth = currentClientRect.right - currentClientRect.left;
+		const LONG currentClientHeight = currentClientRect.bottom - currentClientRect.top;
+		if (currentClientWidth <= 0 || currentClientHeight <= 0)
+		{
+			DEBUG_PRINTF("Invalid game client dimensions\n");
+			return false;
+		}
+		const double gameAspectRatio = static_cast<double>(currentClientWidth) / currentClientHeight;
+
+		// Fit the game's aspect ratio first, then scale both dimensions uniformly
+		// and center the result in the available work area.
+		const double fittingWidth = (std::min)(
+			static_cast<double>(maxClientWidth),
+			static_cast<double>(maxClientHeight) * gameAspectRatio);
+		const double fittingHeight = fittingWidth / gameAspectRatio;
+		clientWidth = (std::max)(1L,
+			static_cast<LONG>(std::lround(fittingWidth * windowScale)));
+		clientHeight = (std::max)(1L,
+			static_cast<LONG>(std::lround(fittingHeight * windowScale)));
 	}
 
 	RECT rect = { 0, 0, clientWidth, clientHeight };
@@ -209,6 +273,11 @@ static bool MakeWindowedPlacement(HWND window, const WindowPlacement& current,
 
 	const LONG windowWidth = rect.right - rect.left;
 	const LONG windowHeight = rect.bottom - rect.top;
+	if (windowWidth > workWidth || windowHeight > workHeight)
+	{
+		DEBUG_PRINTF("Calculated game window does not fit the monitor work area\n");
+		return false;
+	}
 	rect.left = workArea.left + (workWidth - windowWidth) / 2;
 	rect.top = workArea.top + (workHeight - windowHeight) / 2;
 	rect.right = rect.left + windowWidth;
@@ -476,15 +545,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 		input.HandleRawInput(wParam, lParam);
 	}
 
-	if ((Msg == WM_KEYDOWN || Msg == WM_SYSKEYDOWN) && wParam == VK_F9)
+	const bool isWindowToggleKey = wParam == configSettings.windowToggleKey;
+	if ((Msg == WM_KEYDOWN || Msg == WM_SYSKEYDOWN) && isWindowToggleKey)
 	{
 		if ((static_cast<std::uintptr_t>(lParam) & (1ULL << 30)) == 0)
 		{
 			ToggleWindowMode(hWnd);
 		}
-		return 0;
 	}
-	if ((Msg == WM_KEYUP || Msg == WM_SYSKEYUP) && wParam == VK_F9)
+	if ((Msg == WM_KEYUP || Msg == WM_SYSKEYUP) && isWindowToggleKey)
 	{
 		return 0;
 	}
@@ -493,7 +562,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	{
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
-		if (mouse_camera::ProcessToggleKey(desiredState, wParam, lParam, toggleKey) ==
+		if (mouse_camera::ProcessToggleKey(desiredState, wParam, lParam,
+			configSettings.mouseToggleKey) ==
 			mouse_camera::ToggleTransition::Disabled)
 		{
 			SuspendMouseCameraInputImmediately();
@@ -510,6 +580,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 			desiredState.SetFocused(true);
 		}
 		break;
+	}
+	if (isWindowToggleKey)
+	{
+		// Process both actions if a user intentionally binds the two toggles to
+		// the same key, while still keeping the window hotkey out of the game.
+		return 0;
 	}
 	return fpWndProc(hWnd, Msg, wParam, lParam);
 }
@@ -554,12 +630,15 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 	}
 
 	if (cameraModeAllowed && GetAsyncKeyState(VK_HOME)) {
-		sensitivity += 0.005f;
+		// Keep keyboard adjustment deliberately finer than the original 0.005 step.
+		configSettings.sensitivity += lcu_config::SensitivityAdjustmentStep;
 	}
 	if (cameraModeAllowed && GetAsyncKeyState(VK_END)) {
-		sensitivity -= 0.005f;
-		if (sensitivity <= 0)
-			sensitivity = 0.01f;
+		configSettings.sensitivity -= lcu_config::SensitivityAdjustmentStep;
+		if (configSettings.sensitivity < lcu_config::MinimumSensitivity)
+		{
+			configSettings.sensitivity = lcu_config::MinimumSensitivity;
+		}
 	}
 
 	if (needsCameraResync)
@@ -652,7 +731,8 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 	{
 		// Preserve fractional degrees between frames. Integer modulo quantized every raw
 		// mouse count to whole degrees and made low-speed movement visibly asymmetric.
-		rotation = mouse_camera::AdvanceRotation(rotation, horizontalMouseDelta, sensitivity);
+		rotation = mouse_camera::AdvanceRotation(
+			rotation, horizontalMouseDelta, configSettings.sensitivity);
 	}
 	auto rotatedCam = RotateCam(Vector3(playerPos[0] - distance, playerPos[2] - distance, 0), Vector3(playerPos[0], playerPos[2], 0), rotation);
 
@@ -662,6 +742,281 @@ void __fastcall UpdateCamDetour(__int64 a1, float* camPos, float* playerPos , fl
 	//DEBUG_PRINTF("ROTATION %.6f %.6f\n", rotatedCam.x, rotatedCam.y);
 
 	fpUpdateCam(a1, camPos, playerPos, a4, a5, a6, a7, a8, a9);
+}
+
+
+
+static constexpr char ConfigHeaderTemplate[] =
+	"; LEGO City Undercover Mouse Plus settings.\n"
+	";\n"
+	"; Keyboard keys can be \"Friendly\" names (like F8), keys (like w), or decimal/hex virtual-key codes (like 0x77)\n"
+	"; Keyboard key used to enable or disable mouse-camera control. Examples: F8, HOME, END, ESC, PAGEUP, K, 9, 0x77.\n";
+
+
+
+static constexpr char MouseConfigTemplate[] =
+	"[mouse]\n"
+	"toggle=F8\n"
+	"; Mouse-camera sensitivity must be greater than 0. Use Home/End to increase/decrease the sensitivity by 0.001.\n"
+	"sensitivity=0.003\n";
+
+
+
+static constexpr char WindowConfigTemplate[] =
+	"[window]\n"
+	"toggle=F9\n"
+	"; Window sizing mode: scale or fixed.\n"
+	"mode=scale\n"
+	"; Scale fits the game aspect ratio\n"
+	"window_scale=0.8\n"
+	"; Fixed uses window_width and window_height.\n"
+	"window_width=1280\n"
+	"window_height=720\n";
+
+
+
+static bool AppendMissingConfigSections(const mINI::INIStructure& ini)
+{
+	// Legacy files keep all their existing text; append documented sections only
+	// when that whole section is absent, then let mINI parse and update it lazily.
+	const bool needsMouseSection = !ini.has("mouse");
+	const bool needsWindowSection = !ini.has("window");
+	if (!needsMouseSection && !needsWindowSection)
+	{
+		return true;
+	}
+
+	std::ofstream configFile("lcu.ini", std::ios::out | std::ios::app | std::ios::binary);
+	if (!configFile.is_open())
+	{
+		DEBUG_PRINTF("Unable to append documented settings to lcu.ini\n");
+		return false;
+	}
+
+	configFile << "\n";
+	if (needsMouseSection)
+	{
+		configFile << ConfigHeaderTemplate << "\n" << MouseConfigTemplate;
+	}
+	if (needsWindowSection)
+	{
+		configFile << "\n" << WindowConfigTemplate;
+	}
+	configFile.flush();
+	if (!configFile.good())
+	{
+		DEBUG_PRINTF("Unable to append documented settings to lcu.ini\n");
+		return false;
+	}
+	return true;
+}
+
+
+
+static bool EnsureConfigFile()
+{
+	// Seed missing files with the fully documented template. Existing files are
+	// never replaced here; mINI's lazy writer updates them while retaining comments.
+	const DWORD existingAttributes = GetFileAttributesA("lcu.ini");
+	std::ifstream existingFile("lcu.ini", std::ios::in | std::ios::binary);
+	if (existingFile.good() && existingFile.peek() != std::ifstream::traits_type::eof())
+	{
+		return true;
+	}
+	if (existingAttributes != INVALID_FILE_ATTRIBUTES &&
+		(!existingFile.is_open() || existingFile.bad()))
+	{
+		DEBUG_PRINTF("Unable to inspect existing lcu.ini; leaving it untouched\n");
+		return false;
+	}
+	if (existingAttributes != INVALID_FILE_ATTRIBUTES &&
+		(existingAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
+	{
+		DEBUG_PRINTF("lcu.ini refers to a directory; leaving it untouched\n");
+		return false;
+	}
+	existingFile.close();
+
+	std::ofstream newFile("lcu.ini", std::ios::out | std::ios::binary);
+	if (!newFile.is_open())
+	{
+		DEBUG_PRINTF("Unable to create lcu.ini: %lu\n", GetLastError());
+		return false;
+	}
+
+	newFile << ConfigHeaderTemplate << "\n" << MouseConfigTemplate << "\n" <<
+		WindowConfigTemplate;
+	newFile.flush();
+	if (!newFile.good())
+	{
+		DEBUG_PRINTF("Unable to write default lcu.ini template\n");
+		return false;
+	}
+	return true;
+}
+
+
+
+static std::string FormatSensitivity(float value)
+{
+	// Find the shortest significant decimal that round-trips to the same float,
+	// keeping ordinary values such as 0.16 readable without losing precision.
+	for (int precision = 1; precision <= std::numeric_limits<float>::max_digits10; ++precision)
+	{
+		std::ostringstream formatted;
+		formatted << std::setprecision(precision) << value;
+		const std::string candidate = formatted.str();
+		try
+		{
+			std::size_t parsedCharacters = 0;
+			if (std::stof(candidate, &parsedCharacters) == value &&
+				parsedCharacters == candidate.size())
+			{
+				return candidate;
+			}
+		}
+		catch (const std::exception&)
+		{
+			// The stream output is expected to be parseable; try the next precision
+			// rather than writing a potentially lossy representation.
+		}
+	}
+
+	// max_digits10 guarantees a round-trip fallback for finite float values.
+	std::ostringstream formatted;
+	formatted << std::setprecision(std::numeric_limits<float>::max_digits10) << value;
+	return formatted.str();
+}
+
+
+
+static std::string ConfiguredKeyOrDefault(const mINI::INIStructure& ini,
+	const char* sectionName, const char* settingName, const char* defaultValue)
+{
+	if (ini.has(sectionName))
+	{
+		const auto section = ini.get(sectionName);
+		if (section.has(settingName))
+		{
+			const std::string configuredValue = section.get(settingName);
+			unsigned short ignoredKey = 0;
+			if (lcu_config::ParseKeyboardKey(configuredValue, ignoredKey))
+			{
+				return configuredValue;
+			}
+		}
+	}
+	return defaultValue;
+}
+
+
+
+static bool IsPositiveConfigDimension(
+	const mINI::INIMap<std::string>& section, const char* name)
+{
+	if (!section.has(name))
+	{
+		return false;
+	}
+
+	try
+	{
+		const std::string value = section.get(name);
+		std::size_t parsedCharacters = 0;
+		const long parsed = std::stol(value, &parsedCharacters, 10);
+		return parsedCharacters == value.size() && parsed > 0 &&
+			parsed <= (std::numeric_limits<int>::max)();
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
+}
+
+
+
+static bool ReadConfigFile(mINI::INIFile& file, mINI::INIStructure& ini)
+{
+	if (!EnsureConfigFile())
+	{
+		return false;
+	}
+	if (!file.read(ini))
+	{
+		DEBUG_PRINTF("Unable to read lcu.ini\n");
+		return false;
+	}
+	if (!AppendMissingConfigSections(ini))
+	{
+		return false;
+	}
+	// Reading again picks up any fully commented defaults appended to a legacy
+	// file, while mINI's later lazy write continues preserving every old comment.
+	if (!file.read(ini))
+	{
+		DEBUG_PRINTF("Unable to reread lcu.ini after adding documented settings\n");
+		return false;
+	}
+	return true;
+}
+
+
+
+static bool WriteConfigFile(mINI::INIFile& file, mINI::INIStructure& ini)
+{
+	// Remember which ignored fields the user supplied before default insertion;
+	// this lets scale mode leave fixed dimensions alone unless fixing invalid data.
+	const auto originalWindow = ini.get("window");
+	std::string requestedMode = originalWindow.get("mode");
+	std::transform(requestedMode.begin(), requestedMode.end(), requestedMode.begin(),
+		[](unsigned char character) { return static_cast<char>(std::tolower(character)); });
+	const bool requestedFixed = requestedMode == "fixed";
+
+	// Keep accepted user spellings, but normalize invalid or absent bindings to
+	// their documented keyboard defaults before the settings are written.
+	ini["mouse"]["toggle"] = ConfiguredKeyOrDefault(ini, "mouse", "toggle", "F8");
+	ini["mouse"]["sensitivity"] = FormatSensitivity(configSettings.sensitivity);
+	ini["window"]["toggle"] = ConfiguredKeyOrDefault(ini, "window", "toggle", "F9");
+	ini["window"]["mode"] = configSettings.windowSizingMode ==
+		lcu_config::WindowSizingMode::Fixed ? "fixed" : "scale";
+	if (configSettings.windowSizingMode == lcu_config::WindowSizingMode::Scale ||
+		!originalWindow.has("window_scale"))
+	{
+		ini["window"]["window_scale"] = FormatSensitivity(configSettings.windowScale);
+	}
+
+	// Scaled layouts ignore fixed dimensions, so preserve existing values unless
+	// a fixed layout was invalid and explicitly fell back to the default settings.
+	if (configSettings.windowSizingMode == lcu_config::WindowSizingMode::Fixed)
+	{
+		ini["window"]["window_width"] = std::to_string(configSettings.windowWidth);
+		ini["window"]["window_height"] = std::to_string(configSettings.windowHeight);
+	}
+	else if (requestedFixed)
+	{
+		ini["window"]["window_width"] = std::to_string(lcu_config::DefaultWindowWidth);
+		ini["window"]["window_height"] = std::to_string(lcu_config::DefaultWindowHeight);
+	}
+	else
+	{
+		if (!IsPositiveConfigDimension(originalWindow, "window_width"))
+		{
+			ini["window"]["window_width"] =
+				std::to_string(lcu_config::DefaultWindowWidth);
+		}
+		if (!IsPositiveConfigDimension(originalWindow, "window_height"))
+		{
+			ini["window"]["window_height"] =
+				std::to_string(lcu_config::DefaultWindowHeight);
+		}
+	}
+
+	if (!file.write(ini))
+	{
+		DEBUG_PRINTF("Unable to update lcu.ini while preserving its comments\n");
+		return false;
+	}
+	return true;
 }
 
 
@@ -707,30 +1062,26 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 			mINI::INIFile file("lcu.ini");
 			mINI::INIStructure ini;
 
-			if (file.read(ini))
+			if (ReadConfigFile(file, ini))
 			{
+				// Load only the new mouse/window settings. The retired [settings]
+				// hotkey and sensitivity entries are deliberately ignored.
+				configSettings = lcu_config::LoadSettings(ini);
+
+				// These separate game-input bindings are retained for existing users;
+				// they are not accepted as mouse-camera or window-mode toggle keys.
 				if (ini.has("settings"))
 				{
-					auto& collection = ini["settings"];
-					if (collection.has("sensitivity"))
-					{
-						sensitivity = std::stof(collection["sensitivity"]);
-					}
+					const auto collection = ini.get("settings");
 					if (collection.has("leftclick"))
 					{
-						leftClickKey = static_cast<unsigned short>(std::stoi(collection["leftclick"], 0, 16));
+						leftClickKey = static_cast<unsigned short>(
+							std::stoi(collection.get("leftclick"), 0, 16));
 					}
 					if (collection.has("rightclick"))
 					{
-						rightClickKey = static_cast<unsigned short>(std::stoi(collection["rightclick"], 0, 16));
-					}
-					if (collection.has("togglekey"))
-					{
-						const int configuredToggleKey = std::stoi(collection["togglekey"], 0, 16);
-						if (configuredToggleKey > 0 && configuredToggleKey <= 0xFF)
-						{
-							toggleKey = static_cast<unsigned short>(configuredToggleKey);
-						}
+						rightClickKey = static_cast<unsigned short>(
+							std::stoi(collection.get("rightclick"), 0, 16));
 					}
 				}
 			}
@@ -783,20 +1134,12 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 			mINI::INIFile file("lcu.ini");
 			mINI::INIStructure ini;
 
-			char leftclickHex[16];
-			char rightclickHex[16];
-			char toggleKeyHex[16];
-			sprintf(leftclickHex, "%X", leftClickKey);
-			sprintf(rightclickHex, "%X", rightClickKey);
-			sprintf(toggleKeyHex, "%X", toggleKey);
-
-			ini["settings"]["sensitivity"] = std::to_string(sensitivity);
-
-			ini["settings"]["leftclick"] = "0x" + std::string(leftclickHex);
-			ini["settings"]["rightclick"] = "0x" +  std::string(rightclickHex);
-			ini["settings"]["togglekey"] = "0x" + std::string(toggleKeyHex);
-
-			file.write(ini);
+			// Home/End sensitivity changes are saved using the new [mouse] key;
+			// mINI's lazy write path retains existing explanatory comments/formatting.
+			if (ReadConfigFile(file, ini))
+			{
+				WriteConfigFile(file, ini);
+			}
 		}
 		catch (std::exception& ex)
 		{

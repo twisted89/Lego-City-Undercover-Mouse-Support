@@ -126,7 +126,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SupportJustMyCode>false</SupportJustMyCode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\camera;$(ProjectDir)src\input;$(ProjectDir)src\steam_proxy;$(ProjectDir)src\third_party\minhook;$(ProjectDir)src\third_party\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\camera;$(ProjectDir)src\config;$(ProjectDir)src\input;$(ProjectDir)src\steam_proxy;$(ProjectDir)src\third_party\minhook;$(ProjectDir)src\third_party\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,7 +150,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\camera;$(ProjectDir)src\input;$(ProjectDir)src\steam_proxy;$(ProjectDir)src\third_party\minhook;$(ProjectDir)src\third_party\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\camera;$(ProjectDir)src\config;$(ProjectDir)src\input;$(ProjectDir)src\steam_proxy;$(ProjectDir)src\third_party\minhook;$(ProjectDir)src\third_party\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClCompile Include="src\game\dllmain.cpp" />
     <ClCompile Include="src\camera\MouseCameraState.cpp" />
+    <ClCompile Include="src\config\Settings.cpp" />
     <ClCompile Include="src\camera\Vector3.cpp" />
     <ClCompile Include="src\third_party\minhook\buffer.c" />
     <ClCompile Include="src\third_party\minhook\hde\hde32.c" />
@@ -187,6 +188,7 @@
     <ClInclude Include="src\third_party\minhook\MinHook.h" />
     <ClInclude Include="src\third_party\minhook\trampoline.h" />
     <ClInclude Include="src\camera\MouseCameraState.h" />
+    <ClInclude Include="src\config\Settings.h" />
     <ClInclude Include="src\camera\Vector3.h" />
     <ClInclude Include="src\steam_proxy\Proxy.h" />
     <ClInclude Include="src\input\RawInput.h" />
@@ -198,6 +200,7 @@
     <None Include="src\steam_proxy\steam_api64.def" />
     <None Include="src\tests\MouseCameraStateTests.cpp" />
     <None Include="src\tests\RawInputLifecycleTests.cpp" />
+    <None Include="src\tests\SettingsTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

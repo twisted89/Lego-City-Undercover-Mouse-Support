@@ -14,9 +14,11 @@ cl /nologo /std:c++17 /EHsc /W4 /WX src\tests\MouseCameraStateTests.cpp src\came
 .\Release\obj\MouseCameraStateTests.exe
 cl /nologo /std:c++17 /EHsc /W4 src\tests\RawInputLifecycleTests.cpp src\input\RawInput.cpp Setupapi.lib User32.lib /Fe:Release\obj\RawInputLifecycleTests.exe
 .\Release\obj\RawInputLifecycleTests.exe
+cl /nologo /std:c++17 /EHsc /W4 /WX /Isrc\third_party\mini src\tests\SettingsTests.cpp src\config\Settings.cpp /Fe:Release\obj\SettingsTests.exe
+.\Release\obj\SettingsTests.exe
 ```
 
-The first command produces `Release\steam_api64.dll`; intermediates are written to `Release\obj\`. The next two compile and run the state tests independently with warnings treated as errors. The final two compile and run the Raw Input lifecycle tests.
+The first command produces `Release\steam_api64.dll`; intermediates are written to `Release\obj\`. The state and settings tests compile with warnings treated as errors. The Raw Input lifecycle tests exercise real Win32 registration against persistent and replaced target windows.
 
 ## Local Deployment
 
