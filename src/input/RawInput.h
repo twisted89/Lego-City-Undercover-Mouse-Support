@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <mutex>
 #include <Windows.h>
 #include <Setupapi.h>
 
@@ -12,13 +13,18 @@ public:
 	);
 	~RawInput();
 
+	// Raw input is registered to the game's long-lived window, never to a window
+	// owned by the camera worker that calls Update.
+	void SetTargetWindow(HWND window);
+	// The hooked game WndProc forwards WM_INPUT here, then still calls the original
+	// WndProc so the game retains its normal message handling.
+	void HandleRawInput(WPARAM wParam, LPARAM lParam);
 	void Update(bool enable);
+	void DisableCapture();
 	bool Init();
 
 private:
 	static char* utf16le_to_utf8(const unsigned char* inbuf);
-	static void wminput_handler(WPARAM wParam, LPARAM lParam);
-	static LRESULT CALLBACK RawWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 	void rawinput_handler(const RAWINPUT* raw, UINT align);
 	bool get_devinfos();
 	void free_dev_info();
@@ -26,9 +32,7 @@ private:
 	char* get_dev_name_by_instance(const char* devinstance);
 	void init_device(const RAWINPUTDEVICELIST* dev);
 	bool register_raw_input(bool enable);
-	void cleanup_window();
 	void rawinput_quit();
-	bool init_event_queue();
 
 private:
 	struct deviceInfo {
@@ -41,8 +45,6 @@ private:
 		char* name;
 	};
 
-	static RawInput* ctx;
-
 	std::function<void(int x, int y)> m_moveCallback;
 	std::function<void(bool up)> m_scrollCallback;
 	std::function<void(unsigned short buttonFlags)> m_buttonCallback;
@@ -52,8 +54,8 @@ private:
 	mouseDevice* m_mice;
 	size_t nb_mice;
 	bool m_registered;
-	HWND m_hwnd;
-	ATOM m_class_atom;
-	BOOL m_isWow64;
+	HWND m_targetWindow;
+	std::mutex m_updateMutex;
+	std::mutex m_registrationMutex;
 };
 

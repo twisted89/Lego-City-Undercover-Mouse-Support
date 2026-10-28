@@ -76,6 +76,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>steam_api64</TargetName>
+    <OutDir>$(MSBuildProjectDirectory)\Release\</OutDir>
+    <IntDir>$(OutDir)obj\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(MSBuildProjectDirectory)\Debug\</OutDir>
+    <IntDir>$(OutDir)obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,14 +126,17 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SupportJustMyCode>false</SupportJustMyCode>
-      <AdditionalIncludeDirectories>minhook</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\camera;$(ProjectDir)src\config;$(ProjectDir)src\input;$(ProjectDir)src\steam_proxy;$(ProjectDir)src\third_party\minhook;$(ProjectDir)src\third_party\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <OutputFile>$(OutDir)steam_api64$(TargetExt)</OutputFile>
-      <ModuleDefinitionFile>steam_api64.def</ModuleDefinitionFile>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <LinkTimeCodeGenerationObjectFile>$(IntDir)$(TargetName).iobj</LinkTimeCodeGenerationObjectFile>
+      <ModuleDefinitionFile>src\steam_proxy\steam_api64.def</ModuleDefinitionFile>
       <AdditionalDependencies>Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -141,7 +150,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>minhook</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\camera;$(ProjectDir)src\config;$(ProjectDir)src\input;$(ProjectDir)src\steam_proxy;$(ProjectDir)src\third_party\minhook;$(ProjectDir)src\third_party\mini;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,36 +158,49 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ImportLibrary>$(IntDir)$(TargetName).lib</ImportLibrary>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <LinkTimeCodeGenerationObjectFile>$(IntDir)$(TargetName).iobj</LinkTimeCodeGenerationObjectFile>
       <AdditionalDependencies>Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>steam_api64.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>src\steam_proxy\steam_api64.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="minhook\buffer.c" />
-    <ClCompile Include="minhook\hde\hde32.c" />
-    <ClCompile Include="minhook\hde\hde64.c" />
-    <ClCompile Include="minhook\hook.c" />
-    <ClCompile Include="minhook\trampoline.c" />
-    <ClCompile Include="RawInput.cpp" />
-    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="src\game\dllmain.cpp" />
+    <ClCompile Include="src\camera\MouseCameraState.cpp" />
+    <ClCompile Include="src\config\Settings.cpp" />
+    <ClCompile Include="src\camera\Vector3.cpp" />
+    <ClCompile Include="src\third_party\minhook\buffer.c" />
+    <ClCompile Include="src\third_party\minhook\hde\hde32.c" />
+    <ClCompile Include="src\third_party\minhook\hde\hde64.c" />
+    <ClCompile Include="src\third_party\minhook\hook.c" />
+    <ClCompile Include="src\third_party\minhook\trampoline.c" />
+    <ClCompile Include="src\input\RawInput.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ini.h" />
-    <ClInclude Include="minhook\buffer.h" />
-    <ClInclude Include="minhook\hde\hde32.h" />
-    <ClInclude Include="minhook\hde\hde64.h" />
-    <ClInclude Include="minhook\hde\pstdint.h" />
-    <ClInclude Include="minhook\hde\table32.h" />
-    <ClInclude Include="minhook\hde\table64.h" />
-    <ClInclude Include="minhook\MinHook.h" />
-    <ClInclude Include="minhook\trampoline.h" />
-    <ClInclude Include="Proxy.h" />
-    <ClInclude Include="RawInput.h" />
-    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="src\third_party\mini\ini.h" />
+    <ClInclude Include="src\third_party\minhook\buffer.h" />
+    <ClInclude Include="src\third_party\minhook\hde\hde32.h" />
+    <ClInclude Include="src\third_party\minhook\hde\hde64.h" />
+    <ClInclude Include="src\third_party\minhook\hde\pstdint.h" />
+    <ClInclude Include="src\third_party\minhook\hde\table32.h" />
+    <ClInclude Include="src\third_party\minhook\hde\table64.h" />
+    <ClInclude Include="src\third_party\minhook\MinHook.h" />
+    <ClInclude Include="src\third_party\minhook\trampoline.h" />
+    <ClInclude Include="src\camera\MouseCameraState.h" />
+    <ClInclude Include="src\config\Settings.h" />
+    <ClInclude Include="src\camera\Vector3.h" />
+    <ClInclude Include="src\steam_proxy\Proxy.h" />
+    <ClInclude Include="src\input\RawInput.h" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="steam_api64.asm" />
+    <MASM Include="src\steam_proxy\steam_api64.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\steam_proxy\steam_api64.def" />
+    <None Include="src\tests\MouseCameraStateTests.cpp" />
+    <None Include="src\tests\RawInputLifecycleTests.cpp" />
+    <None Include="src\tests\SettingsTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
